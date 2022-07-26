@@ -16,16 +16,12 @@ import org.threeten.bp.LocalTime
 
 class DateTimePickerDialog(
     initialLocalDateTime: LocalDateTime?,
-    private var minLocalDateTime: LocalDateTime?,
-    private var maxLocalDateTime: LocalDateTime?,
-    private var wrapSelectionWheel: Boolean,
-    private var withOnlyDatePicker: Boolean,
-    private var withOnlyTimePicker: Boolean
+    private val minLocalDateTime: LocalDateTime?,
+    private val maxLocalDateTime: LocalDateTime?,
+    private val wrapSelectionWheel: Boolean,
+    private val withOnlyDatePicker: Boolean,
+    private val withOnlyTimePicker: Boolean
 ) : DialogFragment() {
-
-    companion object {
-        private const val DIALOG_TAG = "date_time_picker_dialog"
-    }
 
     var tabLayout: TabLayout? = null
 
@@ -184,5 +180,9 @@ class DateTimePickerDialog(
 
     fun showDialog(fragmentManager: FragmentManager) {
         this.show(fragmentManager, DIALOG_TAG)
+    }
+
+    private companion object {
+        const val DIALOG_TAG = "date_time_picker_dialog"
     }
 }

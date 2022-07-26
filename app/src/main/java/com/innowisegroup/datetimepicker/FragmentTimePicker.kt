@@ -15,21 +15,16 @@ import java.util.*
 
 class FragmentTimePicker : Fragment() {
 
-    companion object {
-        private const val MIN_HOUR = 0
-        private const val MAX_HOUR = 23
-        private const val MIN_MINUTE = 0
-        private const val MAX_MINUTE = 59
-    }
-
     var timeStub: TextView? = null
 
     var mHours: CustomNumberPicker? = null
 
     var mMinutes: CustomNumberPicker? = null
+
     private var refreshCallback: RefreshCallback? = null
 
     var localTime: LocalTime? = null
+
     fun init(localTime: LocalTime?, callback: RefreshCallback?) {
         this.localTime = localTime
         this.refreshCallback = callback
@@ -91,5 +86,12 @@ class FragmentTimePicker : Fragment() {
     private fun refreshTimeValue(newValue: LocalTime) {
         localTime = newValue
         refreshCallback?.refresh()
+    }
+
+    private companion object {
+        const val MIN_HOUR = 0
+        const val MAX_HOUR = 23
+        const val MIN_MINUTE = 0
+        const val MAX_MINUTE = 59
     }
 }

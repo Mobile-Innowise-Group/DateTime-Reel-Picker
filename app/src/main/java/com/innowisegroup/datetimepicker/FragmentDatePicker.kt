@@ -14,6 +14,7 @@ import java.lang.String.format
 import java.util.*
 
 class FragmentDatePicker : Fragment() {
+
     var day: CustomNumberPicker? = null
 
     var month: CustomNumberPicker? = null
@@ -27,6 +28,7 @@ class FragmentDatePicker : Fragment() {
     private var maxLocalDate: LocalDate? = null
     private var refreshDateCallback: RefreshCallback? = null
     private var wrapSelectionWheel = false
+
     fun init(
         localDate: LocalDate?,
         minLocalDate: LocalDate?,
@@ -133,11 +135,11 @@ class FragmentDatePicker : Fragment() {
         refreshDateCallback?.refresh()
     }
 
-    companion object {
-        private const val DAY_MIN_VALUE = 1
-        private const val MONTH_MIN_VALUE = 1
-        private const val MONTH_MAX_VALUE = 12
-        private const val DEFAULT_YEAR = 1900
-        private const val MAX_YEARS_INCREASE = 20
+    private companion object {
+        const val DAY_MIN_VALUE = 1
+        const val MONTH_MIN_VALUE = 1
+        const val MONTH_MAX_VALUE = 12
+        const val DEFAULT_YEAR = 1900
+        const val MAX_YEARS_INCREASE = 20
     }
 }

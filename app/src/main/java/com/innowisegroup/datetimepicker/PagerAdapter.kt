@@ -8,15 +8,10 @@ import java.util.*
 open class PagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     private val mFragmentList: MutableList<Fragment> = ArrayList()
-    override fun getItem(position: Int): Fragment {
-        return mFragmentList[position]
-    }
 
-    override fun getCount(): Int {
-        return mFragmentList.size
-    }
+    override fun getItem(position: Int): Fragment = mFragmentList[position]
 
-    fun addFragment(fragment: Fragment) {
-        mFragmentList.add(fragment)
-    }
+    override fun getCount(): Int = mFragmentList.size
+
+    fun addFragment(fragment: Fragment) = mFragmentList.add(fragment)
 }

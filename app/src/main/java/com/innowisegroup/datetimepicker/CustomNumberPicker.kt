@@ -11,8 +11,11 @@ import android.widget.NumberPicker
 import android.widget.NumberPicker.OnValueChangeListener
 import java.lang.reflect.Field
 
-class CustomNumberPicker(context: Context?, attrs: AttributeSet?) :
-    NumberPicker(context, attrs), OnValueChangeListener {
+class CustomNumberPicker(
+    context: Context,
+    attrs: AttributeSet?
+) : NumberPicker(context, attrs), OnValueChangeListener {
+
     override fun addView(child: View) {
         super.addView(child)
         updateView(child)
@@ -36,6 +39,7 @@ class CustomNumberPicker(context: Context?, attrs: AttributeSet?) :
     }
 
     override fun onValueChange(numberPicker: NumberPicker, oldVal: Int, newVal: Int) {}
+
     fun setDividerColor(picker: NumberPicker?, customDrawable: Drawable?) {
         val pickerFields: Array<Field> = NumberPicker::class.java.declaredFields
         for (pf in pickerFields) {
@@ -51,7 +55,7 @@ class CustomNumberPicker(context: Context?, attrs: AttributeSet?) :
         }
     }
 
-    companion object {
-        private const val TEXT_SIZE = 28f
+    private companion object {
+        const val TEXT_SIZE = 28f
     }
 }
