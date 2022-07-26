@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:theme="@style/Theme.MaterialComponents.DayNight">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@null"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        app:tabTextAppearance="@style/CustomTabText" />
+
+    <com.innowisegroup.datetimepicker.CustomViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="250dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="@style/ButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/default_layout_height"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="Отмена"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_ok"
+            style="@style/ButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/default_layout_height"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="ОК"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
+</LinearLayout>

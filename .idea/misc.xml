@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Android/DateTime-Reel-Picker/app/src/main/res/drawable/background_datetimepicker_dialog.xml" value="0.196875" />
+        <entry key="..\:/Android/DateTime-Reel-Picker/app/src/main/res/drawable/btn_normal.xml" value="0.196875" />
+        <entry key="..\:/Android/DateTime-Reel-Picker/app/src/main/res/drawable/btn_pressed.xml" value="0.196875" />
+        <entry key="..\:/Android/DateTime-Reel-Picker/app/src/main/res/drawable/btn_selected.xml" value="0.196875" />
+        <entry key="..\:/Android/DateTime-Reel-Picker/app/src/main/res/drawable/button_state_selector.xml" value="0.196875" />
+        <entry key="..\:/Android/DateTime-Reel-Picker/app/src/main/res/drawable/ic_launcher_background.xml" value="0.196875" />
+        <entry key="..\:/Android/DateTime-Reel-Picker/app/src/main/res/drawable/number_picker_divider_color.xml" value="0.196875" />
+        <entry key="..\:/Android/DateTime-Reel-Picker/app/src/main/res/layout/activity_main.xml" value="0.16893115942028986" />
+        <entry key="..\:/Android/DateTime-Reel-Picker/app/src/main/res/layout/fragment_date_time_picker.xml" value="0.16893115942028986" />
+        <entry key="..\:/Android/DateTime-Reel-Picker/app/src/main/res/layout/item_date_picker_spinner.xml" value="0.16893115942028986" />
+        <entry key="..\:/Android/DateTime-Reel-Picker/app/src/main/res/layout/item_time_picker_spinner.xml" value="0.16893115942028986" />
+      </map>
+    </option>
+  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
+</project>
