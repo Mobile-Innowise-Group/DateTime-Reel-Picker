@@ -68,8 +68,8 @@ class DateTimePickerDialog(
         adapter = object : PagerAdapter(childFragmentManager) {
             override fun getPageTitle(position: Int): CharSequence? =
                 when (val curFragment = adapter?.getItem(position)) {
-                    is FragmentTimePicker -> curFragment.localTime.formatTime()
-                    is FragmentDatePicker -> curFragment.localDate.formatDate()
+                    is FragmentTimePicker -> curFragment.localTime?.formatTime()
+                    is FragmentDatePicker -> curFragment.localDate?.formatDate()
                     else -> null
                 }
         }
