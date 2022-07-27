@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
@@ -67,8 +68,8 @@ class DateTimePickerDialog(
         adapter = object : PagerAdapter(childFragmentManager) {
             override fun getPageTitle(position: Int): CharSequence? =
                 when (val curFragment = adapter?.getItem(position)) {
-                    is FragmentTimePicker -> DateUtils.formatTime(curFragment.localTime)
-                    is FragmentDatePicker -> DateUtils.formatDate(curFragment.localDate)
+                    is FragmentTimePicker -> curFragment.localTime.formatTime()
+                    is FragmentDatePicker -> curFragment.localDate.formatDate()
                     else -> null
                 }
         }
@@ -89,8 +90,8 @@ class DateTimePickerDialog(
             datePickerFragment = FragmentDatePicker()
             datePickerFragment?.init(
                 initialLocalDateTime?.toLocalDate(),
-                if (minLocalDateTime == null) null else minLocalDateTime?.toLocalDate(),
-                if (maxLocalDateTime == null) null else maxLocalDateTime?.toLocalDate(),
+                if (minLocalDateTime == null) null else minLocalDateTime.toLocalDate(),
+                if (maxLocalDateTime == null) null else maxLocalDateTime.toLocalDate(),
                 object : RefreshCallback {
                     override fun refresh() {
                         this@DateTimePickerDialog.refresh()
@@ -114,7 +115,7 @@ class DateTimePickerDialog(
         if (root is LinearLayout) {
             root.showDividers = LinearLayout.SHOW_DIVIDER_MIDDLE
             val drawable = GradientDrawable()
-            drawable.setColor(resources.getColor(android.R.color.black, null))
+            drawable.setColor(ResourcesCompat.getColor(resources, android.R.color.black, null))
             drawable.setSize(1, 1)
             root.dividerPadding = 10
             root.dividerDrawable = drawable
