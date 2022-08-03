@@ -8,9 +8,6 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import com.innowisegroup.datetimepicker.DateTimePickerDialog.RefreshCallback
-import org.threeten.bp.LocalTime
-import java.lang.String.format
 import java.util.*
 
 class FragmentTimePicker : Fragment() {
@@ -21,19 +18,19 @@ class FragmentTimePicker : Fragment() {
 
     var mMinutes: CustomNumberPicker? = null
 
-    private var refreshCallback: RefreshCallback? = null
+    private var refreshCallback: DateTimePickerDialog.RefreshCallback? = null
 
     var localTime: LocalTime? = null
 
-    fun init(localTime: LocalTime?, callback: RefreshCallback?) {
+    fun init(localTime: LocalTime?, callback: DateTimePickerDialog.RefreshCallback?) {
         this.localTime = localTime
         this.refreshCallback = callback
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.item_time_picker_spinner, container, false)
         timeStub = view.findViewById(R.id.time_stub)
@@ -42,42 +39,43 @@ class FragmentTimePicker : Fragment() {
 
         mHours?.minValue = MIN_HOUR
         mHours?.maxValue = MAX_HOUR
-        mHours?.value = localTime?.hour!!
+        mHours?.value = localTime?.getHour()!!
         mHours?.wrapSelectorWheel = true
         mHours?.setFormatter { i: Int ->
-            format(
-                Locale.getDefault(),
-                "%02d",
-                i
+            String.format(
+                    Locale.getDefault(),
+                    "%02d",
+                    i
             )
         }
         mHours?.setDividerColor(
-            mHours,
-            ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
+                mHours,
+                ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
         )
-        mHours?.setOnValueChangedListener { picker: NumberPicker?, oldVal: Int, newVal: Int ->
+        mHours?.setOnValueChangedListener { _: NumberPicker?, _: Int, newVal: Int ->
             refreshTimeValue(
-                localTime?.withHour(newVal)!!
+                    localTime?.withHour(newVal)!!
             )
         }
+
         mMinutes?.minValue = MIN_MINUTE
         mMinutes?.maxValue = MAX_MINUTE
-        mMinutes?.value = localTime?.minute!!
+        mMinutes?.value = localTime?.getMinute()!!
         mMinutes?.setDividerColor(
-            mMinutes,
-            ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
+                mMinutes,
+                ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
         )
         mMinutes?.wrapSelectorWheel = true
         mMinutes?.setFormatter { i: Int ->
-            format(
-                Locale.getDefault(),
-                "%02d",
-                i
+            String.format(
+                    Locale.getDefault(),
+                    "%02d",
+                    i
             )
         }
-        mMinutes?.setOnValueChangedListener { picker: NumberPicker?, oldVal: Int, newVal: Int ->
+        mMinutes?.setOnValueChangedListener { _: NumberPicker?, _: Int, newVal: Int ->
             refreshTimeValue(
-                localTime?.withMinute(newVal)!!
+                    localTime?.withMinute(newVal)!!
             )
         }
         return view

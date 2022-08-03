@@ -9,11 +9,12 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.NumberPicker
 import android.widget.NumberPicker.OnValueChangeListener
+import androidx.core.content.res.ResourcesCompat
 import java.lang.reflect.Field
 
 class CustomNumberPicker(
-    context: Context,
-    attrs: AttributeSet?
+        context: Context,
+        attrs: AttributeSet?
 ) : NumberPicker(context, attrs), OnValueChangeListener {
 
     override fun addView(child: View) {
@@ -34,7 +35,7 @@ class CustomNumberPicker(
     private fun updateView(view: View) {
         if (view is EditText) {
             view.textSize = TEXT_SIZE
-            view.setTextColor(resources.getColor(R.color.black, null))
+            view.setTextColor(ResourcesCompat.getColor(resources, R.color.black, null))
         }
     }
 

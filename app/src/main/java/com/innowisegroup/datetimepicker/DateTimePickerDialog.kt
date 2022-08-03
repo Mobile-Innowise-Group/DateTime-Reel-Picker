@@ -7,51 +7,52 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.LocalTime
 
 class DateTimePickerDialog(
-    initialLocalDateTime: LocalDateTime?,
-    private val minLocalDateTime: LocalDateTime?,
-    private val maxLocalDateTime: LocalDateTime?,
-    private val wrapSelectionWheel: Boolean,
-    private val withOnlyDatePicker: Boolean,
-    private val withOnlyTimePicker: Boolean
+        initialLocalDateTime: LocalDateTime?,
+        private val minLocalDateTime: LocalDateTime?,
+        private val maxLocalDateTime: LocalDateTime?,
+        private val wrapSelectionWheel: Boolean,
+        private val withOnlyDatePicker: Boolean,
+        private val withOnlyTimePicker: Boolean
 ) : DialogFragment() {
 
-    var tabLayout: TabLayout? = null
+    private var tabLayout: TabLayout? = null
 
-    var viewPager: CustomViewPager? = null
+    private var viewPager: CustomViewPager? = null
 
     private val okClickCallback: OkClickCallback? = null
 
     private val cancelClickCallback: CancelClickCallback? = null
 
     private var adapter: PagerAdapter? = null
+
     private var initialLocalDateTime: LocalDateTime? = null
+
     private var timePickerFragment: FragmentTimePicker? = null
     private var datePickerFragment: FragmentDatePicker? = null
 
     init {
-        this.initialLocalDateTime = initialLocalDateTime ?: LocalDateTime.now()
+        this.initialLocalDateTime = initialLocalDateTime
+                ?: LocalDateTime().now()
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_date_time_picker, container, false)
         isCancelable = false
         dialog?.window?.setBackgroundDrawable(
-            resources.getDrawable(
-                R.drawable.background_datetimepicker_dialog,
-                null
-            )
+                ResourcesCompat.getDrawable(resources,
+                        R.drawable.background_datetimepicker_dialog,
+                        null
+                )
         )
         viewPager = view.findViewById(R.id.viewPager)
         tabLayout = view.findViewById(R.id.tabLayout)
@@ -66,21 +67,20 @@ class DateTimePickerDialog(
 
         adapter = object : PagerAdapter(childFragmentManager) {
             override fun getPageTitle(position: Int): CharSequence? =
-                when (val curFragment = adapter?.getItem(position)) {
-                    is FragmentTimePicker -> DateUtils.formatTime(curFragment.localTime)
-                    is FragmentDatePicker -> DateUtils.formatDate(curFragment.localDate)
-                    else -> null
-                }
+                    when (val currentFragment = adapter?.getItem(position)) {
+                        is FragmentTimePicker -> currentFragment.localTime?.formatTime()
+                        is FragmentDatePicker -> currentFragment.localDate?.formatDate()
+                        else -> null
+                    }
         }
+
         if (!withOnlyDatePicker) {
             timePickerFragment = FragmentTimePicker()
             timePickerFragment?.init(
-                initialLocalDateTime?.toLocalTime(),
-                object : RefreshCallback {
-                    override fun refresh() {
-                        this@DateTimePickerDialog.refresh()
+                    initialLocalDateTime?.toLocalTime(),
+                    object : RefreshCallback {
+                        override fun refresh() = this@DateTimePickerDialog.refresh()
                     }
-                }
             )
             (adapter as PagerAdapter).addFragment(timePickerFragment!!)
         }
@@ -88,15 +88,13 @@ class DateTimePickerDialog(
         if (!withOnlyTimePicker) {
             datePickerFragment = FragmentDatePicker()
             datePickerFragment?.init(
-                initialLocalDateTime?.toLocalDate(),
-                if (minLocalDateTime == null) null else minLocalDateTime?.toLocalDate(),
-                if (maxLocalDateTime == null) null else maxLocalDateTime?.toLocalDate(),
-                object : RefreshCallback {
-                    override fun refresh() {
-                        this@DateTimePickerDialog.refresh()
-                    }
-                },
-                wrapSelectionWheel
+                    initialLocalDateTime?.toLocalDate(),
+                    minLocalDateTime?.toLocalDate(),
+                    maxLocalDateTime?.toLocalDate(),
+                    object : RefreshCallback {
+                        override fun refresh() = this@DateTimePickerDialog.refresh()
+                    },
+                    wrapSelectionWheel
             )
             (adapter as PagerAdapter).addFragment(datePickerFragment!!)
         }
@@ -109,12 +107,12 @@ class DateTimePickerDialog(
                 timePickerFragment?.timeStub?.requestFocus()
             }
         })
-        //makes vertical divider between tabs
         val root = tabLayout?.getChildAt(0)
+
         if (root is LinearLayout) {
             root.showDividers = LinearLayout.SHOW_DIVIDER_MIDDLE
             val drawable = GradientDrawable()
-            drawable.setColor(resources.getColor(android.R.color.black, null))
+            drawable.setColor(ResourcesCompat.getColor(resources, android.R.color.black, null))
             drawable.setSize(1, 1)
             root.dividerPadding = 10
             root.dividerDrawable = drawable
@@ -133,37 +131,37 @@ class DateTimePickerDialog(
             if (datePickerFragment == null) {
                 timePickerFragment?.timeStub?.requestFocus()
                 okClickCallback.onOkClick(
-                    LocalDateTime.of(
-                        LocalDate.now(),
-                        timePickerFragment?.localTime
-                    )
+                        LocalDateTime(
+                                LocalDate().now(),
+                                timePickerFragment?.localTime!!
+                        )
                 )
                 return
             }
             if (timePickerFragment == null) {
                 datePickerFragment?.dateStub?.requestFocus()
                 okClickCallback.onOkClick(
-                    LocalDateTime.of(
-                        datePickerFragment?.localDate,
-                        LocalTime.now()
-                    )
+                        LocalDateTime(
+                                datePickerFragment?.localDate!!,
+                                LocalTime().now()
+                        )
                 )
                 return
             }
             datePickerFragment?.dateStub?.requestFocus()
             timePickerFragment?.timeStub?.requestFocus()
             okClickCallback.onOkClick(
-                LocalDateTime.of(
-                    datePickerFragment?.localDate,
-                    timePickerFragment?.localTime
-                )
+                    LocalDateTime().of(
+                            datePickerFragment?.localDate!!,
+                            timePickerFragment?.localTime!!
+                    )
             )
         }
     }
 
     private fun refresh() {
-        val curItem = viewPager?.currentItem
-        tabLayout?.getTabAt(curItem!!)?.text = adapter?.getPageTitle(curItem!!)
+        val curItem = requireNonNull(viewPager?.currentItem)
+        tabLayout?.getTabAt(curItem)?.text = adapter?.getPageTitle(curItem)
     }
 
     interface RefreshCallback {
