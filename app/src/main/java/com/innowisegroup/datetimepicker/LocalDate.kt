@@ -18,7 +18,7 @@ class LocalDate() : Serializable {
     private var month: Int? = null
     private var year: Int? = null
 
-    private var calendar: Calendar = Calendar.getInstance()
+    private val calendar: Calendar = Calendar.getInstance()
 
     private val arrayMonth: Array<Month> = Month.values()
 
@@ -84,25 +84,16 @@ class LocalDate() : Serializable {
             }
 
     fun withDayOfMonth(day: Int): LocalDate =
-            if (this.day == day) {
-                this
-            } else {
-                LocalDate().of(day, getMonth(), getYear())
-            }
+            if (this.day == day) this else LocalDate().of(day, getMonth(), getYear())
+
 
     fun withMonth(month: Int): LocalDate =
-            if (this.month == month) {
-                this
-            } else {
-                resolvePreviousValid(getDay(), month, getYear())
-            }
+            if (this.month == month) this else resolvePreviousValid(getDay(), month, getYear())
+
 
     fun withYear(year: Int): LocalDate =
-            if (this.year == year) {
-                this
-            } else {
-                resolvePreviousValid(getDay(), getMonth(), year)
-            }
+            if (this.year == year) this else resolvePreviousValid(getDay(), getMonth(), year)
+
 
     fun plusYears(yearsToAdd: Int): LocalDate =
             if (yearsToAdd == 0) {

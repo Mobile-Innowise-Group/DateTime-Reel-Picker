@@ -13,14 +13,10 @@ class CustomViewPager(
     private var enable = true
 
     override fun onTouchEvent(event: MotionEvent): Boolean =
-            if (enable) {
-                super.onTouchEvent(event)
-            } else false
+            if (enable) super.onTouchEvent(event) else false
 
     override fun onInterceptTouchEvent(event: MotionEvent): Boolean =
-            if (enable) {
-                super.onInterceptTouchEvent(event)
-            } else false
+            if (enable) super.onInterceptTouchEvent(event) else false
 
     fun setPagingEnabled(enabled: Boolean) {
         this.enable = enabled

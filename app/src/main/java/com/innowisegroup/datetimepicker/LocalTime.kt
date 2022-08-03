@@ -12,7 +12,7 @@ class LocalTime() : Serializable {
     private var hour: Int? = null
     private var minute: Int? = null
 
-    private var calendar: Calendar = Calendar.getInstance()
+    private val calendar: Calendar = Calendar.getInstance()
 
     fun now(): LocalTime {
         val getHour = calendar.get(Calendar.HOUR_OF_DAY)
@@ -43,18 +43,10 @@ class LocalTime() : Serializable {
     fun getMinute() = requireNonNull(this.minute)
 
     fun withHour(hour: Int): LocalTime =
-            if (this.hour == hour) {
-                this
-            } else {
-                create(hour, getMinute())
-            }
+            if (this.hour == hour) this else create(hour, getMinute())
 
     fun withMinute(minute: Int): LocalTime =
-            if (this.minute == minute) {
-                this
-            } else {
-                create(getHour(), minute)
-            }
+            if (this.minute == minute) this else create(getHour(), minute)
 
     private companion object {
         const val MIN_HOUR = 0

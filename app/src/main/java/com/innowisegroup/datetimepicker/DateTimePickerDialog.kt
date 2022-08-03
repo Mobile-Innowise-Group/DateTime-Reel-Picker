@@ -131,7 +131,7 @@ class DateTimePickerDialog(
             if (datePickerFragment == null) {
                 timePickerFragment?.timeStub?.requestFocus()
                 okClickCallback.onOkClick(
-                        LocalDateTime(
+                        LocalDateTime().of(
                                 LocalDate().now(),
                                 timePickerFragment?.localTime!!
                         )
@@ -141,7 +141,7 @@ class DateTimePickerDialog(
             if (timePickerFragment == null) {
                 datePickerFragment?.dateStub?.requestFocus()
                 okClickCallback.onOkClick(
-                        LocalDateTime(
+                        LocalDateTime().of(
                                 datePickerFragment?.localDate!!,
                                 LocalTime().now()
                         )

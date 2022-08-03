@@ -21,8 +21,8 @@ class FragmentDatePicker : Fragment() {
     var dateStub: TextView? = null
 
     var localDate: LocalDate? = null
-    var minLocalDate: LocalDate? = null
-    var maxLocalDate: LocalDate? = null
+    private var minLocalDate: LocalDate? = null
+    private var maxLocalDate: LocalDate? = null
 
     private var refreshDateCallback: DateTimePickerDialog.RefreshCallback? = null
     private var wrapSelectionWheel = false
