@@ -4,10 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import com.innowisegroup.datetimepicker.DateTimePickerDialog.Companion.UPDATE_DATE_TAB_TITLE_KEY
+import com.innowisegroup.datetimepicker.DateTimePickerDialog.Companion.UPDATE_DATE_TAB_TITLE_REQUEST_KEY
 import java.util.*
 
 class FragmentDatePicker : Fragment() {
@@ -23,36 +24,23 @@ class FragmentDatePicker : Fragment() {
     var localDate: LocalDate? = null
     private var minLocalDate: LocalDate? = null
     private var maxLocalDate: LocalDate? = null
-
-    private var refreshDateCallback: DateTimePickerDialog.RefreshCallback? = null
     private var wrapSelectionWheel = false
 
-    fun init(
-            localDate: LocalDate?,
-            minLocalDate: LocalDate?,
-            maxLocalDate: LocalDate?,
-            callback: DateTimePickerDialog.RefreshCallback?,
-            wrapSelectionWheel: Boolean
-    ) {
-        this.localDate = localDate
-        this.minLocalDate = minLocalDate
-                ?: LocalDate().of(
-                        DAY_MIN_VALUE,
-                        MONTH_MIN_VALUE,
-                        DEFAULT_YEAR
-                )
-        this.maxLocalDate = maxLocalDate
-                ?: LocalDate().now().plusYears(MAX_YEARS_INCREASE)
-        this.refreshDateCallback = callback
-        this.wrapSelectionWheel = wrapSelectionWheel
-    }
-
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.item_date_picker_spinner, container, false)
+        with(requireArguments()) {
+            localDate = getSerializable(LOCAL_DATE) as? LocalDate
+            minLocalDate = getSerializable(MIN_LOCAL_DATE) as? LocalDate
+                ?: LocalDate.now()
+            maxLocalDate = maxLocalDate
+                ?: LocalDate.now().plusYears(MAX_YEARS_INCREASE)
+            wrapSelectionWheel = getBoolean(WRAP_SELECTION_BOOLEAN)
+        }
+
         day = view.findViewById(R.id.day)
         month = view.findViewById(R.id.month)
         year = view.findViewById(R.id.year)
@@ -62,20 +50,20 @@ class FragmentDatePicker : Fragment() {
         day?.maxValue = localDate?.lengthOfMonth()!!
         day?.value = localDate?.getDay()!!
         day?.setDividerColor(
-                day,
-                ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
+            day,
+            ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
         )
         day?.setFormatter { i: Int ->
             String.format(
-                    Locale.getDefault(),
-                    "%02d",
-                    i
+                Locale.getDefault(),
+                "%02d",
+                i
             )
         }
         day?.wrapSelectorWheel = wrapSelectionWheel
-        day?.setOnValueChangedListener { _: NumberPicker?, _: Int, newVal: Int ->
+        day?.setOnValueChangedListener { _, _, newVal: Int ->
             refreshDateValue(
-                    localDate?.withDayOfMonth(newVal)!!
+                localDate?.withDayOfMonth(newVal)!!
             )
         }
 
@@ -83,20 +71,20 @@ class FragmentDatePicker : Fragment() {
         month?.maxValue = MONTH_MAX_VALUE
         month?.value = localDate?.getMonth()!!
         month?.setDividerColor(
-                month,
-                ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
+            month,
+            ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
         )
         month?.setFormatter { i: Int ->
             String.format(
-                    Locale.getDefault(),
-                    "%02d",
-                    i
+                Locale.getDefault(),
+                "%02d",
+                i
             )
         }
         month?.wrapSelectorWheel = wrapSelectionWheel
-        month?.setOnValueChangedListener { _: NumberPicker?, _: Int, newVal: Int ->
+        month?.setOnValueChangedListener { _, _, newVal: Int ->
             refreshDateValue(
-                    localDate?.withMonth(newVal)!!
+                localDate?.withMonth(newVal)!!
             )
         }
 
@@ -104,46 +92,59 @@ class FragmentDatePicker : Fragment() {
         year?.maxValue = maxLocalDate?.getMaxYear()!!
         year?.value = localDate?.getYear()!!
         year?.setDividerColor(
-                year,
-                ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
+            year,
+            ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
         )
         year?.setFormatter { i: Int ->
             String.format(
-                    Locale.getDefault(),
-                    "%04d",
-                    i
+                Locale.getDefault(),
+                "%04d",
+                i
             )
         }
         year?.wrapSelectorWheel = wrapSelectionWheel
-        year?.setOnValueChangedListener { _: NumberPicker?, _: Int, newVal: Int ->
+        year?.setOnValueChangedListener { _, _, newVal: Int ->
             refreshDateValue(
-                    localDate?.withYear(newVal)!!
+                localDate?.withYear(newVal)!!
             )
         }
-        refreshDateValue(
-                LocalDate().of(
-                        localDate?.getDay()!!,
-                        localDate?.getMonth()!!,
-                        localDate?.getYear()!!
-                )
-        )
         return view
     }
 
     private fun refreshDateValue(newValue: LocalDate) {
-        if (day == null) {
-            return
-        }
-        localDate = newValue
-        day?.maxValue = localDate?.lengthOfMonth()!!
-        refreshDateCallback?.refresh()
+        requireActivity().supportFragmentManager.setFragmentResult(
+            UPDATE_DATE_TAB_TITLE_REQUEST_KEY,
+            Bundle().apply { putString(UPDATE_DATE_TAB_TITLE_KEY, newValue.formatDate()) })
     }
 
-    private companion object {
-        const val DAY_MIN_VALUE = 1
-        const val MONTH_MIN_VALUE = 1
-        const val MONTH_MAX_VALUE = 12
-        const val DEFAULT_YEAR = 1900
-        const val MAX_YEARS_INCREASE = 20
+    companion object {
+        private const val DAY_MIN_VALUE = 1
+        private const val MONTH_MIN_VALUE = 1
+        private const val MONTH_MAX_VALUE = 12
+        private const val DEFAULT_YEAR = 1900
+        private const val MAX_YEARS_INCREASE = 20
+
+        private const val LOCAL_DATE = "localDate"
+        private const val MIN_LOCAL_DATE = "minLocalDate"
+        private const val MAX_LOCAL_DATE = "maxLocalDate"
+        private const val WRAP_SELECTION_BOOLEAN = "wrapSelectionWheel"
+
+        @JvmStatic
+        fun newInstance(
+            localDate: LocalDate?,
+            minLocalDate: LocalDate?,
+            maxLocalDate: LocalDate?,
+            wrapSelectionWheel: Boolean
+        ): FragmentDatePicker {
+            val args = Bundle().apply {
+                putSerializable(LOCAL_DATE, localDate)
+                putSerializable(MIN_LOCAL_DATE, minLocalDate)
+                putSerializable(MAX_LOCAL_DATE, maxLocalDate)
+                putBoolean(WRAP_SELECTION_BOOLEAN, wrapSelectionWheel)
+            }
+            val fragment = FragmentDatePicker()
+            fragment.arguments = args
+            return fragment
+        }
     }
 }

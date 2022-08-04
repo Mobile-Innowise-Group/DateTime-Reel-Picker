@@ -4,10 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import com.innowisegroup.datetimepicker.DateTimePickerDialog.Companion.UPDATE_TIME_TAB_TITLE_KEY
+import com.innowisegroup.datetimepicker.DateTimePickerDialog.Companion.UPDATE_TIME_TAB_TITLE_REQUEST_KEY
 import java.util.*
 
 class FragmentTimePicker : Fragment() {
@@ -18,21 +19,16 @@ class FragmentTimePicker : Fragment() {
 
     var mMinutes: CustomNumberPicker? = null
 
-    private var refreshCallback: DateTimePickerDialog.RefreshCallback? = null
-
     var localTime: LocalTime? = null
 
-    fun init(localTime: LocalTime?, callback: DateTimePickerDialog.RefreshCallback?) {
-        this.localTime = localTime
-        this.refreshCallback = callback
-    }
-
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.item_time_picker_spinner, container, false)
+        localTime = requireArguments().getSerializable(LOCAL_TIME) as? LocalTime
+
         timeStub = view.findViewById(R.id.time_stub)
         mHours = view.findViewById(R.id.hours)
         mMinutes = view.findViewById(R.id.minutes)
@@ -43,18 +39,18 @@ class FragmentTimePicker : Fragment() {
         mHours?.wrapSelectorWheel = true
         mHours?.setFormatter { i: Int ->
             String.format(
-                    Locale.getDefault(),
-                    "%02d",
-                    i
+                Locale.getDefault(),
+                "%02d",
+                i
             )
         }
         mHours?.setDividerColor(
-                mHours,
-                ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
+            mHours,
+            ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
         )
-        mHours?.setOnValueChangedListener { _: NumberPicker?, _: Int, newVal: Int ->
+        mHours?.setOnValueChangedListener { _, _, newVal: Int ->
             refreshTimeValue(
-                    localTime?.withHour(newVal)!!
+                localTime?.withHour(newVal)!!
             )
         }
 
@@ -62,34 +58,49 @@ class FragmentTimePicker : Fragment() {
         mMinutes?.maxValue = MAX_MINUTE
         mMinutes?.value = localTime?.getMinute()!!
         mMinutes?.setDividerColor(
-                mMinutes,
-                ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
+            mMinutes,
+            ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
         )
         mMinutes?.wrapSelectorWheel = true
         mMinutes?.setFormatter { i: Int ->
             String.format(
-                    Locale.getDefault(),
-                    "%02d",
-                    i
+                Locale.getDefault(),
+                "%02d",
+                i
             )
         }
-        mMinutes?.setOnValueChangedListener { _: NumberPicker?, _: Int, newVal: Int ->
+        mMinutes?.setOnValueChangedListener { _, _, newVal: Int ->
             refreshTimeValue(
-                    localTime?.withMinute(newVal)!!
+                localTime?.withMinute(newVal)!!
             )
         }
         return view
     }
 
     private fun refreshTimeValue(newValue: LocalTime) {
-        localTime = newValue
-        refreshCallback?.refresh()
+        requireActivity().supportFragmentManager.setFragmentResult(
+            UPDATE_TIME_TAB_TITLE_REQUEST_KEY,
+            Bundle().apply { putString(UPDATE_TIME_TAB_TITLE_KEY, newValue.formatTime()) })
     }
 
-    private companion object {
-        const val MIN_HOUR = 0
-        const val MAX_HOUR = 23
-        const val MIN_MINUTE = 0
-        const val MAX_MINUTE = 59
+    companion object {
+        private const val MIN_HOUR = 0
+        private const val MAX_HOUR = 23
+        private const val MIN_MINUTE = 0
+        private const val MAX_MINUTE = 59
+
+        private const val LOCAL_TIME = "localDate"
+
+        @JvmStatic
+        fun newInstance(
+            localTime: LocalTime?,
+        ): FragmentTimePicker {
+            val args = Bundle().apply {
+                putSerializable(LOCAL_TIME, localTime)
+            }
+            val fragment = FragmentTimePicker()
+            fragment.arguments = args
+            return fragment
+        }
     }
 }
