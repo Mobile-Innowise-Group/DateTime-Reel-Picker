@@ -27,7 +27,7 @@ class FragmentTimePicker : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.item_time_picker_spinner, container, false)
-        localTime = requireArguments().getSerializable(LOCAL_TIME) as? LocalTime
+        localTime = requireArguments().getSerializable(LOCAL_TIME) as? LocalTime ?: LocalTime.now()
 
         timeStub = view.findViewById(R.id.time_stub)
         mHours = view.findViewById(R.id.hours)
@@ -78,6 +78,7 @@ class FragmentTimePicker : Fragment() {
     }
 
     private fun refreshTimeValue(newValue: LocalTime) {
+        localTime = newValue
         requireActivity().supportFragmentManager.setFragmentResult(
             UPDATE_TIME_TAB_TITLE_REQUEST_KEY,
             Bundle().apply { putString(UPDATE_TIME_TAB_TITLE_KEY, newValue.formatTime()) })
@@ -89,7 +90,7 @@ class FragmentTimePicker : Fragment() {
         private const val MIN_MINUTE = 0
         private const val MAX_MINUTE = 59
 
-        private const val LOCAL_TIME = "localDate"
+        private const val LOCAL_TIME = "localTime"
 
         @JvmStatic
         fun newInstance(

@@ -12,11 +12,10 @@ class MainActivity : AppCompatActivity() {
 
         val dateTimePickerDialog = DateTimePickerDialog.newInstance(
             initialLocalDateTime = null,
-            initialLocalTime = null,
             minLocalDateTime = null,
             maxLocalDateTime = null,
             wrapSelectionWheel = false,
-            fragmentToCreate = FragmentToCreate.BOTH
+            pickerType = PickerType.BOTH
         )
         val btn = findViewById<Button>(R.id.btn)
         btn.setOnClickListener {

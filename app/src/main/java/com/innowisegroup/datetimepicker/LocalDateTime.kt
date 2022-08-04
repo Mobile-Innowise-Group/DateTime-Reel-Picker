@@ -4,9 +4,9 @@ import java.io.Serializable
 
 class LocalDateTime(private val date: LocalDate, private val time: LocalTime) : Serializable {
 
-    fun toLocalDate(): LocalDate = this.date
+    fun toLocalDate(): LocalDate = date
 
-    fun toLocalTime(): LocalTime = this.time
+    fun toLocalTime(): LocalTime = time
 
     companion object {
         fun now(): LocalDateTime {

@@ -16,7 +16,6 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class DateTimePickerDialog : DialogFragment() {
-
     private var tabLayout: TabLayout? = null
 
     private var viewPager: ViewPager2? = null
@@ -25,19 +24,14 @@ class DateTimePickerDialog : DialogFragment() {
 
     private val cancelClickCallback: CancelClickCallback? = null
 
-    private var initialLocalDateTime: LocalDateTime? = null
-    private var initialLocalTime: LocalTime? = null
-
     private var timePickerFragment: FragmentTimePicker? = null
     private var datePickerFragment: FragmentDatePicker? = null
 
+    private var initialLocalDateTime: LocalDateTime? = null
     private var minLocalDateTime: LocalDateTime? = null
     private var maxLocalDateTime: LocalDateTime? = null
     private var wrapSelectionWheel: Boolean = false
-    private var fragmentToCreate: FragmentToCreate = FragmentToCreate.BOTH
-
-    private var currentTimeStub = "99:99"
-    private var currentDateStub = "99-99-99"
+    private var pickerType: PickerType = PickerType.BOTH
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,15 +41,13 @@ class DateTimePickerDialog : DialogFragment() {
         val view = inflater.inflate(R.layout.fragment_date_time_picker, container, false)
         with(requireArguments()) {
             initialLocalDateTime =
-                getSerializable(INITIAL_LOCAL_DATE_TIME) as? LocalDateTime
-                    ?: LocalDateTime.now()
-            initialLocalTime = getSerializable(INITIAL_LOCAL_TIME) as? LocalTime
-                ?: LocalTime.now()
-            minLocalDateTime = getSerializable(MIN_LOCAL_DATE_TIME) as? LocalDateTime
-            maxLocalDateTime = getSerializable(MAX_LOCAL_DATE_TIME) as? LocalDateTime
+                getSerializable(INITIAL_LOCAL_DATE_TIME) as? LocalDateTime ?: LocalDateTime.now()
+            minLocalDateTime =
+                getSerializable(MIN_LOCAL_DATE_TIME) as? LocalDateTime ?: MIN_DEFAULT_DATE_TIME
+            maxLocalDateTime =
+                getSerializable(MAX_LOCAL_DATE_TIME) as? LocalDateTime ?: MAX_DEFAULT_DATE_TIME
             wrapSelectionWheel = getBoolean(WRAP_SELECTION_WHEEL)
-            fragmentToCreate =
-                getSerializable(FRAGMENT_TO_CREATE) as? FragmentToCreate ?: FragmentToCreate.BOTH
+            pickerType = getSerializable(FRAGMENT_TO_CREATE) as PickerType
         }
 
         isCancelable = false
@@ -81,7 +73,8 @@ class DateTimePickerDialog : DialogFragment() {
             UPDATE_TIME_TAB_TITLE_REQUEST_KEY,
             viewLifecycleOwner
         ) { _, bundle ->
-            val selectedTime = bundle.getString(UPDATE_TIME_TAB_TITLE_KEY) ?: currentTimeStub
+            val selectedTime =
+                bundle.getString(UPDATE_TIME_TAB_TITLE_KEY) ?: LocalTime.now().formatTime()
             refresh(selectedTime)
         }
 
@@ -89,31 +82,32 @@ class DateTimePickerDialog : DialogFragment() {
             UPDATE_DATE_TAB_TITLE_REQUEST_KEY,
             viewLifecycleOwner
         ) { _, bundle ->
-            val selectedDate = bundle.getString(UPDATE_DATE_TAB_TITLE_KEY) ?: currentDateStub
+            val selectedDate =
+                bundle.getString(UPDATE_DATE_TAB_TITLE_KEY) ?: LocalDate.now().formatDate()
             refresh(selectedDate)
         }
 
-        val listOfFragments: List<Fragment> = when (fragmentToCreate) {
-            FragmentToCreate.ONLY_TIME -> listOf(
+        val listOfFragments: List<Fragment> = when (pickerType) {
+            PickerType.TIME_ONLY -> listOf(
                 FragmentTimePicker.newInstance(
                     initialLocalDateTime?.toLocalTime()
                 )
             )
-            FragmentToCreate.ONLY_DATE -> listOf(
+            PickerType.DATE_ONLY -> listOf(
                 FragmentDatePicker.newInstance(
                     initialLocalDateTime?.toLocalDate(),
-                    if (minLocalDateTime == null) null else minLocalDateTime?.toLocalDate(),
-                    if (maxLocalDateTime == null) null else maxLocalDateTime?.toLocalDate(),
+                    if (minLocalDateTime == null) MIN_DEFAULT_DATE_TIME.toLocalDate() else minLocalDateTime?.toLocalDate(),
+                    if (maxLocalDateTime == null) MAX_DEFAULT_DATE_TIME.toLocalDate() else maxLocalDateTime?.toLocalDate(),
                     wrapSelectionWheel
                 )
             )
-            FragmentToCreate.BOTH -> {
+            PickerType.BOTH -> {
                 listOf(
                     FragmentTimePicker.newInstance(initialLocalDateTime?.toLocalTime()),
                     FragmentDatePicker.newInstance(
                         initialLocalDateTime?.toLocalDate(),
-                        if (minLocalDateTime == null) null else minLocalDateTime?.toLocalDate(),
-                        if (maxLocalDateTime == null) null else maxLocalDateTime?.toLocalDate(),
+                        if (minLocalDateTime == null) MIN_DEFAULT_DATE_TIME.toLocalDate() else minLocalDateTime?.toLocalDate(),
+                        if (maxLocalDateTime == null) MAX_DEFAULT_DATE_TIME.toLocalDate() else maxLocalDateTime?.toLocalDate(),
                         wrapSelectionWheel
                     )
                 )
@@ -126,8 +120,7 @@ class DateTimePickerDialog : DialogFragment() {
         TabLayoutMediator(tabLayout as TabLayout, viewPager as ViewPager2) { tab, position ->
             tab.text = when (adapter.getItemViewType(position)) {
                 0 -> LocalTime.now().formatTime()
-                1 -> LocalDate.now().formatDate()
-                else -> currentTimeStub
+                else -> LocalDate.now().formatDate()
             }
         }.attach()
 
@@ -217,27 +210,29 @@ class DateTimePickerDialog : DialogFragment() {
         private const val DIALOG_TAG = "date_time_picker_dialog"
 
         private const val INITIAL_LOCAL_DATE_TIME = "initialLocalDateTime"
-        private const val INITIAL_LOCAL_TIME = "initialLocalTime"
         private const val MIN_LOCAL_DATE_TIME = "minLocalDateTime"
         private const val MAX_LOCAL_DATE_TIME = "maxLocalDateTime"
         private const val WRAP_SELECTION_WHEEL = "wrapSelectionWheel"
         private const val FRAGMENT_TO_CREATE = "fragmentToCreate"
 
+        private val MIN_DEFAULT_DATE_TIME =
+            LocalDateTime(LocalDate.of(1, 1, 1900), LocalTime.of(0, 0))
+        private val MAX_DEFAULT_DATE_TIME =
+            LocalDateTime(LocalDate.of(1, 1, 2100), LocalTime.of(0, 0))
+
         @JvmStatic
         fun newInstance(
             initialLocalDateTime: LocalDateTime?,
-            initialLocalTime: LocalTime?,
             minLocalDateTime: LocalDateTime?,
             maxLocalDateTime: LocalDateTime?,
-            fragmentToCreate: FragmentToCreate,
+            pickerType: PickerType,
             wrapSelectionWheel: Boolean
         ): DateTimePickerDialog {
             val args = Bundle().apply {
                 putSerializable(INITIAL_LOCAL_DATE_TIME, initialLocalDateTime)
-                putSerializable(INITIAL_LOCAL_TIME, initialLocalTime)
                 putSerializable(MIN_LOCAL_DATE_TIME, minLocalDateTime)
                 putSerializable(MAX_LOCAL_DATE_TIME, maxLocalDateTime)
-                putSerializable(FRAGMENT_TO_CREATE, fragmentToCreate)
+                putSerializable(FRAGMENT_TO_CREATE, pickerType)
                 putBoolean(WRAP_SELECTION_WHEEL, wrapSelectionWheel)
             }
             val fragment = DateTimePickerDialog()

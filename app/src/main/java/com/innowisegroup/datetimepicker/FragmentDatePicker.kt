@@ -14,9 +14,7 @@ import java.util.*
 class FragmentDatePicker : Fragment() {
 
     var day: CustomNumberPicker? = null
-
     var month: CustomNumberPicker? = null
-
     var year: CustomNumberPicker? = null
 
     var dateStub: TextView? = null
@@ -33,11 +31,9 @@ class FragmentDatePicker : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.item_date_picker_spinner, container, false)
         with(requireArguments()) {
-            localDate = getSerializable(LOCAL_DATE) as? LocalDate
-            minLocalDate = getSerializable(MIN_LOCAL_DATE) as? LocalDate
-                ?: LocalDate.now()
-            maxLocalDate = maxLocalDate
-                ?: LocalDate.now().plusYears(MAX_YEARS_INCREASE)
+            localDate = getSerializable(LOCAL_DATE) as? LocalDate ?: LocalDate.now()
+            minLocalDate = getSerializable(MIN_LOCAL_DATE) as? LocalDate ?: MIN_DEFAULT_LOCAL_DATE
+            maxLocalDate = getSerializable(MAX_LOCAL_DATE) as? LocalDate ?: MAX_DEFAULT_LOCAL_DATE
             wrapSelectionWheel = getBoolean(WRAP_SELECTION_BOOLEAN)
         }
 
@@ -112,6 +108,12 @@ class FragmentDatePicker : Fragment() {
     }
 
     private fun refreshDateValue(newValue: LocalDate) {
+        if (day == null) {
+            return
+        }
+        localDate = newValue
+        day?.maxValue = localDate?.lengthOfMonth()!!
+
         requireActivity().supportFragmentManager.setFragmentResult(
             UPDATE_DATE_TAB_TITLE_REQUEST_KEY,
             Bundle().apply { putString(UPDATE_DATE_TAB_TITLE_KEY, newValue.formatDate()) })
@@ -121,8 +123,10 @@ class FragmentDatePicker : Fragment() {
         private const val DAY_MIN_VALUE = 1
         private const val MONTH_MIN_VALUE = 1
         private const val MONTH_MAX_VALUE = 12
-        private const val DEFAULT_YEAR = 1900
-        private const val MAX_YEARS_INCREASE = 20
+        private const val MAX_YEARS_INCREASE = 200
+
+        private val MIN_DEFAULT_LOCAL_DATE = LocalDate.now()
+        private val MAX_DEFAULT_LOCAL_DATE = LocalDate.now().plusYears(MAX_YEARS_INCREASE)
 
         private const val LOCAL_DATE = "localDate"
         private const val MIN_LOCAL_DATE = "minLocalDate"
