@@ -20,7 +20,7 @@ import com.innowisegroup.datetimepicker.FragmentDatePicker.Companion.MIN_LOCAL_D
 import com.innowisegroup.datetimepicker.FragmentDatePicker.Companion.WRAP_SELECTION_BOOLEAN
 import com.innowisegroup.datetimepicker.FragmentTimePicker.Companion.LOCAL_TIME
 
-class DateTimePickerDialog : DialogFragment() {
+class PickerDialog : DialogFragment() {
     private var tabLayout: TabLayout? = null
 
     private var viewPager: ViewPager2? = null
@@ -261,14 +261,13 @@ class DateTimePickerDialog : DialogFragment() {
             initialLocalTime: LocalTime = LocalTime.now(),
             minLocalTime: LocalTime = MIN_DEFAULT_TIME,
             maxLocalTime: LocalTime = MAX_DEFAULT_TIME,
-            pickerType: PickerType = PickerType.TIME_ONLY,
             wrapSelectionWheel: Boolean = false
-        ): DateTimePickerDialog =
-            createDateTimePickerDialog(
+        ): PickerDialog =
+            createPickerDialog(
                 LocalDateTime.of(initialLocalTime),
                 LocalDateTime.of(minLocalTime),
                 LocalDateTime.of(maxLocalTime),
-                pickerType,
+                PickerType.TIME_ONLY,
                 wrapSelectionWheel
             )
 
@@ -278,27 +277,41 @@ class DateTimePickerDialog : DialogFragment() {
             initialLocalDate: LocalDate = LocalDate.now(),
             minLocalDateTime: LocalDate = MIN_DEFAULT_DATE,
             maxLocalDateTime: LocalDate = MAX_DEFAULT_DATE,
-            pickerType: PickerType = PickerType.DATE_ONLY,
             wrapSelectionWheel: Boolean = false
-        ): DateTimePickerDialog =
-            createDateTimePickerDialog(
+        ): PickerDialog =
+            createPickerDialog(
                 LocalDateTime.of(initialLocalDate),
                 LocalDateTime.of(minLocalDateTime),
                 LocalDateTime.of(maxLocalDateTime),
-                pickerType,
+                PickerType.DATE_ONLY,
                 wrapSelectionWheel
             )
 
         @JvmStatic
         @JvmOverloads
         fun createDateTimePickerDialog(
-            initialLocalDateTime: LocalDateTime = LocalDateTime.now(),
+            initialLocalDate: LocalDateTime = LocalDateTime.now(),
             minLocalDateTime: LocalDateTime = MIN_DEFAULT_DATE_TIME,
             maxLocalDateTime: LocalDateTime = MAX_DEFAULT_DATE_TIME,
-            pickerType: PickerType = PickerType.DATE_TIME,
             wrapSelectionWheel: Boolean = false
-        ): DateTimePickerDialog =
-            DateTimePickerDialog().apply {
+        ): PickerDialog =
+            createPickerDialog(
+                initialLocalDate,
+                minLocalDateTime,
+                maxLocalDateTime,
+                PickerType.DATE_TIME,
+                wrapSelectionWheel
+            )
+
+        @JvmStatic
+        private fun createPickerDialog(
+            initialLocalDateTime: LocalDateTime,
+            minLocalDateTime: LocalDateTime,
+            maxLocalDateTime: LocalDateTime,
+            pickerType: PickerType,
+            wrapSelectionWheel: Boolean
+        ): PickerDialog =
+            PickerDialog().apply {
                 arguments = Bundle().apply {
                     putSerializable(INITIAL_LOCAL_DATE_TIME, initialLocalDateTime)
                     putSerializable(MIN_LOCAL_DATE_TIME, minLocalDateTime)

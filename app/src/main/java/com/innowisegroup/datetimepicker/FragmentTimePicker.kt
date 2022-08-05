@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import com.innowisegroup.datetimepicker.DateTimePickerDialog.Companion.UPDATE_TIME_TAB_TITLE_KEY
-import com.innowisegroup.datetimepicker.DateTimePickerDialog.Companion.UPDATE_TIME_TAB_TITLE_REQUEST_KEY
+import com.innowisegroup.datetimepicker.PickerDialog.Companion.UPDATE_TIME_TAB_TITLE_KEY
+import com.innowisegroup.datetimepicker.PickerDialog.Companion.UPDATE_TIME_TAB_TITLE_REQUEST_KEY
 import java.util.*
 
 class FragmentTimePicker : Fragment() {
