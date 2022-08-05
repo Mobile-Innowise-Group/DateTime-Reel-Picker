@@ -37,5 +37,15 @@ class LocalDateTime(private val date: LocalDate, private val time: LocalTime) : 
             requireNonNull(time)
             return LocalDateTime(date, time)
         }
+
+        fun of(date: LocalDate): LocalDateTime {
+            requireNonNull(date)
+            return LocalDateTime(date, LocalTime.now())
+        }
+
+        fun of(time: LocalTime): LocalDateTime {
+            requireNonNull(time)
+            return LocalDateTime(LocalDate.now(), time)
+        }
     }
 }

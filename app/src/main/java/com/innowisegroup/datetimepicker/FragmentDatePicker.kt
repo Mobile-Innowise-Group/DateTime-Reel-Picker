@@ -128,27 +128,9 @@ class FragmentDatePicker : Fragment() {
         private val MIN_DEFAULT_LOCAL_DATE = LocalDate.now()
         private val MAX_DEFAULT_LOCAL_DATE = LocalDate.now().plusYears(MAX_YEARS_INCREASE)
 
-        private const val LOCAL_DATE = "localDate"
-        private const val MIN_LOCAL_DATE = "minLocalDate"
-        private const val MAX_LOCAL_DATE = "maxLocalDate"
-        private const val WRAP_SELECTION_BOOLEAN = "wrapSelectionWheel"
-
-        @JvmStatic
-        fun newInstance(
-            localDate: LocalDate?,
-            minLocalDate: LocalDate?,
-            maxLocalDate: LocalDate?,
-            wrapSelectionWheel: Boolean
-        ): FragmentDatePicker {
-            val args = Bundle().apply {
-                putSerializable(LOCAL_DATE, localDate)
-                putSerializable(MIN_LOCAL_DATE, minLocalDate)
-                putSerializable(MAX_LOCAL_DATE, maxLocalDate)
-                putBoolean(WRAP_SELECTION_BOOLEAN, wrapSelectionWheel)
-            }
-            val fragment = FragmentDatePicker()
-            fragment.arguments = args
-            return fragment
-        }
+        internal const val LOCAL_DATE = "localDate"
+        internal const val MIN_LOCAL_DATE = "minLocalDate"
+        internal const val MAX_LOCAL_DATE = "maxLocalDate"
+        internal const val WRAP_SELECTION_BOOLEAN = "wrapSelectionWheel"
     }
 }

@@ -90,18 +90,6 @@ class FragmentTimePicker : Fragment() {
         private const val MIN_MINUTE = 0
         private const val MAX_MINUTE = 59
 
-        private const val LOCAL_TIME = "localTime"
-
-        @JvmStatic
-        fun newInstance(
-            localTime: LocalTime?,
-        ): FragmentTimePicker {
-            val args = Bundle().apply {
-                putSerializable(LOCAL_TIME, localTime)
-            }
-            val fragment = FragmentTimePicker()
-            fragment.arguments = args
-            return fragment
-        }
+        internal const val LOCAL_TIME = "localTime"
     }
 }

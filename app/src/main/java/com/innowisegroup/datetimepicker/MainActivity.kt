@@ -10,13 +10,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val dateTimePickerDialog = DateTimePickerDialog.newInstance(
-            initialLocalDateTime = null,
-            minLocalDateTime = null,
-            maxLocalDateTime = null,
-            wrapSelectionWheel = false,
-            pickerType = PickerType.BOTH
-        )
+        val dateTimePickerDialog = DateTimePickerDialog.createDateTimePickerDialog()
+
         val btn = findViewById<Button>(R.id.btn)
         btn.setOnClickListener {
             dateTimePickerDialog.showDialog(supportFragmentManager)
