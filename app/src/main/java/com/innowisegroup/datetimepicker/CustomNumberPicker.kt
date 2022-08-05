@@ -57,6 +57,6 @@ class CustomNumberPicker(
     }
 
     private companion object {
-        private const val TEXT_SIZE = 28f
+        const val TEXT_SIZE = 28f
     }
 }
