@@ -15,7 +15,7 @@ class PagerAdapter(
 
     override fun getItemViewType(position: Int): Int =
         when (list[position]) {
-            is FragmentTimePicker -> 0
+            is TimePickerFragment -> 0
             else -> 1
         }
 }

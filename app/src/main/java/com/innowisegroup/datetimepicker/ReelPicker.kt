@@ -14,13 +14,13 @@ import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.innowisegroup.datetimepicker.FragmentDatePicker.Companion.LOCAL_DATE
-import com.innowisegroup.datetimepicker.FragmentDatePicker.Companion.MAX_LOCAL_DATE
-import com.innowisegroup.datetimepicker.FragmentDatePicker.Companion.MIN_LOCAL_DATE
-import com.innowisegroup.datetimepicker.FragmentDatePicker.Companion.WRAP_SELECTION_BOOLEAN
-import com.innowisegroup.datetimepicker.FragmentTimePicker.Companion.LOCAL_TIME
+import com.innowisegroup.datetimepicker.DatePickerFragment.Companion.LOCAL_DATE
+import com.innowisegroup.datetimepicker.DatePickerFragment.Companion.MAX_LOCAL_DATE
+import com.innowisegroup.datetimepicker.DatePickerFragment.Companion.MIN_LOCAL_DATE
+import com.innowisegroup.datetimepicker.DatePickerFragment.Companion.WRAP_SELECTION_BOOLEAN
+import com.innowisegroup.datetimepicker.TimePickerFragment.Companion.LOCAL_TIME
 
-class PickerDialog : DialogFragment() {
+class ReelPicker : DialogFragment() {
     private var tabLayout: TabLayout? = null
 
     private var viewPager: ViewPager2? = null
@@ -29,8 +29,8 @@ class PickerDialog : DialogFragment() {
 
     private val cancelClickCallback: CancelClickCallback? = null
 
-    private var timePickerFragment: FragmentTimePicker? = null
-    private var datePickerFragment: FragmentDatePicker? = null
+    private var timePickerFragment: TimePickerFragment? = null
+    private var datePickerFragment: DatePickerFragment? = null
 
     private var initialLocalDateTime: LocalDateTime? = null
     private var minLocalDateTime: LocalDateTime? = null
@@ -94,14 +94,14 @@ class PickerDialog : DialogFragment() {
 
         val listOfFragments: List<Fragment> = when (pickerType) {
             PickerType.TIME_ONLY -> listOf(
-                FragmentTimePicker().apply {
+                TimePickerFragment().apply {
                     arguments = Bundle().apply {
                         putSerializable(LOCAL_TIME, initialLocalDateTime?.toLocalTime())
                     }
                 }
             )
             PickerType.DATE_ONLY -> listOf(
-                FragmentDatePicker().apply {
+                DatePickerFragment().apply {
                     arguments = Bundle().apply {
                         putSerializable(
                             LOCAL_DATE,
@@ -121,12 +121,12 @@ class PickerDialog : DialogFragment() {
             )
             PickerType.DATE_TIME -> {
                 listOf(
-                    FragmentTimePicker().apply {
+                    TimePickerFragment().apply {
                         arguments = Bundle().apply {
                             putSerializable(LOCAL_TIME, initialLocalDateTime?.toLocalTime())
                         }
                     },
-                    FragmentDatePicker().apply {
+                    DatePickerFragment().apply {
                         arguments = Bundle().apply {
                             putSerializable(
                                 LOCAL_DATE,
@@ -257,12 +257,12 @@ class PickerDialog : DialogFragment() {
 
         @JvmStatic
         @JvmOverloads
-        fun createTimePickerDialog(
+        fun createTimeDialog(
             initialLocalTime: LocalTime = LocalTime.now(),
             minLocalTime: LocalTime = MIN_DEFAULT_TIME,
             maxLocalTime: LocalTime = MAX_DEFAULT_TIME,
             wrapSelectionWheel: Boolean = false
-        ): PickerDialog =
+        ): ReelPicker =
             createPickerDialog(
                 LocalDateTime.of(initialLocalTime),
                 LocalDateTime.of(minLocalTime),
@@ -273,12 +273,12 @@ class PickerDialog : DialogFragment() {
 
         @JvmStatic
         @JvmOverloads
-        fun createDatePickerDialog(
+        fun createDateDialog(
             initialLocalDate: LocalDate = LocalDate.now(),
             minLocalDate: LocalDate = MIN_DEFAULT_DATE,
             maxLocalDate: LocalDate = MAX_DEFAULT_DATE,
             wrapSelectionWheel: Boolean = false
-        ): PickerDialog =
+        ): ReelPicker =
             createPickerDialog(
                 LocalDateTime.of(initialLocalDate),
                 LocalDateTime.of(minLocalDate),
@@ -289,12 +289,12 @@ class PickerDialog : DialogFragment() {
 
         @JvmStatic
         @JvmOverloads
-        fun createDateTimePickerDialog(
+        fun createDateTimeDialog(
             initialLocalDateTime: LocalDateTime = LocalDateTime.now(),
             minLocalDateTime: LocalDateTime = MIN_DEFAULT_DATE_TIME,
             maxLocalDateTime: LocalDateTime = MAX_DEFAULT_DATE_TIME,
             wrapSelectionWheel: Boolean = false
-        ): PickerDialog =
+        ): ReelPicker =
             createPickerDialog(
                 initialLocalDateTime,
                 minLocalDateTime,
@@ -310,8 +310,8 @@ class PickerDialog : DialogFragment() {
             maxLocalDateTime: LocalDateTime,
             pickerType: PickerType,
             wrapSelectionWheel: Boolean
-        ): PickerDialog =
-            PickerDialog().apply {
+        ): ReelPicker =
+            ReelPicker().apply {
                 arguments = Bundle().apply {
                     putSerializable(INITIAL_LOCAL_DATE_TIME, initialLocalDateTime)
                     putSerializable(MIN_LOCAL_DATE_TIME, minLocalDateTime)
