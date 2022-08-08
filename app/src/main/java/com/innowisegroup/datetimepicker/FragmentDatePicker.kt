@@ -42,67 +42,73 @@ class FragmentDatePicker : Fragment() {
         year = view.findViewById(R.id.year)
         dateStub = view.findViewById(R.id.stub)
 
-        day?.minValue = DAY_MIN_VALUE
-        day?.maxValue = localDate?.lengthOfMonth()!!
-        day?.value = localDate?.getDay()!!
-        day?.setDividerColor(
-            day,
-            ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
-        )
-        day?.setFormatter { i: Int ->
-            String.format(
-                Locale.getDefault(),
-                "%02d",
-                i
+        day?.run {
+            minValue = DAY_MIN_VALUE
+            maxValue = localDate?.lengthOfMonth()!!
+            value = localDate?.getDay()!!
+            setDividerColor(
+                day,
+                ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
             )
-        }
-        day?.wrapSelectorWheel = wrapSelectionWheel
-        day?.setOnValueChangedListener { _, _, newVal: Int ->
-            refreshDateValue(
-                localDate?.withDayOfMonth(newVal)!!
-            )
-        }
-
-        month?.minValue = MONTH_MIN_VALUE
-        month?.maxValue = MONTH_MAX_VALUE
-        month?.value = localDate?.getMonth()!!
-        month?.setDividerColor(
-            month,
-            ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
-        )
-        month?.setFormatter { i: Int ->
-            String.format(
-                Locale.getDefault(),
-                "%02d",
-                i
-            )
-        }
-        month?.wrapSelectorWheel = wrapSelectionWheel
-        month?.setOnValueChangedListener { _, _, newVal: Int ->
-            refreshDateValue(
-                localDate?.withMonth(newVal)!!
-            )
+            setFormatter { i: Int ->
+                String.format(
+                    Locale.getDefault(),
+                    "%02d",
+                    i
+                )
+            }
+            wrapSelectorWheel = wrapSelectionWheel
+            setOnValueChangedListener { _, _, newVal: Int ->
+                refreshDateValue(
+                    localDate?.withDayOfMonth(newVal)!!
+                )
+            }
         }
 
-        year?.minValue = minLocalDate?.getMinYear()!!
-        year?.maxValue = maxLocalDate?.getMaxYear()!!
-        year?.value = localDate?.getYear()!!
-        year?.setDividerColor(
-            year,
-            ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
-        )
-        year?.setFormatter { i: Int ->
-            String.format(
-                Locale.getDefault(),
-                "%04d",
-                i
+        month?.run {
+            minValue = MONTH_MIN_VALUE
+            maxValue = MONTH_MAX_VALUE
+            value = localDate?.getMonth()!!
+            setDividerColor(
+                month,
+                ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
             )
+            setFormatter { i: Int ->
+                String.format(
+                    Locale.getDefault(),
+                    "%02d",
+                    i
+                )
+            }
+            wrapSelectorWheel = wrapSelectionWheel
+            setOnValueChangedListener { _, _, newVal: Int ->
+                refreshDateValue(
+                    localDate?.withMonth(newVal)!!
+                )
+            }
         }
-        year?.wrapSelectorWheel = wrapSelectionWheel
-        year?.setOnValueChangedListener { _, _, newVal: Int ->
-            refreshDateValue(
-                localDate?.withYear(newVal)!!
+
+        year?.run {
+            minValue = minLocalDate?.getMinYear()!!
+            maxValue = maxLocalDate?.getMaxYear()!!
+            value = localDate?.getYear()!!
+            setDividerColor(
+                year,
+                ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
             )
+            setFormatter { i: Int ->
+                String.format(
+                    Locale.getDefault(),
+                    "%04d",
+                    i
+                )
+            }
+            wrapSelectorWheel = wrapSelectionWheel
+            setOnValueChangedListener { _, _, newVal: Int ->
+                refreshDateValue(
+                    localDate?.withYear(newVal)!!
+                )
+            }
         }
         return view
     }

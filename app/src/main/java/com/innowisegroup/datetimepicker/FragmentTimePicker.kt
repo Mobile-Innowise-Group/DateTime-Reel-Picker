@@ -15,9 +15,8 @@ class FragmentTimePicker : Fragment() {
 
     var timeStub: TextView? = null
 
-    var mHours: CustomNumberPicker? = null
-
-    var mMinutes: CustomNumberPicker? = null
+    var hours: CustomNumberPicker? = null
+    var minutes: CustomNumberPicker? = null
 
     var localTime: LocalTime? = null
 
@@ -30,49 +29,53 @@ class FragmentTimePicker : Fragment() {
         localTime = requireArguments().getSerializable(LOCAL_TIME) as? LocalTime ?: LocalTime.now()
 
         timeStub = view.findViewById(R.id.time_stub)
-        mHours = view.findViewById(R.id.hours)
-        mMinutes = view.findViewById(R.id.minutes)
+        hours = view.findViewById(R.id.hours)
+        minutes = view.findViewById(R.id.minutes)
 
-        mHours?.minValue = MIN_HOUR
-        mHours?.maxValue = MAX_HOUR
-        mHours?.value = localTime?.getHour()!!
-        mHours?.wrapSelectorWheel = true
-        mHours?.setFormatter { i: Int ->
-            String.format(
-                Locale.getDefault(),
-                "%02d",
-                i
+        hours?.run {
+            minValue = MIN_HOUR
+            maxValue = MAX_HOUR
+            value = localTime?.getHour()!!
+            wrapSelectorWheel = true
+            setFormatter { i: Int ->
+                String.format(
+                    Locale.getDefault(),
+                    "%02d",
+                    i
+                )
+            }
+            setDividerColor(
+                hours,
+                ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
             )
-        }
-        mHours?.setDividerColor(
-            mHours,
-            ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
-        )
-        mHours?.setOnValueChangedListener { _, _, newVal: Int ->
-            refreshTimeValue(
-                localTime?.withHour(newVal)!!
-            )
+            setOnValueChangedListener { _, _, newVal: Int ->
+                refreshTimeValue(
+                    localTime?.withHour(newVal)!!
+                )
+            }
         }
 
-        mMinutes?.minValue = MIN_MINUTE
-        mMinutes?.maxValue = MAX_MINUTE
-        mMinutes?.value = localTime?.getMinute()!!
-        mMinutes?.setDividerColor(
-            mMinutes,
-            ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
-        )
-        mMinutes?.wrapSelectorWheel = true
-        mMinutes?.setFormatter { i: Int ->
-            String.format(
-                Locale.getDefault(),
-                "%02d",
-                i
+        minutes?.run {
+            minValue = MIN_MINUTE
+            maxValue = MAX_MINUTE
+            value = localTime?.getMinute()!!
+            setDividerColor(
+                minutes,
+                ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
             )
-        }
-        mMinutes?.setOnValueChangedListener { _, _, newVal: Int ->
-            refreshTimeValue(
-                localTime?.withMinute(newVal)!!
-            )
+            wrapSelectorWheel = true
+            setFormatter { i: Int ->
+                String.format(
+                    Locale.getDefault(),
+                    "%02d",
+                    i
+                )
+            }
+            setOnValueChangedListener { _, _, newVal: Int ->
+                refreshTimeValue(
+                    localTime?.withMinute(newVal)!!
+                )
+            }
         }
         return view
     }

@@ -52,7 +52,7 @@ class PickerDialog : DialogFragment() {
             maxLocalDateTime =
                 getSerializable(MAX_LOCAL_DATE_TIME) as? LocalDateTime ?: MAX_DEFAULT_DATE_TIME
             wrapSelectionWheel = getBoolean(WRAP_SELECTION_WHEEL)
-            pickerType = getSerializable(FRAGMENT_TO_CREATE) as PickerType
+            pickerType = getSerializable(PICKER_TYPE) as PickerType
         }
 
         isCancelable = false
@@ -236,8 +236,8 @@ class PickerDialog : DialogFragment() {
     companion object {
         private const val DIALOG_TAG = "date_time_picker_dialog"
 
-        internal const val UPDATE_TIME_TAB_TITLE_REQUEST_KEY = "updateTimeTabTitleKey"
-        internal const val UPDATE_DATE_TAB_TITLE_REQUEST_KEY = "updateDateTabTitleKey"
+        internal const val UPDATE_TIME_TAB_TITLE_REQUEST_KEY = "updateTimeTabTitleRequestKey"
+        internal const val UPDATE_DATE_TAB_TITLE_REQUEST_KEY = "updateDateTabTitleRequestKey"
 
         internal const val UPDATE_TIME_TAB_TITLE_KEY = "updateTimeTabTitleKey"
         internal const val UPDATE_DATE_TAB_TITLE_KEY = "updateDateTabTitleKey"
@@ -246,7 +246,7 @@ class PickerDialog : DialogFragment() {
         private const val MIN_LOCAL_DATE_TIME = "minLocalDateTime"
         private const val MAX_LOCAL_DATE_TIME = "maxLocalDateTime"
         private const val WRAP_SELECTION_WHEEL = "wrapSelectionWheel"
-        private const val FRAGMENT_TO_CREATE = "fragmentToCreate"
+        private const val PICKER_TYPE = "pickerType"
 
         private val MIN_DEFAULT_TIME = LocalTime.of(0, 0)
         private val MAX_DEFAULT_TIME = LocalTime.of(23, 59)
@@ -275,14 +275,14 @@ class PickerDialog : DialogFragment() {
         @JvmOverloads
         fun createDatePickerDialog(
             initialLocalDate: LocalDate = LocalDate.now(),
-            minLocalDateTime: LocalDate = MIN_DEFAULT_DATE,
-            maxLocalDateTime: LocalDate = MAX_DEFAULT_DATE,
+            minLocalDate: LocalDate = MIN_DEFAULT_DATE,
+            maxLocalDate: LocalDate = MAX_DEFAULT_DATE,
             wrapSelectionWheel: Boolean = false
         ): PickerDialog =
             createPickerDialog(
                 LocalDateTime.of(initialLocalDate),
-                LocalDateTime.of(minLocalDateTime),
-                LocalDateTime.of(maxLocalDateTime),
+                LocalDateTime.of(minLocalDate),
+                LocalDateTime.of(maxLocalDate),
                 PickerType.DATE_ONLY,
                 wrapSelectionWheel
             )
@@ -290,13 +290,13 @@ class PickerDialog : DialogFragment() {
         @JvmStatic
         @JvmOverloads
         fun createDateTimePickerDialog(
-            initialLocalDate: LocalDateTime = LocalDateTime.now(),
+            initialLocalDateTime: LocalDateTime = LocalDateTime.now(),
             minLocalDateTime: LocalDateTime = MIN_DEFAULT_DATE_TIME,
             maxLocalDateTime: LocalDateTime = MAX_DEFAULT_DATE_TIME,
             wrapSelectionWheel: Boolean = false
         ): PickerDialog =
             createPickerDialog(
-                initialLocalDate,
+                initialLocalDateTime,
                 minLocalDateTime,
                 maxLocalDateTime,
                 PickerType.DATE_TIME,
@@ -316,7 +316,7 @@ class PickerDialog : DialogFragment() {
                     putSerializable(INITIAL_LOCAL_DATE_TIME, initialLocalDateTime)
                     putSerializable(MIN_LOCAL_DATE_TIME, minLocalDateTime)
                     putSerializable(MAX_LOCAL_DATE_TIME, maxLocalDateTime)
-                    putSerializable(FRAGMENT_TO_CREATE, pickerType)
+                    putSerializable(PICKER_TYPE, pickerType)
                     putBoolean(WRAP_SELECTION_WHEEL, wrapSelectionWheel)
                 }
             }
