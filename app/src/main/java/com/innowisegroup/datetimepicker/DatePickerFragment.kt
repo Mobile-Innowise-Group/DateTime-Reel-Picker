@@ -30,11 +30,17 @@ class DatePickerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.item_date_picker_spinner, container, false)
+
         with(requireArguments()) {
             localDate = getSerializable(LOCAL_DATE) as? LocalDate ?: LocalDate.now()
             minLocalDate = getSerializable(MIN_LOCAL_DATE) as? LocalDate ?: MIN_DEFAULT_LOCAL_DATE
             maxLocalDate = getSerializable(MAX_LOCAL_DATE) as? LocalDate ?: MAX_DEFAULT_LOCAL_DATE
             wrapSelectionWheel = getBoolean(WRAP_SELECTION_BOOLEAN)
+        }
+
+        if (savedInstanceState != null) {
+            localDate = savedInstanceState.getSerializable(SELECTED_DATE) as? LocalDate
+            refreshDateValue(localDate!!)
         }
 
         day = view.findViewById(R.id.day)
@@ -114,15 +120,22 @@ class DatePickerFragment : Fragment() {
     }
 
     private fun refreshDateValue(newValue: LocalDate) {
-        if (day == null) {
-            return
-        }
+        day ?: return
         localDate = newValue
         day?.maxValue = localDate?.lengthOfMonth()!!
 
+        val bundle = Bundle()
+        bundle.putString(UPDATE_DATE_TAB_TITLE_KEY, newValue.formatDate())
+
         requireActivity().supportFragmentManager.setFragmentResult(
             UPDATE_DATE_TAB_TITLE_REQUEST_KEY,
-            Bundle().apply { putString(UPDATE_DATE_TAB_TITLE_KEY, newValue.formatDate()) })
+            bundle
+        )
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(SELECTED_DATE, localDate)
     }
 
     companion object {
@@ -138,5 +151,7 @@ class DatePickerFragment : Fragment() {
         internal const val MIN_LOCAL_DATE = "minLocalDate"
         internal const val MAX_LOCAL_DATE = "maxLocalDate"
         internal const val WRAP_SELECTION_BOOLEAN = "wrapSelectionWheel"
+
+        private const val SELECTED_DATE = "selectedDate"
     }
 }

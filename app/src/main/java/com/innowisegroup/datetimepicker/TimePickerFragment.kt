@@ -28,6 +28,11 @@ class TimePickerFragment : Fragment() {
         val view = inflater.inflate(R.layout.item_time_picker_spinner, container, false)
         localTime = requireArguments().getSerializable(LOCAL_TIME) as? LocalTime ?: LocalTime.now()
 
+        if (savedInstanceState != null) {
+            localTime = savedInstanceState.getSerializable(SELECTED_TIME) as? LocalTime
+            refreshTimeValue(localTime!!)
+        }
+
         timeStub = view.findViewById(R.id.time_stub)
         hours = view.findViewById(R.id.hours)
         minutes = view.findViewById(R.id.minutes)
@@ -82,9 +87,17 @@ class TimePickerFragment : Fragment() {
 
     private fun refreshTimeValue(newValue: LocalTime) {
         localTime = newValue
+        val bundle = Bundle()
+        bundle.putString(UPDATE_TIME_TAB_TITLE_KEY, newValue.formatTime())
         requireActivity().supportFragmentManager.setFragmentResult(
             UPDATE_TIME_TAB_TITLE_REQUEST_KEY,
-            Bundle().apply { putString(UPDATE_TIME_TAB_TITLE_KEY, newValue.formatTime()) })
+            bundle
+        )
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(SELECTED_TIME, localTime)
     }
 
     companion object {
@@ -94,5 +107,6 @@ class TimePickerFragment : Fragment() {
         private const val MAX_MINUTE = 59
 
         internal const val LOCAL_TIME = "localTime"
+        private const val SELECTED_TIME = "selectedTime"
     }
 }
