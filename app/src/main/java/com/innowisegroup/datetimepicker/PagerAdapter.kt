@@ -1,16 +1,21 @@
 package com.innowisegroup.datetimepicker
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 
-open class PagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class PagerAdapter(
+    fragmentActivity: FragmentActivity,
+    private val list: List<Fragment>
+) : FragmentStateAdapter(fragmentActivity) {
 
-    private val mFragmentList: MutableList<Fragment> = ArrayList()
+    override fun getItemCount(): Int = list.size
 
-    override fun getItem(position: Int): Fragment = mFragmentList[position]
+    override fun createFragment(position: Int): Fragment = list[position]
 
-    override fun getCount(): Int = mFragmentList.size
-
-    fun addFragment(fragment: Fragment) = mFragmentList.add(fragment)
+    override fun getItemViewType(position: Int): Int =
+        when (list[position]) {
+            is TimePickerFragment -> 0
+            else -> 1
+        }
 }

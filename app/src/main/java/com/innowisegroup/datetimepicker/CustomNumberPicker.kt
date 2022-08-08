@@ -13,8 +13,8 @@ import androidx.core.content.res.ResourcesCompat
 import java.lang.reflect.Field
 
 class CustomNumberPicker(
-        context: Context,
-        attrs: AttributeSet?
+    context: Context,
+    attrs: AttributeSet?
 ) : NumberPicker(context, attrs), OnValueChangeListener {
 
     override fun addView(child: View) {
