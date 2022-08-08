@@ -87,16 +87,17 @@ class TimePickerFragment : Fragment() {
 
     private fun refreshTimeValue(newValue: LocalTime) {
         localTime = newValue
+        val bundle = Bundle()
+        bundle.putString(UPDATE_TIME_TAB_TITLE_KEY, newValue.formatTime())
         requireActivity().supportFragmentManager.setFragmentResult(
             UPDATE_TIME_TAB_TITLE_REQUEST_KEY,
-            Bundle().apply { putString(UPDATE_TIME_TAB_TITLE_KEY, newValue.formatTime()) })
+            bundle
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.apply {
-            putSerializable(SELECTED_TIME, localTime)
-        }
+        outState.putSerializable(SELECTED_TIME, localTime)
     }
 
     companion object {

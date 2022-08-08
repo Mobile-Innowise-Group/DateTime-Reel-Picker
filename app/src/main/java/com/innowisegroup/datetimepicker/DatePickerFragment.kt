@@ -120,22 +120,22 @@ class DatePickerFragment : Fragment() {
     }
 
     private fun refreshDateValue(newValue: LocalDate) {
-        if (day == null) {
-            return
-        }
+        day ?: return
         localDate = newValue
         day?.maxValue = localDate?.lengthOfMonth()!!
 
+        val bundle = Bundle()
+        bundle.putString(UPDATE_DATE_TAB_TITLE_KEY, newValue.formatDate())
+
         requireActivity().supportFragmentManager.setFragmentResult(
             UPDATE_DATE_TAB_TITLE_REQUEST_KEY,
-            Bundle().apply { putString(UPDATE_DATE_TAB_TITLE_KEY, newValue.formatDate()) })
+            bundle
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.apply {
-            putSerializable(SELECTED_DATE, localDate)
-        }
+        outState.putSerializable(SELECTED_DATE, localDate)
     }
 
     companion object {
