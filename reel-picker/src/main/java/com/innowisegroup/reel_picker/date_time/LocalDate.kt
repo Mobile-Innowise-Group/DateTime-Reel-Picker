@@ -1,5 +1,9 @@
-package com.innowisegroup.datetimepicker
+package com.innowisegroup.reel_picker.date_time
 
+import com.innowisegroup.reel_picker.utils.Month
+import com.innowisegroup.reel_picker.utils.formattedMonth
+import com.innowisegroup.reel_picker.utils.isLeapYear
+import com.innowisegroup.reel_picker.utils.requireNonNull
 import java.io.Serializable
 import java.util.*
 
@@ -29,7 +33,7 @@ class LocalDate(val day: Int, val month: Int, val year: Int) : Serializable {
     @JvmName("getYearKotlin")
     fun getYear() = requireNonNull(year)
 
-    fun lengthOfMonth(): Int =
+    internal fun lengthOfMonth(): Int =
         when (month) {
             2 -> if (isLeapYear(getYear().toLong())) 29 else 28
             3, 5, 7, 8, 10 -> 31
@@ -37,16 +41,16 @@ class LocalDate(val day: Int, val month: Int, val year: Int) : Serializable {
             else -> 31
         }
 
-    fun withDayOfMonth(day: Int): LocalDate =
+    internal fun withDayOfMonth(day: Int): LocalDate =
         if (this.day == day) this else of(day, getMonth(), getYear())
 
-    fun withMonth(month: Int): LocalDate =
+    internal fun withMonth(month: Int): LocalDate =
         if (this.month == month) this else resolvePreviousValid(getDay(), month, getYear())
 
-    fun withYear(year: Int): LocalDate =
+    internal fun withYear(year: Int): LocalDate =
         if (this.year == year) this else resolvePreviousValid(getDay(), getMonth(), year)
 
-    fun plusYears(yearsToAdd: Int): LocalDate =
+    internal fun plusYears(yearsToAdd: Int): LocalDate =
         if (yearsToAdd == 0) {
             this
         } else {

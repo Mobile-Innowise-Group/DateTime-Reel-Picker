@@ -14,7 +14,7 @@
         android:focusableInTouchMode="true" />
 
     <!-- Hours -->
-    <com.innowisegroup.datetimepicker.CustomNumberPicker
+    <com.innowisegroup.reel_picker.CustomNumberPicker
         android:id="@+id/hours"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         android:textSize="30sp" />
 
     <!-- Minutes -->
-    <com.innowisegroup.datetimepicker.CustomNumberPicker
+    <com.innowisegroup.reel_picker.CustomNumberPicker
         android:id="@+id/minutes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

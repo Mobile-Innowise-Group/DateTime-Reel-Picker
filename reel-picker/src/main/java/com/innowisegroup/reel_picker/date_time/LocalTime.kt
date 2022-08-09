@@ -1,5 +1,6 @@
-package com.innowisegroup.datetimepicker
+package com.innowisegroup.reel_picker.date_time
 
+import com.innowisegroup.reel_picker.utils.requireNonNull
 import java.io.Serializable
 import java.util.*
 
@@ -11,10 +12,10 @@ class LocalTime(val hour: Int, val minute: Int) : Serializable {
     @JvmName("getMinuteKotlin")
     fun getMinute() = requireNonNull(minute)
 
-    fun withHour(hour: Int): LocalTime =
+    internal fun withHour(hour: Int): LocalTime =
         if (this.hour == hour) this else create(hour, getMinute())
 
-    fun withMinute(minute: Int): LocalTime =
+    internal fun withMinute(minute: Int): LocalTime =
         if (this.minute == minute) this else create(getHour(), minute)
 
     companion object {

@@ -1,9 +1,9 @@
-package com.innowisegroup.datetimepicker
+package com.innowisegroup.reel_picker
 
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 
-interface TabSelectedListener : OnTabSelectedListener {
+internal interface TabSelectedListener : OnTabSelectedListener {
 
     override fun onTabSelected(tab: TabLayout.Tab) {}
 

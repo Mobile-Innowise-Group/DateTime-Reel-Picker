@@ -1,6 +1,5 @@
-package com.innowisegroup.datetimepicker
+package com.innowisegroup.reel_picker
 
-import android.R
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
@@ -12,7 +11,7 @@ import android.widget.NumberPicker.OnValueChangeListener
 import androidx.core.content.res.ResourcesCompat
 import java.lang.reflect.Field
 
-class CustomNumberPicker(
+internal class CustomNumberPicker(
     context: Context,
     attrs: AttributeSet?
 ) : NumberPicker(context, attrs), OnValueChangeListener {

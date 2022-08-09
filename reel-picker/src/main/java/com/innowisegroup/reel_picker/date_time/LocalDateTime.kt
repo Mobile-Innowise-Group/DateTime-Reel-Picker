@@ -1,5 +1,7 @@
-package com.innowisegroup.datetimepicker
+package com.innowisegroup.reel_picker.date_time
 
+import com.innowisegroup.reel_picker.utils.Month
+import com.innowisegroup.reel_picker.utils.requireNonNull
 import java.io.Serializable
 
 class LocalDateTime(private val date: LocalDate, private val time: LocalTime) : Serializable {
@@ -27,7 +29,7 @@ class LocalDateTime(private val date: LocalDate, private val time: LocalTime) : 
             requireNonNull(year)
             requireNonNull(hour)
             requireNonNull(minute)
-            val date = LocalDate.of(day, month - 1, year)
+            val date = LocalDate.Companion.of(day, month - 1, year)
             val time = LocalTime.of(hour, minute)
             return LocalDateTime(date, time)
         }

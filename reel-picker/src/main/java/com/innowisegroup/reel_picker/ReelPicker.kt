@@ -1,4 +1,4 @@
-package com.innowisegroup.datetimepicker
+package com.innowisegroup.reel_picker
 
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -14,11 +14,19 @@ import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.innowisegroup.datetimepicker.DatePickerFragment.Companion.LOCAL_DATE
-import com.innowisegroup.datetimepicker.DatePickerFragment.Companion.MAX_LOCAL_DATE
-import com.innowisegroup.datetimepicker.DatePickerFragment.Companion.MIN_LOCAL_DATE
-import com.innowisegroup.datetimepicker.DatePickerFragment.Companion.WRAP_SELECTION_BOOLEAN
-import com.innowisegroup.datetimepicker.TimePickerFragment.Companion.LOCAL_TIME
+import com.innowisegroup.reel_picker.date_time.LocalDate
+import com.innowisegroup.reel_picker.date_time.LocalDateTime
+import com.innowisegroup.reel_picker.date_time.LocalTime
+import com.innowisegroup.reel_picker.picker_fragments.DatePickerFragment
+import com.innowisegroup.reel_picker.picker_fragments.DatePickerFragment.Companion.LOCAL_DATE
+import com.innowisegroup.reel_picker.picker_fragments.DatePickerFragment.Companion.MAX_LOCAL_DATE
+import com.innowisegroup.reel_picker.picker_fragments.DatePickerFragment.Companion.MIN_LOCAL_DATE
+import com.innowisegroup.reel_picker.picker_fragments.DatePickerFragment.Companion.WRAP_SELECTION_BOOLEAN
+import com.innowisegroup.reel_picker.picker_fragments.TimePickerFragment
+import com.innowisegroup.reel_picker.picker_fragments.TimePickerFragment.Companion.LOCAL_TIME
+import com.innowisegroup.reel_picker.utils.PickerType
+import com.innowisegroup.reel_picker.utils.formatDate
+import com.innowisegroup.reel_picker.utils.formatTime
 
 class ReelPicker : DialogFragment() {
     private var tabLayout: TabLayout? = null

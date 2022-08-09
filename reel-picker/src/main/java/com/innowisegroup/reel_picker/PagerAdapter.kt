@@ -1,10 +1,11 @@
-package com.innowisegroup.datetimepicker
+package com.innowisegroup.reel_picker
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.innowisegroup.reel_picker.picker_fragments.TimePickerFragment
 
-class PagerAdapter(
+internal class PagerAdapter(
     fragmentActivity: FragmentActivity,
     private val list: List<Fragment>
 ) : FragmentStateAdapter(fragmentActivity) {
