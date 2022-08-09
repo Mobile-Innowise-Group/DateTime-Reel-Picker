@@ -1,4 +1,7 @@
-package com.innowisegroup.datetimepicker
+package com.innowisegroup.reelpicker.extension
+
+import com.innowisegroup.reelpicker.datetime.LocalDate
+import com.innowisegroup.reelpicker.datetime.LocalTime
 
 internal fun LocalTime.formatTime(): String {
     val correctHour = if (hour < 10) "0$hour" else "$hour"

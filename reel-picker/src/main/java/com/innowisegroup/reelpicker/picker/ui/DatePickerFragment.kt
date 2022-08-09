@@ -1,4 +1,4 @@
-package com.innowisegroup.datetimepicker
+package com.innowisegroup.reelpicker.picker.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,15 +7,18 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import com.innowisegroup.datetimepicker.ReelPicker.Companion.UPDATE_DATE_TAB_TITLE_KEY
-import com.innowisegroup.datetimepicker.ReelPicker.Companion.UPDATE_DATE_TAB_TITLE_REQUEST_KEY
+import com.innowisegroup.reelpicker.R
+import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.UPDATE_DATE_TAB_TITLE_KEY
+import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.UPDATE_DATE_TAB_TITLE_REQUEST_KEY
+import com.innowisegroup.reelpicker.datetime.LocalDate
+import com.innowisegroup.reelpicker.extension.formatDate
 import java.util.*
 
-class DatePickerFragment : Fragment() {
+internal class DatePickerFragment : Fragment() {
 
-    var day: CustomNumberPicker? = null
-    var month: CustomNumberPicker? = null
-    var year: CustomNumberPicker? = null
+    private var day: CustomNumberPicker? = null
+    private var month: CustomNumberPicker? = null
+    private var year: CustomNumberPicker? = null
 
     var dateStub: TextView? = null
 
@@ -29,7 +32,7 @@ class DatePickerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.item_date_picker_spinner, container, false)
+        val view = inflater.inflate(R.layout.item_date_picker, container, false)
 
         with(requireArguments()) {
             localDate = getSerializable(LOCAL_DATE) as? LocalDate ?: LocalDate.now()
