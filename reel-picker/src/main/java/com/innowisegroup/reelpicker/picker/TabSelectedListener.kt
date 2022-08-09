@@ -1,4 +1,4 @@
-package com.innowisegroup.reel_picker
+package com.innowisegroup.reelpicker.picker
 
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener

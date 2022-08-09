@@ -1,4 +1,4 @@
-package com.innowisegroup.reel_picker.utils
+package com.innowisegroup.reelpicker.extension
 
 internal fun <T> requireNonNull(value: T?): T =
     value ?: throw NullPointerException("Value must not be null")

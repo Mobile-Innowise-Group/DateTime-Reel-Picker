@@ -1,9 +1,8 @@
-package com.innowisegroup.reel_picker.date_time
+package com.innowisegroup.reelpicker.datetime
 
-import com.innowisegroup.reel_picker.utils.Month
-import com.innowisegroup.reel_picker.utils.formattedMonth
-import com.innowisegroup.reel_picker.utils.isLeapYear
-import com.innowisegroup.reel_picker.utils.requireNonNull
+import com.innowisegroup.reelpicker.extension.formattedMonth
+import com.innowisegroup.reelpicker.extension.isLeapYear
+import com.innowisegroup.reelpicker.extension.requireNonNull
 import java.io.Serializable
 import java.util.*
 

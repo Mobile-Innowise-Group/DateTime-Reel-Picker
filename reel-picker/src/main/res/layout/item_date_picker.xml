@@ -14,7 +14,7 @@
         android:focusableInTouchMode="true" />
 
     <!-- Day -->
-    <com.innowisegroup.reel_picker.CustomNumberPicker
+    <com.innowisegroup.reelpicker.picker.ui.CustomNumberPicker
         android:id="@+id/day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
         android:focusableInTouchMode="true" />
 
     <!-- Month -->
-    <com.innowisegroup.reel_picker.CustomNumberPicker
+    <com.innowisegroup.reelpicker.picker.ui.CustomNumberPicker
         android:id="@+id/month"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
         android:visibility="visible" />
 
     <!-- Year -->
-    <com.innowisegroup.reel_picker.CustomNumberPicker
+    <com.innowisegroup.reelpicker.picker.ui.CustomNumberPicker
         android:id="@+id/year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

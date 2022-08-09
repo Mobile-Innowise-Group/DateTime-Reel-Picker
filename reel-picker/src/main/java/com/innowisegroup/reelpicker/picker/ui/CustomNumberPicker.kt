@@ -1,4 +1,4 @@
-package com.innowisegroup.reel_picker
+package com.innowisegroup.reelpicker.picker.ui
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.NumberPicker
 import android.widget.NumberPicker.OnValueChangeListener
 import androidx.core.content.res.ResourcesCompat
+import com.innowisegroup.reelpicker.R
 import java.lang.reflect.Field
 
 internal class CustomNumberPicker(

@@ -1,4 +1,4 @@
-package com.innowisegroup.reel_picker
+package com.innowisegroup.reelpicker.picker
 
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -14,19 +14,20 @@ import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.innowisegroup.reel_picker.date_time.LocalDate
-import com.innowisegroup.reel_picker.date_time.LocalDateTime
-import com.innowisegroup.reel_picker.date_time.LocalTime
-import com.innowisegroup.reel_picker.picker_fragments.DatePickerFragment
-import com.innowisegroup.reel_picker.picker_fragments.DatePickerFragment.Companion.LOCAL_DATE
-import com.innowisegroup.reel_picker.picker_fragments.DatePickerFragment.Companion.MAX_LOCAL_DATE
-import com.innowisegroup.reel_picker.picker_fragments.DatePickerFragment.Companion.MIN_LOCAL_DATE
-import com.innowisegroup.reel_picker.picker_fragments.DatePickerFragment.Companion.WRAP_SELECTION_BOOLEAN
-import com.innowisegroup.reel_picker.picker_fragments.TimePickerFragment
-import com.innowisegroup.reel_picker.picker_fragments.TimePickerFragment.Companion.LOCAL_TIME
-import com.innowisegroup.reel_picker.utils.PickerType
-import com.innowisegroup.reel_picker.utils.formatDate
-import com.innowisegroup.reel_picker.utils.formatTime
+import com.innowisegroup.reelpicker.R
+import com.innowisegroup.reelpicker.datetime.LocalDate
+import com.innowisegroup.reelpicker.datetime.LocalDateTime
+import com.innowisegroup.reelpicker.datetime.LocalTime
+import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment
+import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.LOCAL_DATE
+import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.MAX_LOCAL_DATE
+import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.MIN_LOCAL_DATE
+import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.WRAP_SELECTION_BOOLEAN
+import com.innowisegroup.reelpicker.picker.ui.PagerAdapter
+import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment
+import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment.Companion.LOCAL_TIME
+import com.innowisegroup.reelpicker.extension.formatDate
+import com.innowisegroup.reelpicker.extension.formatTime
 
 class ReelPicker : DialogFragment() {
     private var tabLayout: TabLayout? = null
@@ -51,7 +52,7 @@ class ReelPicker : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_date_time_picker, container, false)
+        val view = inflater.inflate(R.layout.fragment_reel_picker, container, false)
         with(requireArguments()) {
             initialLocalDateTime =
                 getSerializable(INITIAL_LOCAL_DATE_TIME) as? LocalDateTime ?: LocalDateTime.now()
