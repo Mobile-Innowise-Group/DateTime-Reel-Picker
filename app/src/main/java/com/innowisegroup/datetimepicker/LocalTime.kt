@@ -3,7 +3,24 @@ package com.innowisegroup.datetimepicker
 import java.io.Serializable
 import java.util.*
 
-class LocalTime(val hour: Int, val minute: Int) : Serializable {
+class LocalTime(hour: Int, minute: Int) : Serializable {
+
+    var hour = hour
+        set(value) {
+            validateHour(hour)
+            field = value
+        }
+
+    var minute = minute
+        set(value) {
+            validateMinute(minute)
+            field = value
+        }
+
+    init {
+        this.hour = hour
+        this.minute = minute
+    }
 
     @JvmName("getHourKotlin")
     fun getHour() = requireNonNull(hour)
@@ -38,15 +55,31 @@ class LocalTime(val hour: Int, val minute: Int) : Serializable {
         }
 
         private fun create(hour: Int, minute: Int): LocalTime {
-            timeChecker(hour, minute)
+            validateHour(hour)
+            validateMinute(minute)
             return LocalTime(hour, minute)
         }
 
-        private fun timeChecker(hour: Int, minute: Int) {
-            if (hour > MAX_HOUR || hour < MIN_HOUR)
-                throw Exception("Incorrect hour")
-            if (minute < MIN_MINUTE || minute > MAX_MINUTE)
-                throw Exception("Incorrect minutes")
+        internal fun isTimeWithinMinMaxValue(
+            time: LocalTime,
+            minTime: LocalTime,
+            maxTime: LocalTime
+        ) = isWithinMinMaxRange(
+            time.hour,
+            minTime.hour,
+            maxTime.hour
+        ) && isWithinMinMaxRange(
+            time.minute,
+            minTime.minute,
+            maxTime.minute
+        )
+
+        private fun validateHour(hour: Int) {
+            if (hour > MAX_HOUR || hour < MIN_HOUR) throw IllegalArgumentException("Invalid hours value")
+        }
+
+        private fun validateMinute(minute: Int) {
+            if (minute < MIN_MINUTE || minute > MAX_MINUTE) throw IllegalArgumentException("Invalid minutes value")
         }
     }
 }

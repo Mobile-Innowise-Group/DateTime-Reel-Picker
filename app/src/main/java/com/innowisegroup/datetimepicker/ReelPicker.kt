@@ -18,7 +18,10 @@ import com.innowisegroup.datetimepicker.DatePickerFragment.Companion.LOCAL_DATE
 import com.innowisegroup.datetimepicker.DatePickerFragment.Companion.MAX_LOCAL_DATE
 import com.innowisegroup.datetimepicker.DatePickerFragment.Companion.MIN_LOCAL_DATE
 import com.innowisegroup.datetimepicker.DatePickerFragment.Companion.WRAP_SELECTION_BOOLEAN
+import com.innowisegroup.datetimepicker.LocalDateTime.Companion.validateInputDateTime
 import com.innowisegroup.datetimepicker.TimePickerFragment.Companion.LOCAL_TIME
+import com.innowisegroup.datetimepicker.TimePickerFragment.Companion.MAX_TIME
+import com.innowisegroup.datetimepicker.TimePickerFragment.Companion.MIN_TIME
 
 class ReelPicker : DialogFragment() {
     private var tabLayout: TabLayout? = null
@@ -97,6 +100,8 @@ class ReelPicker : DialogFragment() {
                 TimePickerFragment().apply {
                     arguments = Bundle().apply {
                         putSerializable(LOCAL_TIME, initialLocalDateTime?.toLocalTime())
+                        putSerializable(MIN_TIME, minLocalDateTime?.toLocalTime())
+                        putSerializable(MAX_TIME, maxLocalDateTime?.toLocalTime())
                     }
                 }
             )
@@ -124,6 +129,8 @@ class ReelPicker : DialogFragment() {
                     TimePickerFragment().apply {
                         arguments = Bundle().apply {
                             putSerializable(LOCAL_TIME, initialLocalDateTime?.toLocalTime())
+                            putSerializable(MIN_TIME, minLocalDateTime?.toLocalTime())
+                            putSerializable(MAX_TIME, maxLocalDateTime?.toLocalTime())
                         }
                     },
                     DatePickerFragment().apply {
@@ -152,8 +159,8 @@ class ReelPicker : DialogFragment() {
         (viewPager as ViewPager2).isUserInputEnabled = false
         TabLayoutMediator(tabLayout as TabLayout, viewPager as ViewPager2) { tab, position ->
             tab.text = when (adapter.getItemViewType(position)) {
-                0 -> LocalTime.now().formatTime()
-                else -> LocalDate.now().formatDate()
+                0 -> initialLocalDateTime?.toLocalTime()?.formatTime()
+                else -> initialLocalDateTime?.toLocalDate()?.formatDate()
             }
         }.attach()
 
@@ -310,8 +317,9 @@ class ReelPicker : DialogFragment() {
             maxLocalDateTime: LocalDateTime,
             pickerType: PickerType,
             wrapSelectionWheel: Boolean
-        ): ReelPicker =
-            ReelPicker().apply {
+        ): ReelPicker {
+            validateInputDateTime(initialLocalDateTime, minLocalDateTime, maxLocalDateTime)
+            return ReelPicker().apply {
                 arguments = Bundle().apply {
                     putSerializable(INITIAL_LOCAL_DATE_TIME, initialLocalDateTime)
                     putSerializable(MIN_LOCAL_DATE_TIME, minLocalDateTime)
@@ -320,5 +328,6 @@ class ReelPicker : DialogFragment() {
                     putBoolean(WRAP_SELECTION_WHEEL, wrapSelectionWheel)
                 }
             }
+        }
     }
 }

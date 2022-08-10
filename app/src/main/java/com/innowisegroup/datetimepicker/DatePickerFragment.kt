@@ -49,8 +49,8 @@ class DatePickerFragment : Fragment() {
         dateStub = view.findViewById(R.id.stub)
 
         day?.run {
-            minValue = DAY_MIN_VALUE
-            maxValue = localDate?.lengthOfMonth()!!
+            minValue = if (minLocalDate?.year == localDate?.year) minLocalDate?.day!! else DAY_MIN_VALUE
+            maxValue = if (maxLocalDate?.year == localDate?.year) maxLocalDate?.day!! else localDate?.lengthOfMonth()!!
             value = localDate?.getDay()!!
             setDividerColor(
                 day,
@@ -72,8 +72,8 @@ class DatePickerFragment : Fragment() {
         }
 
         month?.run {
-            minValue = MONTH_MIN_VALUE
-            maxValue = MONTH_MAX_VALUE
+            minValue = if (minLocalDate?.year == localDate?.year) minLocalDate?.month!! else MONTH_MIN_VALUE
+            maxValue = if (maxLocalDate?.year == localDate?.year) maxLocalDate?.month!! else MONTH_MAX_VALUE
             value = localDate?.getMonth()!!
             setDividerColor(
                 month,
@@ -95,8 +95,8 @@ class DatePickerFragment : Fragment() {
         }
 
         year?.run {
-            minValue = minLocalDate?.getMinYear()!!
-            maxValue = maxLocalDate?.getMaxYear()!!
+            minValue = minLocalDate?.year!!
+            maxValue = maxLocalDate?.year!!
             value = localDate?.getYear()!!
             setDividerColor(
                 year,
@@ -122,7 +122,11 @@ class DatePickerFragment : Fragment() {
     private fun refreshDateValue(newValue: LocalDate) {
         day ?: return
         localDate = newValue
-        day?.maxValue = localDate?.lengthOfMonth()!!
+        day?.minValue = if (minLocalDate?.year == localDate?.year) minLocalDate?.day!! else DAY_MIN_VALUE
+        day?.maxValue = if (maxLocalDate?.year == localDate?.year) maxLocalDate?.day!! else localDate?.lengthOfMonth()!!
+
+        month?.minValue = if (minLocalDate?.year == localDate?.year) minLocalDate?.month!! else MONTH_MIN_VALUE
+        month?.maxValue = if (maxLocalDate?.year == localDate?.year) maxLocalDate?.month!! else MONTH_MAX_VALUE
 
         val bundle = Bundle()
         bundle.putString(UPDATE_DATE_TAB_TITLE_KEY, newValue.formatDate())
@@ -142,7 +146,7 @@ class DatePickerFragment : Fragment() {
         private const val DAY_MIN_VALUE = 1
         private const val MONTH_MIN_VALUE = 1
         private const val MONTH_MAX_VALUE = 12
-        private const val MAX_YEARS_INCREASE = 200
+        private const val MAX_YEARS_INCREASE = 20
 
         private val MIN_DEFAULT_LOCAL_DATE = LocalDate.now()
         private val MAX_DEFAULT_LOCAL_DATE = LocalDate.now().plusYears(MAX_YEARS_INCREASE)

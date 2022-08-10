@@ -19,6 +19,8 @@ class TimePickerFragment : Fragment() {
     var minutes: CustomNumberPicker? = null
 
     var localTime: LocalTime? = null
+    private var minTime: LocalTime? = null
+    private var maxTime: LocalTime? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,7 +28,9 @@ class TimePickerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.item_time_picker_spinner, container, false)
-        localTime = requireArguments().getSerializable(LOCAL_TIME) as? LocalTime ?: LocalTime.now()
+        localTime = requireArguments().getSerializable(LOCAL_TIME) as? LocalTime
+        minTime = requireArguments().getSerializable(MIN_TIME) as? LocalTime
+        maxTime = requireArguments().getSerializable(MAX_TIME) as? LocalTime
 
         if (savedInstanceState != null) {
             localTime = savedInstanceState.getSerializable(SELECTED_TIME) as? LocalTime
@@ -38,8 +42,8 @@ class TimePickerFragment : Fragment() {
         minutes = view.findViewById(R.id.minutes)
 
         hours?.run {
-            minValue = MIN_HOUR
-            maxValue = MAX_HOUR
+            minValue = minTime?.hour ?: MIN_HOUR
+            maxValue = maxTime?.hour ?: MAX_HOUR
             value = localTime?.getHour()!!
             wrapSelectorWheel = true
             setFormatter { i: Int ->
@@ -61,8 +65,8 @@ class TimePickerFragment : Fragment() {
         }
 
         minutes?.run {
-            minValue = MIN_MINUTE
-            maxValue = MAX_MINUTE
+            minValue = minTime?.minute ?: MIN_MINUTE
+            maxValue = maxTime?.minute ?: MAX_MINUTE
             value = localTime?.getMinute()!!
             setDividerColor(
                 minutes,
@@ -107,6 +111,8 @@ class TimePickerFragment : Fragment() {
         private const val MAX_MINUTE = 59
 
         internal const val LOCAL_TIME = "localTime"
+        internal const val MIN_TIME = "minTime"
+        internal const val MAX_TIME = "maxTime"
         private const val SELECTED_TIME = "selectedTime"
     }
 }

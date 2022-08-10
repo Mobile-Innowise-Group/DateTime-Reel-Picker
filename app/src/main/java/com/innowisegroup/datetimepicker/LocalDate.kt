@@ -3,7 +3,31 @@ package com.innowisegroup.datetimepicker
 import java.io.Serializable
 import java.util.*
 
-class LocalDate(val day: Int, val month: Int, val year: Int) : Serializable {
+class LocalDate(day: Int, month: Int, year: Int) : Serializable {
+
+    var day = day
+        set(value) {
+            validateDay(day)
+            field = value
+        }
+
+    var month = month
+        set(value) {
+            validateMonth(month)
+            field = value
+        }
+
+    var year = year
+        set(value) {
+            validateYear(year)
+            field = value
+        }
+
+    init {
+        this.day = day
+        this.month = month
+        this.year = year
+    }
 
     private fun resolvePreviousValid(day: Int, month: Int, year: Int): LocalDate {
         var day2 = day
@@ -16,7 +40,7 @@ class LocalDate(val day: Int, val month: Int, val year: Int) : Serializable {
         return of(day2, month, year)
     }
 
-    fun getMinYear() = DEFAULT_MIN_YEAR
+    fun getMinYear() = MIN_YEAR
 
     fun getMaxYear() = requireNonNull(year)
 
@@ -57,14 +81,13 @@ class LocalDate(val day: Int, val month: Int, val year: Int) : Serializable {
     companion object {
         private val calendar: Calendar = Calendar.getInstance()
         private val arrayMonth: Array<Month> = Month.values()
-        private const val DEFAULT_MIN_YEAR = 1900
 
-        fun of(day: Int, month: Int, year: Int): LocalDate {
-            requireNonNull(day)
-            requireNonNull(month)
-            requireNonNull(year)
-            return create(day, arrayMonth[month - 1], year)
-        }
+        private const val MIN_DAY = 1
+        private const val MAX_DAY = 31
+        private const val MIN_MONTH = 1
+        private const val MAX_MONTH = 12
+        private const val MIN_YEAR = 1900
+        private const val MAX_YEAR = 2100
 
         fun now(): LocalDate {
             val getDay = calendar.get(Calendar.DAY_OF_MONTH)
@@ -73,22 +96,66 @@ class LocalDate(val day: Int, val month: Int, val year: Int) : Serializable {
             return LocalDate(getDay, getMonth, getYear)
         }
 
+        fun of(day: Int, month: Int, year: Int): LocalDate {
+            requireNonNull(day)
+            requireNonNull(month)
+            requireNonNull(year)
+            validateDay(day)
+            validateMonth(month)
+            validateYear(year)
+            return create(day, arrayMonth[month - 1], year)
+        }
+
         fun of(day: Int, month: Month, year: Int): LocalDate {
             requireNonNull(day)
             requireNonNull(month)
             requireNonNull(year)
+            validateDay(day)
+            validateYear(year)
             return create(day, month, year)
         }
 
         private fun create(day: Int, month: Month, year: Int): LocalDate =
             if (day > 28 && day > month.length(isLeapYear(year.toLong()))) {
                 if (day == 29) {
-                    throw Exception("Invalid date 'February 29' as '$year' is not a leap year")
+                    throw IllegalArgumentException("Invalid date 'February 29' as '$year' is not a leap year")
                 } else {
-                    throw Exception("Invalid date '" + month.name + " " + day + "'")
+                    throw IllegalArgumentException("Invalid date '" + month.name + " " + day + "'")
                 }
             } else {
                 LocalDate(day, month.of(), year)
             }
+
+        internal fun isDateWithinMinMaxValue(
+            date: LocalDate,
+            minDate: LocalDate,
+            maxDate: LocalDate
+        ): Boolean {
+            return if (date.year == minDate.year && date.year == maxDate.year) {
+                isWithinMinMaxRange(
+                    date.month,
+                    minDate.month,
+                    maxDate.month
+                ) && isWithinMinMaxRange(
+                    date.day,
+                    minDate.day,
+                    maxDate.day
+                )
+            } else {
+                isWithinMinMaxRange(date.year, minDate.year, maxDate.year)
+            }
+        }
+
+        private fun validateDay(day: Int) {
+            if (day < MIN_DAY || day > MAX_DAY) throw IllegalArgumentException("Invalid days value")
+        }
+
+        private fun validateMonth(month: Int) {
+            if (month < MIN_MONTH || month > MAX_MONTH) throw IllegalArgumentException("Invalid months value")
+        }
+
+        private fun validateYear(year: Int) {
+            if (year < MIN_YEAR || year > MAX_YEAR) throw IllegalArgumentException("Invalid years value")
+        }
     }
 }

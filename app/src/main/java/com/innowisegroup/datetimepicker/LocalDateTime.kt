@@ -1,5 +1,7 @@
 package com.innowisegroup.datetimepicker
 
+import com.innowisegroup.datetimepicker.LocalDate.Companion.isDateWithinMinMaxValue
+import com.innowisegroup.datetimepicker.LocalTime.Companion.isTimeWithinMinMaxValue
 import java.io.Serializable
 
 class LocalDateTime(private val date: LocalDate, private val time: LocalTime) : Serializable {
@@ -46,6 +48,29 @@ class LocalDateTime(private val date: LocalDate, private val time: LocalTime) : 
         fun of(time: LocalTime): LocalDateTime {
             requireNonNull(time)
             return LocalDateTime(LocalDate.now(), time)
+        }
+
+        internal fun validateInputDateTime(
+            initialLocalTime: LocalDateTime,
+            minLocalDateTime: LocalDateTime,
+            maxLocalDateTime: LocalDateTime,
+        ) {
+            if (!isTimeWithinMinMaxValue(
+                    initialLocalTime.toLocalTime(),
+                    minLocalDateTime.toLocalTime(),
+                    maxLocalDateTime.toLocalTime()
+                )
+            ) throw IllegalArgumentException(
+                "Initial time value must be within max and min bounds"
+            )
+            if (!isDateWithinMinMaxValue(
+                    initialLocalTime.toLocalDate(),
+                    minLocalDateTime.toLocalDate(),
+                    maxLocalDateTime.toLocalDate()
+                )
+            ) throw IllegalArgumentException(
+                "Initial date value must be within max and min bounds"
+            )
         }
     }
 }
