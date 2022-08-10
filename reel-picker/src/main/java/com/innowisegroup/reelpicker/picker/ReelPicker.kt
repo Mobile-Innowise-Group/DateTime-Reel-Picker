@@ -264,55 +264,69 @@ class ReelPicker : DialogFragment() {
         private val MIN_DEFAULT_DATE_TIME = LocalDateTime(MIN_DEFAULT_DATE, MIN_DEFAULT_TIME)
         private val MAX_DEFAULT_DATE_TIME = LocalDateTime(MAX_DEFAULT_DATE, MAX_DEFAULT_TIME)
 
+        //need to kotlin-java interop
         @JvmStatic
         @JvmOverloads
         fun createTimeDialog(
-            initialLocalTime: LocalTime = LocalTime.now(),
-            minLocalTime: LocalTime = MIN_DEFAULT_TIME,
-            maxLocalTime: LocalTime = MAX_DEFAULT_TIME,
+            initialLocalTime: LocalTime? = LocalTime.now(),
+            minLocalTime: LocalTime? = MIN_DEFAULT_TIME,
+            maxLocalTime: LocalTime? = MAX_DEFAULT_TIME,
             wrapSelectionWheel: Boolean = false
-        ): ReelPicker =
-            createPickerDialog(
+        ): ReelPicker {
+            requireNotNull(initialLocalTime) { "initialLocalTime must not be null" }
+            requireNotNull(minLocalTime) { "minLocalTime must not be null" }
+            requireNotNull(maxLocalTime) { "maxLocalTime must not be null" }
+            return (createPickerDialog(
                 LocalDateTime.of(initialLocalTime),
                 LocalDateTime.of(minLocalTime),
                 LocalDateTime.of(maxLocalTime),
                 PickerType.TIME_ONLY,
                 wrapSelectionWheel
-            )
+            ))
+        }
 
+        //need to kotlin-java interop
         @JvmStatic
         @JvmOverloads
         fun createDateDialog(
-            initialLocalDate: LocalDate = LocalDate.now(),
-            minLocalDate: LocalDate = MIN_DEFAULT_DATE,
-            maxLocalDate: LocalDate = MAX_DEFAULT_DATE,
+            initialLocalDate: LocalDate? = LocalDate.now(),
+            minLocalDate: LocalDate? = MIN_DEFAULT_DATE,
+            maxLocalDate: LocalDate? = MAX_DEFAULT_DATE,
             wrapSelectionWheel: Boolean = false
-        ): ReelPicker =
-            createPickerDialog(
+        ): ReelPicker {
+            requireNotNull(initialLocalDate) { "initialLocalDate must not be null" }
+            requireNotNull(minLocalDate) { "minLocalDate must not be null" }
+            requireNotNull(maxLocalDate) { "maxLocalDate must not be null" }
+            return createPickerDialog(
                 LocalDateTime.of(initialLocalDate),
                 LocalDateTime.of(minLocalDate),
                 LocalDateTime.of(maxLocalDate),
                 PickerType.DATE_ONLY,
                 wrapSelectionWheel
             )
+        }
 
+        //need to kotlin-java interop
         @JvmStatic
         @JvmOverloads
         fun createDateTimeDialog(
-            initialLocalDateTime: LocalDateTime = LocalDateTime.now(),
-            minLocalDateTime: LocalDateTime = MIN_DEFAULT_DATE_TIME,
-            maxLocalDateTime: LocalDateTime = MAX_DEFAULT_DATE_TIME,
+            initialLocalDateTime: LocalDateTime? = LocalDateTime.now(),
+            minLocalDateTime: LocalDateTime? = MIN_DEFAULT_DATE_TIME,
+            maxLocalDateTime: LocalDateTime? = MAX_DEFAULT_DATE_TIME,
             wrapSelectionWheel: Boolean = false
-        ): ReelPicker =
-            createPickerDialog(
+        ): ReelPicker {
+            requireNotNull(initialLocalDateTime) { "initialLocalDateTime must not be null" }
+            requireNotNull(minLocalDateTime) { "minLocalDateTime must not be null" }
+            requireNotNull(maxLocalDateTime) { "maxLocalDateTime must not be null" }
+            return createPickerDialog(
                 initialLocalDateTime,
                 minLocalDateTime,
                 maxLocalDateTime,
                 PickerType.DATE_TIME,
                 wrapSelectionWheel
             )
+        }
 
-        @JvmStatic
         private fun createPickerDialog(
             initialLocalDateTime: LocalDateTime,
             minLocalDateTime: LocalDateTime,
