@@ -1,7 +1,8 @@
-package com.innowisegroup.datetimepicker
+package com.innowisegroup.reelpicker.datetime
 
 import com.innowisegroup.datetimepicker.LocalDate.Companion.isDateWithinMinMaxValue
 import com.innowisegroup.datetimepicker.LocalTime.Companion.isTimeWithinMinMaxValue
+import com.innowisegroup.reelpicker.extension.requireNonNull
 import java.io.Serializable
 
 class LocalDateTime(private val date: LocalDate, private val time: LocalTime) : Serializable {

@@ -1,0 +1,28 @@
+<resources>
+
+    <style name="ButtonStyle" parent="android:Widget.Button">
+        <item name="cornerRadius">20dp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/button_font_size</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:paddingStart">@dimen/default_padding</item>
+        <item name="android:paddingEnd">@dimen/default_padding</item>
+        <item name="android:background">@drawable/button_state_selector</item>
+    </style>
+
+    <style name="TextViewStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/default_margin_top</item>
+    </style>
+
+    <style name="DrawerIcon" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@android:color/white</item>
+    </style>
+
+    <style name="CustomTabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">@dimen/edit_text_font_size</item>
+
+    </style>
+</resources>

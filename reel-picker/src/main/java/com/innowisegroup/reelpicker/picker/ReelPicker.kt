@@ -1,4 +1,4 @@
-package com.innowisegroup.datetimepicker
+package com.innowisegroup.reelpicker.picker
 
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -22,6 +22,20 @@ import com.innowisegroup.datetimepicker.LocalDateTime.Companion.validateInputDat
 import com.innowisegroup.datetimepicker.TimePickerFragment.Companion.LOCAL_TIME
 import com.innowisegroup.datetimepicker.TimePickerFragment.Companion.MAX_TIME
 import com.innowisegroup.datetimepicker.TimePickerFragment.Companion.MIN_TIME
+import com.innowisegroup.reelpicker.R
+import com.innowisegroup.reelpicker.datetime.LocalDate
+import com.innowisegroup.reelpicker.datetime.LocalDateTime
+import com.innowisegroup.reelpicker.datetime.LocalTime
+import com.innowisegroup.reelpicker.extension.formatDate
+import com.innowisegroup.reelpicker.extension.formatTime
+import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment
+import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.LOCAL_DATE
+import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.MAX_LOCAL_DATE
+import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.MIN_LOCAL_DATE
+import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.WRAP_SELECTION_BOOLEAN
+import com.innowisegroup.reelpicker.picker.ui.PagerAdapter
+import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment
+import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment.Companion.LOCAL_TIME
 
 class ReelPicker : DialogFragment() {
     private var tabLayout: TabLayout? = null
@@ -46,7 +60,7 @@ class ReelPicker : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_date_time_picker, container, false)
+        val view = inflater.inflate(R.layout.fragment_reel_picker, container, false)
         with(requireArguments()) {
             initialLocalDateTime =
                 getSerializable(INITIAL_LOCAL_DATE_TIME) as? LocalDateTime ?: LocalDateTime.now()
@@ -237,7 +251,7 @@ class ReelPicker : DialogFragment() {
     }
 
     fun showDialog(fragmentManager: FragmentManager) {
-        this.show(fragmentManager, DIALOG_TAG)
+        if (!isAdded) show(fragmentManager, DIALOG_TAG)
     }
 
     companion object {
