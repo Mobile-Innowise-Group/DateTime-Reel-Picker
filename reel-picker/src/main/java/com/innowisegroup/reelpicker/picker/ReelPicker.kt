@@ -239,6 +239,7 @@ class ReelPicker : DialogFragment() {
     }
 
     fun showDialog(fragmentManager: FragmentManager) {
+        if(this.isAdded) return
         this.show(fragmentManager, DIALOG_TAG)
     }
 
