@@ -12,10 +12,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val reelPicker = ReelPicker.createDateTimeDialog()
+        val javaWrapper = JavaWrapper()
 
-        val btn = findViewById<Button>(R.id.btn)
-        btn.setOnClickListener {
+        val kotlinButton = findViewById<Button>(R.id.kotlinButton)
+        val javaButton = findViewById<Button>(R.id.javaButton)
+
+        kotlinButton.setOnClickListener {
             reelPicker.showDialog(supportFragmentManager)
+        }
+        javaButton.setOnClickListener {
+            javaWrapper.showDialog(supportFragmentManager)
         }
     }
 }
