@@ -2,6 +2,7 @@ package com.innowisegroup.reelpicker.datetime
 
 import com.innowisegroup.reelpicker.extension.formattedMonth
 import com.innowisegroup.reelpicker.extension.isLeapYear
+import com.innowisegroup.reelpicker.extension.isWithinMinMaxRange
 import com.innowisegroup.reelpicker.extension.requireNonNull
 import java.io.Serializable
 import java.util.*
@@ -80,6 +81,11 @@ class LocalDate(day: Int, month: Int, year: Int) : Serializable {
             val newYear = getYear() + yearsToAdd
             resolvePreviousValid(getDay(), getMonth(), newYear)
         }
+
+    override fun equals(other: Any?): Boolean =
+        this.year == (other as LocalDate).year && this.month == other.month && this.day == other.day
+
+    override fun hashCode(): Int = 31 * day + month + year
 
     companion object {
         private val calendar: Calendar = Calendar.getInstance()

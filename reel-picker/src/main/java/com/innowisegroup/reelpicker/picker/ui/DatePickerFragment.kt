@@ -11,7 +11,6 @@ import com.innowisegroup.reelpicker.R
 import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.UPDATE_DATE_TAB_TITLE_KEY
 import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.UPDATE_DATE_TAB_TITLE_REQUEST_KEY
 import com.innowisegroup.reelpicker.datetime.LocalDate
-import com.innowisegroup.reelpicker.extension.formatDate
 import java.util.*
 
 internal class DatePickerFragment : Fragment() {
@@ -41,6 +40,8 @@ internal class DatePickerFragment : Fragment() {
             wrapSelectionWheel = getBoolean(WRAP_SELECTION_BOOLEAN)
         }
 
+        localDate?.let { refreshDateValue(it) }
+
         if (savedInstanceState != null) {
             localDate = savedInstanceState.getSerializable(SELECTED_DATE) as? LocalDate
             refreshDateValue(localDate!!)
@@ -52,8 +53,8 @@ internal class DatePickerFragment : Fragment() {
         dateStub = view.findViewById(R.id.stub)
 
         day?.run {
-            minValue = if (minLocalDate?.year == localDate?.year) minLocalDate?.day!! else DAY_MIN_VALUE
-            maxValue = if (maxLocalDate?.year == localDate?.year) maxLocalDate?.day!! else localDate?.lengthOfMonth()!!
+            minValue = if (minLocalDate?.year == localDate?.year && localDate?.month == minLocalDate?.month) minLocalDate?.day!! else DAY_MIN_VALUE
+            maxValue = if (maxLocalDate?.year == localDate?.year && localDate?.month == maxLocalDate?.month) maxLocalDate?.day!! else localDate?.lengthOfMonth()!!
             value = localDate?.getDay()!!
             setDividerColor(
                 day,
@@ -75,8 +76,8 @@ internal class DatePickerFragment : Fragment() {
         }
 
         month?.run {
-            minValue = if (minLocalDate?.year == localDate?.year) minLocalDate?.month!! else MONTH_MIN_VALUE
-            maxValue = if (maxLocalDate?.year == localDate?.year) maxLocalDate?.month!! else MONTH_MAX_VALUE
+            minValue = if (minLocalDate?.year == localDate?.year && localDate?.month == minLocalDate?.month) minLocalDate?.month!! else MONTH_MIN_VALUE
+            maxValue = if (maxLocalDate?.year == localDate?.year && localDate?.month == maxLocalDate?.month) maxLocalDate?.month!! else MONTH_MAX_VALUE
             value = localDate?.getMonth()!!
             setDividerColor(
                 month,
@@ -125,17 +126,22 @@ internal class DatePickerFragment : Fragment() {
     private fun refreshDateValue(newValue: LocalDate) {
         day ?: return
         localDate = newValue
-        day?.minValue = if (minLocalDate?.year == localDate?.year) minLocalDate?.day!! else DAY_MIN_VALUE
-        day?.maxValue = if (maxLocalDate?.year == localDate?.year) maxLocalDate?.day!! else localDate?.lengthOfMonth()!!
+        day?.minValue = if (localDate?.year == minLocalDate?.year && localDate?.month == minLocalDate?.month) minLocalDate?.day!! else DAY_MIN_VALUE
+        day?.maxValue = if (localDate?.year == maxLocalDate?.year && localDate?.month == maxLocalDate?.month) maxLocalDate?.day!! else localDate?.lengthOfMonth()!!
 
-        month?.minValue = if (minLocalDate?.year == localDate?.year) minLocalDate?.month!! else MONTH_MIN_VALUE
-        month?.maxValue = if (maxLocalDate?.year == localDate?.year) maxLocalDate?.month!! else MONTH_MAX_VALUE
+        month?.minValue = if (minLocalDate?.year == localDate?.year && localDate?.month == minLocalDate?.month) minLocalDate?.month!! else MONTH_MIN_VALUE
+        month?.maxValue = if (maxLocalDate?.year == localDate?.year && localDate?.month == maxLocalDate?.month) maxLocalDate?.month!! else MONTH_MAX_VALUE
 
         val bundle = Bundle()
-        bundle.putString(UPDATE_DATE_TAB_TITLE_KEY, newValue.formatDate())
+        bundle.putSerializable(UPDATE_DATE_TAB_TITLE_KEY, newValue)
 
         requireActivity().supportFragmentManager.setFragmentResult(
             UPDATE_DATE_TAB_TITLE_REQUEST_KEY,
+            bundle
+        )
+
+        requireActivity().supportFragmentManager.setFragmentResult(
+            UPDATE_DATE_REQUEST_KEY,
             bundle
         )
     }
@@ -160,5 +166,7 @@ internal class DatePickerFragment : Fragment() {
         internal const val WRAP_SELECTION_BOOLEAN = "wrapSelectionWheel"
 
         private const val SELECTED_DATE = "selectedDate"
+
+        internal const val UPDATE_DATE_REQUEST_KEY = "updateDateRequestKey"
     }
 }

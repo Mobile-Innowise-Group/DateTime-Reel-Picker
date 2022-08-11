@@ -1,5 +1,6 @@
 package com.innowisegroup.reelpicker.datetime
 
+import com.innowisegroup.reelpicker.extension.isWithinMinMaxRange
 import com.innowisegroup.reelpicker.extension.requireNonNull
 import java.io.Serializable
 import java.util.*
@@ -35,11 +36,16 @@ class LocalTime(hour: Int, minute: Int) : Serializable {
     internal fun withMinute(minute: Int): LocalTime =
         if (this.minute == minute) this else create(getHour(), minute)
 
+    override fun equals(other: Any?): Boolean =
+        this.hour == (other as? LocalTime)?.hour && this.minute == other.minute
+
+    override fun hashCode(): Int = 31 * hour + minute
+
     companion object {
-        private const val MIN_HOUR = 0
-        private const val MAX_HOUR = 23
-        private const val MIN_MINUTE = 0
-        private const val MAX_MINUTE = 59
+        internal const val MIN_HOUR = 0
+        internal const val MAX_HOUR = 23
+        internal const val MIN_MINUTE = 0
+        internal const val MAX_MINUTE = 59
 
         private val calendar: Calendar = Calendar.getInstance()
 
@@ -65,15 +71,14 @@ class LocalTime(hour: Int, minute: Int) : Serializable {
             time: LocalTime,
             minTime: LocalTime,
             maxTime: LocalTime
-        ) = isWithinMinMaxRange(
-            time.hour,
-            minTime.hour,
-            maxTime.hour
-        ) && isWithinMinMaxRange(
-            time.minute,
-            minTime.minute,
-            maxTime.minute
-        )
+        ): Boolean {
+            return if (time.hour == minTime.hour && time.hour == maxTime.hour) {
+                isWithinMinMaxRange(time.minute, minTime.minute, maxTime.minute)
+            } else {
+                isWithinMinMaxRange(time.hour, minTime.hour, maxTime.hour)
+                        && isWithinMinMaxRange(time.minute, minTime.minute, maxTime.minute)
+            }
+        }
 
         private fun validateHour(hour: Int) {
             if (hour > MAX_HOUR || hour < MIN_HOUR) throw IllegalArgumentException("Invalid hours value")

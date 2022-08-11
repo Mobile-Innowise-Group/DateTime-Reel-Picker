@@ -1,7 +1,11 @@
 package com.innowisegroup.reelpicker.datetime
 
-import com.innowisegroup.datetimepicker.LocalDate.Companion.isDateWithinMinMaxValue
-import com.innowisegroup.datetimepicker.LocalTime.Companion.isTimeWithinMinMaxValue
+import com.innowisegroup.reelpicker.datetime.LocalDate.Companion.isDateWithinMinMaxValue
+import com.innowisegroup.reelpicker.datetime.LocalTime.Companion.MAX_HOUR
+import com.innowisegroup.reelpicker.datetime.LocalTime.Companion.MAX_MINUTE
+import com.innowisegroup.reelpicker.datetime.LocalTime.Companion.MIN_HOUR
+import com.innowisegroup.reelpicker.datetime.LocalTime.Companion.MIN_MINUTE
+import com.innowisegroup.reelpicker.datetime.LocalTime.Companion.isTimeWithinMinMaxValue
 import com.innowisegroup.reelpicker.extension.requireNonNull
 import java.io.Serializable
 
@@ -10,6 +14,11 @@ class LocalDateTime(private val date: LocalDate, private val time: LocalTime) : 
     fun toLocalDate(): LocalDate = date
 
     fun toLocalTime(): LocalTime = time
+
+    override fun equals(other: Any?): Boolean =
+        this.date == (other as? LocalDateTime)?.toLocalDate() && this.time == other.toLocalTime()
+
+    override fun hashCode(): Int = 31 * date.hashCode() + time.hashCode()
 
     companion object {
         fun now(): LocalDateTime {
@@ -56,14 +65,6 @@ class LocalDateTime(private val date: LocalDate, private val time: LocalTime) : 
             minLocalDateTime: LocalDateTime,
             maxLocalDateTime: LocalDateTime,
         ) {
-            if (!isTimeWithinMinMaxValue(
-                    initialLocalTime.toLocalTime(),
-                    minLocalDateTime.toLocalTime(),
-                    maxLocalDateTime.toLocalTime()
-                )
-            ) throw IllegalArgumentException(
-                "Initial time value must be within max and min bounds"
-            )
             if (!isDateWithinMinMaxValue(
                     initialLocalTime.toLocalDate(),
                     minLocalDateTime.toLocalDate(),
@@ -72,6 +73,26 @@ class LocalDateTime(private val date: LocalDate, private val time: LocalTime) : 
             ) throw IllegalArgumentException(
                 "Initial date value must be within max and min bounds"
             )
+            if (initialLocalTime == minLocalDateTime) {
+                if (!isTimeWithinMinMaxValue(
+                        initialLocalTime.toLocalTime(),
+                        minLocalDateTime.toLocalTime(),
+                        LocalTime(MAX_HOUR, MAX_MINUTE)
+                    )
+                ) throw IllegalArgumentException(
+                    "Initial time value must be within max and min bounds"
+                )
+            }
+            if (initialLocalTime == maxLocalDateTime) {
+                if (!isTimeWithinMinMaxValue(
+                        initialLocalTime.toLocalTime(),
+                        LocalTime(MIN_HOUR, MIN_MINUTE),
+                        maxLocalDateTime.toLocalTime()
+                    )
+                ) throw IllegalArgumentException(
+                    "Initial time value must be within max and min bounds"
+                )
+            }
         }
     }
 }
