@@ -3,7 +3,6 @@ package com.innowisegroup.reelpicker.picker.ui
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment
 
 internal class PagerAdapter(
     fragmentActivity: FragmentActivity,
