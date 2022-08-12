@@ -9,19 +9,19 @@ import java.util.*
 
 class LocalDate(day: Int, month: Int, year: Int) : Serializable {
 
-    var day = day
+    internal var day = day
         set(value) {
             validateDay(day)
             field = value
         }
 
-    var month = month
+    internal var month = month
         set(value) {
             validateMonth(month)
             field = value
         }
 
-    var year = year
+    internal var year = year
         set(value) {
             validateYear(year)
             field = value
@@ -139,8 +139,7 @@ class LocalDate(day: Int, month: Int, year: Int) : Serializable {
             date: LocalDate,
             minDate: LocalDate,
             maxDate: LocalDate
-        ): Boolean {
-            return if (date.year == minDate.year && date.year == maxDate.year) {
+        ): Boolean = if (date.year == minDate.year && date.year == maxDate.year) {
                 isWithinMinMaxRange(
                     date.month,
                     minDate.month,
@@ -153,7 +152,6 @@ class LocalDate(day: Int, month: Int, year: Int) : Serializable {
             } else {
                 isWithinMinMaxRange(date.year, minDate.year, maxDate.year)
             }
-        }
 
         private fun validateDay(day: Int) {
             if (day < MIN_DAY || day > MAX_DAY) throw IllegalArgumentException("Invalid days value")

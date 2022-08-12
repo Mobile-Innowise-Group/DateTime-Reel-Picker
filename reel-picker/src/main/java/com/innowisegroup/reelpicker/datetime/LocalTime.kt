@@ -7,13 +7,13 @@ import java.util.*
 
 class LocalTime(hour: Int, minute: Int) : Serializable {
 
-    var hour = hour
+    internal var hour = hour
         set(value) {
             validateHour(hour)
             field = value
         }
 
-    var minute = minute
+    internal var minute = minute
         set(value) {
             validateMinute(minute)
             field = value
@@ -71,14 +71,12 @@ class LocalTime(hour: Int, minute: Int) : Serializable {
             time: LocalTime,
             minTime: LocalTime,
             maxTime: LocalTime
-        ): Boolean {
-            return if (time.hour == minTime.hour && time.hour == maxTime.hour) {
+        ): Boolean = if (time.hour == minTime.hour && time.hour == maxTime.hour) {
                 isWithinMinMaxRange(time.minute, minTime.minute, maxTime.minute)
             } else {
                 isWithinMinMaxRange(time.hour, minTime.hour, maxTime.hour)
                         && isWithinMinMaxRange(time.minute, minTime.minute, maxTime.minute)
             }
-        }
 
         private fun validateHour(hour: Int) {
             if (hour > MAX_HOUR || hour < MIN_HOUR) throw IllegalArgumentException("Invalid hours value")
