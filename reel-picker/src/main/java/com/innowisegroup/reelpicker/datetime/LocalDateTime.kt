@@ -8,7 +8,7 @@ import com.innowisegroup.reelpicker.datetime.LocalTime.Companion.MIN_MINUTE
 import com.innowisegroup.reelpicker.datetime.LocalTime.Companion.isTimeWithinMinMaxValue
 import java.io.Serializable
 
-class LocalDateTime(private val date: LocalDate, private val time: LocalTime) : Serializable {
+class LocalDateTime private constructor(private val date: LocalDate, private val time: LocalTime) : Serializable {
 
     fun toLocalDate(): LocalDate = date
 

@@ -33,14 +33,35 @@ internal class DatePickerFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.item_date_picker, container, false)
         applyArguments()
+        applySavedStateIfNeeded(savedInstanceState)
 
         refreshDateValue(localDate)
 
+        initializeView(view)
+        return view
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(SELECTED_DATE, localDate)
+    }
+
+    private fun applyArguments() {
+        with(requireArguments()) {
+            localDate = getSerializable(LOCAL_DATE) as? LocalDate ?: LocalDate.now()
+            minLocalDate = getSerializable(MIN_LOCAL_DATE) as? LocalDate ?: MIN_DEFAULT_LOCAL_DATE
+            maxLocalDate = getSerializable(MAX_LOCAL_DATE) as? LocalDate ?: MAX_DEFAULT_LOCAL_DATE
+            wrapSelectionWheel = getBoolean(WRAP_SELECTION_BOOLEAN)
+        }
+    }
+
+    private fun applySavedStateIfNeeded(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             localDate = savedInstanceState.getSerializable(SELECTED_DATE) as LocalDate
-            refreshDateValue(localDate)
         }
+    }
 
+    private fun initializeView(view: View) {
         day = view.findViewById(R.id.day)
         month = view.findViewById(R.id.month)
         year = view.findViewById(R.id.year)
@@ -112,16 +133,6 @@ internal class DatePickerFragment : Fragment() {
                 refreshDateValue(localDate.withYear(newVal))
             }
         }
-        return view
-    }
-
-    private fun applyArguments() {
-        with(requireArguments()) {
-            localDate = getSerializable(LOCAL_DATE) as? LocalDate ?: LocalDate.now()
-            minLocalDate = getSerializable(MIN_LOCAL_DATE) as? LocalDate ?: MIN_DEFAULT_LOCAL_DATE
-            maxLocalDate = getSerializable(MAX_LOCAL_DATE) as? LocalDate ?: MAX_DEFAULT_LOCAL_DATE
-            wrapSelectionWheel = getBoolean(WRAP_SELECTION_BOOLEAN)
-        }
     }
 
     private fun refreshDateValue(newValue: LocalDate) {
@@ -149,11 +160,6 @@ internal class DatePickerFragment : Fragment() {
             UPDATE_DATE_REQUEST_KEY,
             bundle
         )
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putSerializable(SELECTED_DATE, localDate)
     }
 
     companion object {

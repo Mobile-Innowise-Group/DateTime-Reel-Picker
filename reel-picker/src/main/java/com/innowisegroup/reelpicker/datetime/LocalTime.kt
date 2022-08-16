@@ -31,9 +31,7 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
             return LocalTime(getHour, getMinute)
         }
 
-        fun of(hour: Int, minute: Int): LocalTime {
-            return create(hour, minute)
-        }
+        fun of(hour: Int, minute: Int): LocalTime = create(hour, minute)
 
         internal fun isTimeWithinMinMaxValue(
             time: LocalTime,

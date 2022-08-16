@@ -43,9 +43,9 @@ class ReelPicker : DialogFragment() {
     private var timePickerFragment: TimePickerFragment? = null
     private var datePickerFragment: DatePickerFragment? = null
 
-    lateinit var initialLocalDateTime: LocalDateTime
-    lateinit var minLocalDateTime: LocalDateTime
-    lateinit var maxLocalDateTime: LocalDateTime
+    private lateinit var initialLocalDateTime: LocalDateTime
+    private lateinit var minLocalDateTime: LocalDateTime
+    private lateinit var maxLocalDateTime: LocalDateTime
     private var wrapSelectionWheel: Boolean = false
     private var pickerType: PickerType = PickerType.DATE_TIME
 
@@ -60,6 +60,10 @@ class ReelPicker : DialogFragment() {
         setFragmentResultListeners()
         initializeView(view)
         return view
+    }
+
+    fun showDialog(fragmentManager: FragmentManager) {
+        if (!isAdded) show(fragmentManager, DIALOG_TAG)
     }
 
     private fun applyArguments() {
@@ -212,10 +216,6 @@ class ReelPicker : DialogFragment() {
         fun onCancelClick()
     }
 
-    fun showDialog(fragmentManager: FragmentManager) {
-        if (!isAdded) show(fragmentManager, DIALOG_TAG)
-    }
-
     companion object {
         private const val DIALOG_TAG = "date_time_picker_dialog"
 
@@ -235,8 +235,8 @@ class ReelPicker : DialogFragment() {
         private val MAX_DEFAULT_TIME = LocalTime.of(23, 59)
         private val MIN_DEFAULT_DATE = LocalDate.of(1, 1, 1900)
         private val MAX_DEFAULT_DATE = LocalDate.of(1, 1, 2100)
-        private val MIN_DEFAULT_DATE_TIME = LocalDateTime(MIN_DEFAULT_DATE, MIN_DEFAULT_TIME)
-        private val MAX_DEFAULT_DATE_TIME = LocalDateTime(MAX_DEFAULT_DATE, MAX_DEFAULT_TIME)
+        private val MIN_DEFAULT_DATE_TIME = LocalDateTime.of(MIN_DEFAULT_DATE, MIN_DEFAULT_TIME)
+        private val MAX_DEFAULT_DATE_TIME = LocalDateTime.of(MAX_DEFAULT_DATE, MAX_DEFAULT_TIME)
 
         //need to kotlin-java interop
         @JvmStatic

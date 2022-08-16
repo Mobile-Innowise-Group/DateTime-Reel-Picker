@@ -7,7 +7,7 @@ import com.innowisegroup.reelpicker.extension.requireNonNull
 import java.io.Serializable
 import java.util.*
 
-class LocalDate(val day: Int, val month: Int, val year: Int) : Serializable {
+class LocalDate private constructor(val day: Int, val month: Int, val year: Int) : Serializable {
     private fun resolvePreviousValid(day: Int, month: Int, year: Int): LocalDate {
         var day2 = day
         when (month) {

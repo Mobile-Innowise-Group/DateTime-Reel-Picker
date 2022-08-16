@@ -44,18 +44,42 @@ internal class TimePickerFragment : Fragment() {
         maxTime = maxDateTime.toLocalTime()
         localTime = localDateTime.toLocalTime()
 
+        applySavedStateIfNeeded(savedInstanceState)
+        setFragmentResultListeners()
+        initializeView(view)
+        return view
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(SELECTED_TIME, localDateTime)
+    }
+
+    private fun applyArguments() {
+        with(requireArguments()) {
+            localDateTime = getSerializable(LOCAL_TIME) as LocalDateTime
+            minDateTime = getSerializable(MIN_TIME) as LocalDateTime
+            maxDateTime = getSerializable(MAX_TIME) as LocalDateTime
+        }
+    }
+
+    private fun applySavedStateIfNeeded(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             localDateTime = savedInstanceState.getSerializable(SELECTED_TIME) as LocalDateTime
             refreshTimeValue(localDateTime.toLocalTime())
         }
+    }
 
+    private fun setFragmentResultListeners() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
             UPDATE_DATE_REQUEST_KEY,
             viewLifecycleOwner
         ) { _, bundle ->
             selectedDate = bundle.getSerializable(UPDATE_DATE_TAB_TITLE_KEY) as? LocalDate
         }
+    }
 
+    private fun initializeView(view: View) {
         timeStub = view.findViewById(R.id.time_stub)
         hours = view.findViewById(R.id.hours)
         minutes = view.findViewById(R.id.minutes)
@@ -118,15 +142,6 @@ internal class TimePickerFragment : Fragment() {
                 refreshTimeValue(localTime.withMinute(newVal))
             }
         }
-        return view
-    }
-
-    private fun applyArguments() {
-        with(requireArguments()) {
-            localDateTime = getSerializable(LOCAL_TIME) as LocalDateTime
-            minDateTime = getSerializable(MIN_TIME) as LocalDateTime
-            maxDateTime = getSerializable(MAX_TIME) as LocalDateTime
-        }
     }
 
     private fun refreshTimeValue(newValue: LocalTime) {
@@ -160,11 +175,6 @@ internal class TimePickerFragment : Fragment() {
             UPDATE_TIME_TAB_TITLE_REQUEST_KEY,
             bundle
         )
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putSerializable(SELECTED_TIME, localDateTime)
     }
 
     companion object {
