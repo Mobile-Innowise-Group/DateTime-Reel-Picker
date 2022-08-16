@@ -21,9 +21,9 @@ internal class DatePickerFragment : Fragment() {
 
     var dateStub: TextView? = null
 
-    var localDate: LocalDate? = null
-    private var minLocalDate: LocalDate? = null
-    private var maxLocalDate: LocalDate? = null
+    private lateinit var localDate: LocalDate
+    private lateinit var minLocalDate: LocalDate
+    private lateinit var maxLocalDate: LocalDate
     private var wrapSelectionWheel = false
 
     override fun onCreateView(
@@ -32,19 +32,13 @@ internal class DatePickerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.item_date_picker, container, false)
+        applyArguments()
 
-        with(requireArguments()) {
-            localDate = getSerializable(LOCAL_DATE) as? LocalDate ?: LocalDate.now()
-            minLocalDate = getSerializable(MIN_LOCAL_DATE) as? LocalDate ?: MIN_DEFAULT_LOCAL_DATE
-            maxLocalDate = getSerializable(MAX_LOCAL_DATE) as? LocalDate ?: MAX_DEFAULT_LOCAL_DATE
-            wrapSelectionWheel = getBoolean(WRAP_SELECTION_BOOLEAN)
-        }
-
-        localDate?.let { refreshDateValue(it) }
+        refreshDateValue(localDate)
 
         if (savedInstanceState != null) {
-            localDate = savedInstanceState.getSerializable(SELECTED_DATE) as? LocalDate
-            refreshDateValue(localDate!!)
+            localDate = savedInstanceState.getSerializable(SELECTED_DATE) as LocalDate
+            refreshDateValue(localDate)
         }
 
         day = view.findViewById(R.id.day)
@@ -53,9 +47,11 @@ internal class DatePickerFragment : Fragment() {
         dateStub = view.findViewById(R.id.stub)
 
         day?.run {
-            minValue = if (minLocalDate?.year == localDate?.year && localDate?.month == minLocalDate?.month) minLocalDate?.day!! else DAY_MIN_VALUE
-            maxValue = if (maxLocalDate?.year == localDate?.year && localDate?.month == maxLocalDate?.month) maxLocalDate?.day!! else localDate?.lengthOfMonth()!!
-            value = localDate?.getDay()!!
+            minValue =
+                if (minLocalDate.year == localDate.year && localDate.month == minLocalDate.month) minLocalDate.day else DAY_MIN_VALUE
+            maxValue =
+                if (maxLocalDate.year == localDate.year && localDate.month == maxLocalDate.month) maxLocalDate.day else localDate.lengthOfMonth()
+            value = localDate.day
             setDividerColor(
                 day,
                 ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
@@ -69,16 +65,16 @@ internal class DatePickerFragment : Fragment() {
             }
             wrapSelectorWheel = wrapSelectionWheel
             setOnValueChangedListener { _, _, newVal: Int ->
-                refreshDateValue(
-                    localDate?.withDayOfMonth(newVal)!!
-                )
+                refreshDateValue(localDate.withDayOfMonth(newVal))
             }
         }
 
         month?.run {
-            minValue = if (minLocalDate?.year == localDate?.year && localDate?.month == minLocalDate?.month) minLocalDate?.month!! else MONTH_MIN_VALUE
-            maxValue = if (maxLocalDate?.year == localDate?.year && localDate?.month == maxLocalDate?.month) maxLocalDate?.month!! else MONTH_MAX_VALUE
-            value = localDate?.getMonth()!!
+            minValue =
+                if (minLocalDate.year == localDate.year && localDate.month == minLocalDate.month) minLocalDate.month else MONTH_MIN_VALUE
+            maxValue =
+                if (maxLocalDate.year == localDate.year && localDate.month == maxLocalDate.month) maxLocalDate.month else MONTH_MAX_VALUE
+            value = localDate.month
             setDividerColor(
                 month,
                 ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
@@ -92,16 +88,14 @@ internal class DatePickerFragment : Fragment() {
             }
             wrapSelectorWheel = wrapSelectionWheel
             setOnValueChangedListener { _, _, newVal: Int ->
-                refreshDateValue(
-                    localDate?.withMonth(newVal)!!
-                )
+                refreshDateValue(localDate.withMonth(newVal))
             }
         }
 
         year?.run {
-            minValue = minLocalDate?.year!!
-            maxValue = maxLocalDate?.year!!
-            value = localDate?.getYear()!!
+            minValue = minLocalDate.year
+            maxValue = maxLocalDate.year
+            value = localDate.year
             setDividerColor(
                 year,
                 ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
@@ -115,22 +109,33 @@ internal class DatePickerFragment : Fragment() {
             }
             wrapSelectorWheel = wrapSelectionWheel
             setOnValueChangedListener { _, _, newVal: Int ->
-                refreshDateValue(
-                    localDate?.withYear(newVal)!!
-                )
+                refreshDateValue(localDate.withYear(newVal))
             }
         }
         return view
     }
 
+    private fun applyArguments() {
+        with(requireArguments()) {
+            localDate = getSerializable(LOCAL_DATE) as? LocalDate ?: LocalDate.now()
+            minLocalDate = getSerializable(MIN_LOCAL_DATE) as? LocalDate ?: MIN_DEFAULT_LOCAL_DATE
+            maxLocalDate = getSerializable(MAX_LOCAL_DATE) as? LocalDate ?: MAX_DEFAULT_LOCAL_DATE
+            wrapSelectionWheel = getBoolean(WRAP_SELECTION_BOOLEAN)
+        }
+    }
+
     private fun refreshDateValue(newValue: LocalDate) {
         day ?: return
         localDate = newValue
-        day?.minValue = if (localDate?.year == minLocalDate?.year && localDate?.month == minLocalDate?.month) minLocalDate?.day!! else DAY_MIN_VALUE
-        day?.maxValue = if (localDate?.year == maxLocalDate?.year && localDate?.month == maxLocalDate?.month) maxLocalDate?.day!! else localDate?.lengthOfMonth()!!
+        day?.minValue =
+            if (localDate.year == minLocalDate.year && localDate.month == minLocalDate.month) minLocalDate.day else DAY_MIN_VALUE
+        day?.maxValue =
+            if (localDate.year == maxLocalDate.year && localDate.month == maxLocalDate.month) maxLocalDate.day else localDate.lengthOfMonth()
 
-        month?.minValue = if (minLocalDate?.year == localDate?.year && localDate?.month == minLocalDate?.month) minLocalDate?.month!! else MONTH_MIN_VALUE
-        month?.maxValue = if (maxLocalDate?.year == localDate?.year && localDate?.month == maxLocalDate?.month) maxLocalDate?.month!! else MONTH_MAX_VALUE
+        month?.minValue =
+            if (minLocalDate.year == localDate.year && localDate.month == minLocalDate.month) minLocalDate.month else MONTH_MIN_VALUE
+        month?.maxValue =
+            if (maxLocalDate.year == localDate.year && localDate.month == maxLocalDate.month) maxLocalDate.month else MONTH_MAX_VALUE
 
         val bundle = Bundle()
         bundle.putSerializable(UPDATE_DATE_TAB_TITLE_KEY, newValue)

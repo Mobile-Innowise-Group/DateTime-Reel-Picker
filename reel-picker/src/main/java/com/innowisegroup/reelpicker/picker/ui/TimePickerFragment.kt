@@ -24,12 +24,12 @@ internal class TimePickerFragment : Fragment() {
     private var hours: CustomNumberPicker? = null
     private var minutes: CustomNumberPicker? = null
 
-    private var localDateTime: LocalDateTime? = null
-    private var minDateTime: LocalDateTime? = null
-    private var maxDateTime: LocalDateTime? = null
-    private var localTime: LocalTime? = null
-    private var minTime: LocalTime? = null
-    private var maxTime: LocalTime? = null
+    lateinit var localDateTime: LocalDateTime
+    private lateinit var minDateTime: LocalDateTime
+    private lateinit var maxDateTime: LocalDateTime
+    private lateinit var localTime: LocalTime
+    private lateinit var minTime: LocalTime
+    private lateinit var maxTime: LocalTime
     private var selectedDate: LocalDate? = null
 
     override fun onCreateView(
@@ -38,17 +38,15 @@ internal class TimePickerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.item_time_picker, container, false)
-        localDateTime = requireArguments().getSerializable(LOCAL_TIME) as? LocalDateTime
-        minDateTime = requireArguments().getSerializable(MIN_TIME) as? LocalDateTime
-        maxDateTime = requireArguments().getSerializable(MAX_TIME) as? LocalDateTime
+        applyArguments()
 
-        minTime = minDateTime?.toLocalTime()
-        maxTime = maxDateTime?.toLocalTime()
-        localTime = localDateTime?.toLocalTime()
+        minTime = minDateTime.toLocalTime()
+        maxTime = maxDateTime.toLocalTime()
+        localTime = localDateTime.toLocalTime()
 
         if (savedInstanceState != null) {
-            localDateTime = savedInstanceState.getSerializable(SELECTED_TIME) as? LocalDateTime
-            refreshTimeValue(localDateTime?.toLocalTime()!!)
+            localDateTime = savedInstanceState.getSerializable(SELECTED_TIME) as LocalDateTime
+            refreshTimeValue(localDateTime.toLocalTime())
         }
 
         requireActivity().supportFragmentManager.setFragmentResultListener(
@@ -64,15 +62,15 @@ internal class TimePickerFragment : Fragment() {
 
         hours?.run {
             if (selectedDate != null) {
-                minValue =
-                    if (selectedDate?.equals(minDateTime?.toLocalDate())!!) minTime?.hour!! else MIN_HOUR
-                maxValue =
-                    if (selectedDate?.equals(maxDateTime?.toLocalDate())!!) maxTime?.hour!! else MAX_HOUR
+                selectedDate?.let {
+                    minValue = if (it == minDateTime.toLocalDate()) minTime.hour else MIN_HOUR
+                    maxValue = if (it == maxDateTime.toLocalDate()) maxTime.hour else MAX_HOUR
+                }
             } else {
-                minValue = minTime?.hour ?: MIN_HOUR
-                maxValue = maxTime?.hour ?: MAX_HOUR
+                minValue = minTime.hour
+                maxValue = maxTime.hour
             }
-            value = localTime?.getHour()!!
+            value = localTime.hour
             wrapSelectorWheel = false
             setFormatter { i: Int ->
                 String.format(
@@ -86,24 +84,24 @@ internal class TimePickerFragment : Fragment() {
                 ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
             )
             setOnValueChangedListener { _, _, newVal: Int ->
-                refreshTimeValue(
-                    localTime?.withHour(newVal)!!
-                )
+                refreshTimeValue(localTime.withHour(newVal))
             }
         }
 
         minutes?.run {
             if (selectedDate != null) {
-                minValue =
-                    if (selectedDate?.equals(minDateTime?.toLocalDate())!! && localTime?.hour == minTime?.hour) minTime?.minute!! else MIN_MINUTE
-                maxValue =
-                    if (selectedDate?.equals(maxDateTime?.toLocalDate())!! && localTime?.hour == maxTime?.hour) maxTime?.minute!! else MAX_MINUTE
+                selectedDate?.let {
+                    minValue =
+                        if (it == minDateTime.toLocalDate() && localTime.hour == minTime.hour) minTime.minute else MIN_MINUTE
+                    maxValue =
+                        if (it == maxDateTime.toLocalDate() && localTime.hour == maxTime.hour) maxTime.minute else MAX_MINUTE
+                }
             } else {
-                minValue = if (localTime?.hour == minTime?.hour) minTime?.minute!! else MIN_MINUTE
-                maxValue = if (localTime?.hour == maxTime?.hour) maxTime?.minute!! else MAX_MINUTE
+                minValue = if (localTime.hour == minTime.hour) minTime.minute else MIN_MINUTE
+                maxValue = if (localTime.hour == maxTime.hour) maxTime.minute else MAX_MINUTE
             }
 
-            value = localTime?.getMinute()!!
+            value = localTime.minute
             setDividerColor(
                 minutes,
                 ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
@@ -117,37 +115,43 @@ internal class TimePickerFragment : Fragment() {
                 )
             }
             setOnValueChangedListener { _, _, newVal: Int ->
-                refreshTimeValue(
-                    localTime?.withMinute(newVal)!!
-                )
+                refreshTimeValue(localTime.withMinute(newVal))
             }
         }
         return view
+    }
+
+    private fun applyArguments() {
+        with(requireArguments()) {
+            localDateTime = getSerializable(LOCAL_TIME) as LocalDateTime
+            minDateTime = getSerializable(MIN_TIME) as LocalDateTime
+            maxDateTime = getSerializable(MAX_TIME) as LocalDateTime
+        }
     }
 
     private fun refreshTimeValue(newValue: LocalTime) {
         localTime = newValue
 
         if (selectedDate != null) {
-            hours?.minValue =
-                if (selectedDate?.equals(minDateTime?.toLocalDate())!!) minTime?.hour!! else MIN_HOUR
-            hours?.maxValue =
-                if (selectedDate?.equals(maxDateTime?.toLocalDate())!!) maxTime?.hour!! else MAX_HOUR
+            selectedDate?.let {
+                hours?.minValue = if ((it == minDateTime.toLocalDate())) minTime.hour else MIN_HOUR
+                hours?.maxValue = if ((it == maxDateTime.toLocalDate())) maxTime.hour else MAX_HOUR
+            }
         } else {
-            hours?.minValue = minTime?.hour ?: MIN_HOUR
-            hours?.maxValue = maxTime?.hour ?: MAX_HOUR
+            hours?.minValue = minTime.hour
+            hours?.maxValue = maxTime.hour
         }
 
         if (selectedDate != null) {
-            minutes?.minValue =
-                if (selectedDate?.equals(minDateTime?.toLocalDate())!! && localTime?.hour == minTime?.hour) minTime?.minute!! else MIN_MINUTE
-            minutes?.maxValue =
-                if (selectedDate?.equals(maxDateTime?.toLocalDate())!! && localTime?.hour == maxTime?.hour) maxTime?.minute!! else MAX_MINUTE
+            selectedDate?.let {
+                minutes?.minValue =
+                    if (it == minDateTime.toLocalDate() && localTime.hour == minTime.hour) minTime.minute else MIN_MINUTE
+                minutes?.maxValue =
+                    if (it == maxDateTime.toLocalDate() && localTime.hour == maxTime.hour) maxTime.minute else MAX_MINUTE
+            }
         } else {
-            minutes?.minValue =
-                if (localTime?.hour == minTime?.hour) minTime?.minute!! else MIN_MINUTE
-            minutes?.maxValue =
-                if (localTime?.hour == maxTime?.hour) maxTime?.minute!! else MAX_MINUTE
+            minutes?.minValue = if (localTime.hour == minTime.hour) minTime.minute else MIN_MINUTE
+            minutes?.maxValue = if (localTime.hour == maxTime.hour) maxTime.minute else MAX_MINUTE
         }
 
         val bundle = Bundle()

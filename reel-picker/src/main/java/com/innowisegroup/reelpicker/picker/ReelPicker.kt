@@ -38,15 +38,14 @@ class ReelPicker : DialogFragment() {
     private var viewPager: ViewPager2? = null
 
     private val okClickCallback: OkClickCallback? = null
-
     private val cancelClickCallback: CancelClickCallback? = null
 
     private var timePickerFragment: TimePickerFragment? = null
     private var datePickerFragment: DatePickerFragment? = null
 
-    private var initialLocalDateTime: LocalDateTime? = null
-    private var minLocalDateTime: LocalDateTime? = null
-    private var maxLocalDateTime: LocalDateTime? = null
+    lateinit var initialLocalDateTime: LocalDateTime
+    lateinit var minLocalDateTime: LocalDateTime
+    lateinit var maxLocalDateTime: LocalDateTime
     private var wrapSelectionWheel: Boolean = false
     private var pickerType: PickerType = PickerType.DATE_TIME
 
@@ -56,6 +55,14 @@ class ReelPicker : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_reel_picker, container, false)
+        applyArguments()
+        applyAttributes()
+        setFragmentResultListeners()
+        initializeView(view)
+        return view
+    }
+
+    private fun applyArguments() {
         with(requireArguments()) {
             initialLocalDateTime =
                 getSerializable(INITIAL_LOCAL_DATE_TIME) as? LocalDateTime ?: LocalDateTime.now()
@@ -66,7 +73,9 @@ class ReelPicker : DialogFragment() {
             wrapSelectionWheel = getBoolean(WRAP_SELECTION_WHEEL)
             pickerType = getSerializable(PICKER_TYPE) as PickerType
         }
+    }
 
+    private fun applyAttributes() {
         isCancelable = false
         dialog?.window?.setBackgroundDrawable(
             ResourcesCompat.getDrawable(
@@ -75,17 +84,9 @@ class ReelPicker : DialogFragment() {
                 null
             )
         )
-        viewPager = view.findViewById(R.id.viewPager)
-        tabLayout = view.findViewById(R.id.tabLayout)
-        val buttonOk = view.findViewById<Button>(R.id.btn_ok)
-        val buttonCancel = view.findViewById<Button>(R.id.btn_cancel)
-        buttonOk.setOnClickListener {
-            onOkClick()
-        }
-        buttonCancel.setOnClickListener {
-            onCancelClick()
-        }
+    }
 
+    private fun setFragmentResultListeners() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
             UPDATE_TIME_TAB_TITLE_REQUEST_KEY,
             viewLifecycleOwner
@@ -103,73 +104,24 @@ class ReelPicker : DialogFragment() {
                 bundle.getSerializable(UPDATE_DATE_TAB_TITLE_KEY) as? LocalDate ?: LocalDate.now()
             refresh(selectedDate.formatDate())
         }
+    }
 
-        val listOfFragments: List<Fragment> = when (pickerType) {
-            PickerType.TIME_ONLY -> listOf(
-                TimePickerFragment().apply {
-                    arguments = Bundle().apply {
-                        putSerializable(LOCAL_TIME, initialLocalDateTime)
-                        putSerializable(MIN_TIME, minLocalDateTime)
-                        putSerializable(MAX_TIME, maxLocalDateTime)
-                    }
-                }
-            )
-            PickerType.DATE_ONLY -> listOf(
-                DatePickerFragment().apply {
-                    arguments = Bundle().apply {
-                        putSerializable(
-                            LOCAL_DATE,
-                            initialLocalDateTime?.toLocalDate()
-                        )
-                        putSerializable(
-                            MIN_LOCAL_DATE,
-                            if (minLocalDateTime == null) MIN_DEFAULT_DATE_TIME.toLocalDate() else minLocalDateTime?.toLocalDate()
-                        )
-                        putSerializable(
-                            MAX_LOCAL_DATE,
-                            if (maxLocalDateTime == null) MAX_DEFAULT_DATE_TIME.toLocalDate() else maxLocalDateTime?.toLocalDate()
-                        )
-                        putBoolean(WRAP_SELECTION_BOOLEAN, wrapSelectionWheel)
-                    }
-                }
-            )
-            PickerType.DATE_TIME -> {
-                listOf(
-                    TimePickerFragment().apply {
-                        arguments = Bundle().apply {
-                            putSerializable(LOCAL_TIME, initialLocalDateTime)
-                            putSerializable(MIN_TIME, minLocalDateTime)
-                            putSerializable(MAX_TIME, maxLocalDateTime)
-                        }
-                    },
-                    DatePickerFragment().apply {
-                        arguments = Bundle().apply {
-                            putSerializable(
-                                LOCAL_DATE,
-                                initialLocalDateTime?.toLocalDate()
-                            )
-                            putSerializable(
-                                MIN_LOCAL_DATE,
-                                if (minLocalDateTime == null) MIN_DEFAULT_DATE_TIME.toLocalDate() else minLocalDateTime?.toLocalDate()
-                            )
-                            putSerializable(
-                                MAX_LOCAL_DATE,
-                                if (maxLocalDateTime == null) MAX_DEFAULT_DATE_TIME.toLocalDate() else maxLocalDateTime?.toLocalDate()
-                            )
-                            putBoolean(WRAP_SELECTION_BOOLEAN, wrapSelectionWheel)
-                        }
-                    }
-                )
-            }
-        }
+    private fun initializeView(view: View) {
+        viewPager = view.findViewById(R.id.viewPager)
+        tabLayout = view.findViewById(R.id.tabLayout)
+        val buttonOk = view.findViewById<Button>(R.id.btn_ok)
+        val buttonCancel = view.findViewById<Button>(R.id.btn_cancel)
+        buttonOk.setOnClickListener { onOkClick() }
+        buttonCancel.setOnClickListener { onCancelClick() }
 
-        val adapter = PagerAdapter(requireActivity(), listOfFragments)
+        val fragments = createFragments()
+        val adapter = PagerAdapter(requireActivity(), fragments)
         (viewPager as ViewPager2).adapter = adapter
         (viewPager as ViewPager2).isUserInputEnabled = false
         TabLayoutMediator(tabLayout as TabLayout, viewPager as ViewPager2) { tab, position ->
             tab.text = when (adapter.getItemViewType(position)) {
-                0 -> initialLocalDateTime?.toLocalTime()?.formatTime()
-                else -> initialLocalDateTime?.toLocalDate()?.formatDate()
+                0 -> initialLocalDateTime.toLocalTime().formatTime()
+                else -> initialLocalDateTime.toLocalDate().formatDate()
             }
         }.attach()
 
@@ -190,8 +142,38 @@ class ReelPicker : DialogFragment() {
             root.dividerPadding = 10
             root.dividerDrawable = drawable
         }
-        return view
     }
+
+    private fun createFragments(): List<Fragment> =
+        when (pickerType) {
+            PickerType.TIME_ONLY -> listOf(createTimePickerFragment())
+            PickerType.DATE_ONLY -> listOf(createDatePickerFragment())
+            PickerType.DATE_TIME -> {
+                listOf(
+                    createTimePickerFragment(),
+                    createDatePickerFragment()
+                )
+            }
+        }
+
+    private fun createTimePickerFragment(): TimePickerFragment =
+        TimePickerFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(LOCAL_TIME, initialLocalDateTime)
+                putSerializable(MIN_TIME, minLocalDateTime)
+                putSerializable(MAX_TIME, maxLocalDateTime)
+            }
+        }
+
+    private fun createDatePickerFragment(): DatePickerFragment =
+        DatePickerFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(LOCAL_DATE, initialLocalDateTime.toLocalDate())
+                putSerializable(MIN_LOCAL_DATE, minLocalDateTime.toLocalDate())
+                putSerializable(MAX_LOCAL_DATE, maxLocalDateTime.toLocalDate())
+                putBoolean(WRAP_SELECTION_BOOLEAN, wrapSelectionWheel)
+            }
+        }
 
     private fun onCancelClick() {
         dialog?.cancel()
@@ -200,36 +182,21 @@ class ReelPicker : DialogFragment() {
 
     private fun onOkClick() {
         dialog?.dismiss()
-//        if (okClickCallback != null) {
-//            if (datePickerFragment == null) {
-//                timePickerFragment?.timeStub?.requestFocus()
-//                okClickCallback.onOkClick(
-//                    LocalDateTime.of(
-//                        LocalDate.now(),
-//                        timePickerFragment?.localDate!!
-//                    )
-//                )
-//                return
-//            }
-//            if (timePickerFragment == null) {
-//                datePickerFragment?.dateStub?.requestFocus()
-//                okClickCallback.onOkClick(
-//                    LocalDateTime.of(
-//                        datePickerFragment?.localDate!!,
-//                        LocalTime.now()
-//                    )
-//                )
-//                return
-//            }
-//            datePickerFragment?.dateStub?.requestFocus()
-//            timePickerFragment?.timeStub?.requestFocus()
-//            okClickCallback.onOkClick(
-//                LocalDateTime.of(
-//                    datePickerFragment?.localDate!!,
-//                    timePickerFragment?.localDate!!
-//                )
-//            )
-//        }
+        if (okClickCallback != null) {
+            if (datePickerFragment == null) {
+                timePickerFragment?.timeStub?.requestFocus()
+                okClickCallback.onOkClick(timePickerFragment?.localDateTime)
+                return
+            }
+            if (timePickerFragment == null) {
+                datePickerFragment?.dateStub?.requestFocus()
+                okClickCallback.onOkClick(timePickerFragment?.localDateTime)
+                return
+            }
+            datePickerFragment?.dateStub?.requestFocus()
+            timePickerFragment?.timeStub?.requestFocus()
+            okClickCallback.onOkClick(timePickerFragment?.localDateTime)
+        }
     }
 
     private fun refresh(value: String) {
