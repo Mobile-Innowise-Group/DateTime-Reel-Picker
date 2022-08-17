@@ -1,28 +1,27 @@
 package com.innowisegroup.reelpicker.datetime
 
-import com.innowisegroup.reelpicker.extension.requireNonNull
+import com.innowisegroup.reelpicker.extension.isWithinMinMaxRange
 import java.io.Serializable
 import java.util.*
 
-class LocalTime(val hour: Int, val minute: Int) : Serializable {
+class LocalTime private constructor(val hour: Int, val minute: Int) : Serializable {
 
-    @JvmName("getHourKotlin")
-    fun getHour() = requireNonNull(hour)
+    override fun equals(other: Any?): Boolean =
+        this.hour == (other as? LocalTime)?.hour && this.minute == other.minute
 
-    @JvmName("getMinuteKotlin")
-    fun getMinute() = requireNonNull(minute)
+    override fun hashCode(): Int = 31 * hour + minute
 
     internal fun withHour(hour: Int): LocalTime =
-        if (this.hour == hour) this else create(hour, getMinute())
+        if (this.hour == hour) this else create(hour, this.minute)
 
     internal fun withMinute(minute: Int): LocalTime =
-        if (this.minute == minute) this else create(getHour(), minute)
+        if (this.minute == minute) this else create(this.hour, minute)
 
     companion object {
-        private const val MIN_HOUR = 0
-        private const val MAX_HOUR = 23
-        private const val MIN_MINUTE = 0
-        private const val MAX_MINUTE = 59
+        internal const val MIN_HOUR = 0
+        internal const val MAX_HOUR = 23
+        internal const val MIN_MINUTE = 0
+        internal const val MAX_MINUTE = 59
 
         private val calendar: Calendar = Calendar.getInstance()
 
@@ -32,22 +31,23 @@ class LocalTime(val hour: Int, val minute: Int) : Serializable {
             return LocalTime(getHour, getMinute)
         }
 
-        fun of(hour: Int, minute: Int): LocalTime {
-            requireNonNull(hour)
-            requireNonNull(minute)
-            return create(hour, minute)
+        fun of(hour: Int, minute: Int): LocalTime = create(hour, minute)
+
+        internal fun isTimeWithinMinMaxValue(
+            time: LocalTime,
+            minTime: LocalTime,
+            maxTime: LocalTime
+        ): Boolean = if (time.hour == minTime.hour && time.hour == maxTime.hour) {
+            isWithinMinMaxRange(time.minute, minTime.minute, maxTime.minute)
+        } else {
+            isWithinMinMaxRange(time.hour, minTime.hour, maxTime.hour)
+                    && isWithinMinMaxRange(time.minute, minTime.minute, maxTime.minute)
         }
 
         private fun create(hour: Int, minute: Int): LocalTime {
-            timeChecker(hour, minute)
+            require(hour in MIN_HOUR..MAX_HOUR) { "Invalid hours value" }
+            require(minute in MIN_MINUTE..MAX_MINUTE) { "Invalid minutes value" }
             return LocalTime(hour, minute)
-        }
-
-        private fun timeChecker(hour: Int, minute: Int) {
-            if (hour > MAX_HOUR || hour < MIN_HOUR)
-                throw Exception("Incorrect hour")
-            if (minute < MIN_MINUTE || minute > MAX_MINUTE)
-                throw Exception("Incorrect minutes")
         }
     }
 }
