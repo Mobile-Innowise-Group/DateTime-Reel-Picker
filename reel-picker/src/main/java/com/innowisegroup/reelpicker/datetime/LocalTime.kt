@@ -34,7 +34,7 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
         fun of(hour: Int, minute: Int): LocalTime {
             require(hour in MIN_HOUR..MAX_HOUR) { "Invalid hours value" }
             require(minute in MIN_MINUTE..MAX_MINUTE) { "Invalid minutes value" }
-            return create(hour, minute)
+            return LocalTime(hour, minute)
         }
 
         internal fun isTimeWithinMinMaxValue(
@@ -47,7 +47,5 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
             isWithinMinMaxRange(time.hour, minTime.hour, maxTime.hour)
                     && isWithinMinMaxRange(time.minute, minTime.minute, maxTime.minute)
         }
-
-        private fun create(hour: Int, minute: Int): LocalTime = LocalTime(hour, minute)
     }
 }

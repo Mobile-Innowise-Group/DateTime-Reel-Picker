@@ -17,8 +17,8 @@ internal class TimePickerFragment : Fragment() {
 
     var timeStub: TextView? = null
 
-    private var hours: CustomNumberPicker? = null
-    private var minutes: CustomNumberPicker? = null
+    private lateinit var hours: CustomNumberPicker
+    private lateinit var minutes: CustomNumberPicker
 
     private lateinit var localTime: LocalTime
     private lateinit var minLocalTime: LocalTime
@@ -33,10 +33,8 @@ internal class TimePickerFragment : Fragment() {
         val view = inflater.inflate(R.layout.item_time_picker, container, false)
         applyArguments()
         applySavedStateIfNeeded(savedInstanceState)
-
-        refreshTimeValue(localTime)
-
         initializeView(view)
+        refreshTimeValue(localTime)
         return view
     }
 
@@ -65,7 +63,7 @@ internal class TimePickerFragment : Fragment() {
         hours = view.findViewById(R.id.hours)
         minutes = view.findViewById(R.id.minutes)
 
-        hours?.run {
+        hours.run {
             minValue = minLocalTime.hour
             maxValue = maxLocalTime.hour
             value = localTime.hour
@@ -87,7 +85,7 @@ internal class TimePickerFragment : Fragment() {
             }
         }
 
-        minutes?.run {
+        minutes.run {
             minValue =
                 if (localTime.hour == minLocalTime.hour) minLocalTime.minute else MIN_MINUTE
             maxValue =
@@ -114,12 +112,12 @@ internal class TimePickerFragment : Fragment() {
     private fun refreshTimeValue(newValue: LocalTime) {
         localTime = newValue
 
-        minutes?.minValue =
+        minutes.minValue =
             if (localTime.hour == minLocalTime.hour) minLocalTime.minute else MIN_MINUTE
-        minutes?.maxValue =
+        minutes.maxValue =
             if (localTime.hour == maxLocalTime.hour) maxLocalTime.minute else MAX_MINUTE
-        hours?.minValue = minLocalTime.hour
-        hours?.maxValue = maxLocalTime.hour
+        hours.minValue = minLocalTime.hour
+        hours.maxValue = maxLocalTime.hour
 
         val bundle = Bundle()
         bundle.putSerializable(UPDATE_TIME_TAB_TITLE_KEY, newValue)
