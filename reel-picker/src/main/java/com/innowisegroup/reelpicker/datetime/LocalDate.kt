@@ -1,9 +1,7 @@
 package com.innowisegroup.reelpicker.datetime
 
 import com.innowisegroup.reelpicker.extension.formattedMonth
-import com.innowisegroup.reelpicker.extension.isLeapYear
 import com.innowisegroup.reelpicker.extension.isWithinMinMaxRange
-import com.innowisegroup.reelpicker.extension.requireNonNull
 import java.io.Serializable
 import java.util.*
 
@@ -18,10 +16,6 @@ class LocalDate private constructor(val day: Int, val month: Int, val year: Int)
         }
         return of(day2, month, year)
     }
-
-    fun getMinYear() = MIN_YEAR
-
-    fun getMaxYear() = requireNonNull(year)
 
     internal fun lengthOfMonth(): Int =
         when (month) {
@@ -124,5 +118,8 @@ class LocalDate private constructor(val day: Int, val month: Int, val year: Int)
         private fun validateYear(year: Int) {
             require(year in MIN_YEAR..MAX_YEAR) { "Invalid years value" }
         }
+
+        private fun isLeapYear(currentYear: Long): Boolean =
+            currentYear and 3L == 0L && (currentYear % 100L != 0L || currentYear % 400L == 0L)
     }
 }
