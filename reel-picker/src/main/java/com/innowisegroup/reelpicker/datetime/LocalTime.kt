@@ -12,10 +12,10 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
     override fun hashCode(): Int = 31 * hour + minute
 
     internal fun withHour(hour: Int): LocalTime =
-        if (this.hour == hour) this else create(hour, this.minute)
+        if (this.hour == hour) this else of(hour, this.minute)
 
     internal fun withMinute(minute: Int): LocalTime =
-        if (this.minute == minute) this else create(this.hour, minute)
+        if (this.minute == minute) this else of(this.hour, minute)
 
     companion object {
         internal const val MIN_HOUR = 0
@@ -31,7 +31,11 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
             return LocalTime(getHour, getMinute)
         }
 
-        fun of(hour: Int, minute: Int): LocalTime = create(hour, minute)
+        fun of(hour: Int, minute: Int): LocalTime {
+            require(hour in MIN_HOUR..MAX_HOUR) { "Invalid hours value" }
+            require(minute in MIN_MINUTE..MAX_MINUTE) { "Invalid minutes value" }
+            return LocalTime(hour, minute)
+        }
 
         internal fun isTimeWithinMinMaxValue(
             time: LocalTime,
@@ -42,12 +46,6 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
         } else {
             isWithinMinMaxRange(time.hour, minTime.hour, maxTime.hour)
                     && isWithinMinMaxRange(time.minute, minTime.minute, maxTime.minute)
-        }
-
-        private fun create(hour: Int, minute: Int): LocalTime {
-            require(hour in MIN_HOUR..MAX_HOUR) { "Invalid hours value" }
-            require(minute in MIN_MINUTE..MAX_MINUTE) { "Invalid minutes value" }
-            return LocalTime(hour, minute)
         }
     }
 }

@@ -15,9 +15,9 @@ import java.util.*
 
 internal class DatePickerFragment : Fragment() {
 
-    private var day: CustomNumberPicker? = null
-    private var month: CustomNumberPicker? = null
-    private var year: CustomNumberPicker? = null
+    private lateinit var day: CustomNumberPicker
+    private lateinit var month: CustomNumberPicker
+    private lateinit var year: CustomNumberPicker
 
     var dateStub: TextView? = null
 
@@ -34,10 +34,8 @@ internal class DatePickerFragment : Fragment() {
         val view = inflater.inflate(R.layout.item_date_picker, container, false)
         applyArguments()
         applySavedStateIfNeeded(savedInstanceState)
-
-        refreshDateValue(localDate)
-
         initializeView(view)
+        refreshDateValue(localDate)
         return view
     }
 
@@ -67,7 +65,7 @@ internal class DatePickerFragment : Fragment() {
         year = view.findViewById(R.id.year)
         dateStub = view.findViewById(R.id.stub)
 
-        day?.run {
+        day.run {
             minValue =
                 if (minLocalDate.year == localDate.year && localDate.month == minLocalDate.month) minLocalDate.day else DAY_MIN_VALUE
             maxValue =
@@ -90,7 +88,7 @@ internal class DatePickerFragment : Fragment() {
             }
         }
 
-        month?.run {
+        month.run {
             minValue =
                 if (minLocalDate.year == localDate.year && localDate.month == minLocalDate.month) minLocalDate.month else MONTH_MIN_VALUE
             maxValue =
@@ -113,7 +111,7 @@ internal class DatePickerFragment : Fragment() {
             }
         }
 
-        year?.run {
+        year.run {
             minValue = minLocalDate.year
             maxValue = maxLocalDate.year
             value = localDate.year
@@ -136,16 +134,15 @@ internal class DatePickerFragment : Fragment() {
     }
 
     private fun refreshDateValue(newValue: LocalDate) {
-        day ?: return
         localDate = newValue
-        day?.minValue =
+        day.minValue =
             if (localDate.year == minLocalDate.year && localDate.month == minLocalDate.month) minLocalDate.day else DAY_MIN_VALUE
-        day?.maxValue =
+        day.maxValue =
             if (localDate.year == maxLocalDate.year && localDate.month == maxLocalDate.month) maxLocalDate.day else localDate.lengthOfMonth()
 
-        month?.minValue =
+        month.minValue =
             if (minLocalDate.year == localDate.year && localDate.month == minLocalDate.month) minLocalDate.month else MONTH_MIN_VALUE
-        month?.maxValue =
+        month.maxValue =
             if (maxLocalDate.year == localDate.year && localDate.month == maxLocalDate.month) maxLocalDate.month else MONTH_MAX_VALUE
 
         val bundle = Bundle()

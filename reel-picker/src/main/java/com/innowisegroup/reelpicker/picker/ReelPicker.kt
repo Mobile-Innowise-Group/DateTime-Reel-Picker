@@ -29,8 +29,8 @@ import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.WRAP_
 import com.innowisegroup.reelpicker.picker.ui.PagerAdapter
 import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment
 import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment.Companion.LOCAL_TIME
-import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment.Companion.MAX_TIME
-import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment.Companion.MIN_TIME
+import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment.Companion.MAX_LOCAL_TIME
+import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment.Companion.MIN_LOCAL_TIME
 
 class ReelPicker : DialogFragment() {
     private var tabLayout: TabLayout? = null
@@ -163,9 +163,10 @@ class ReelPicker : DialogFragment() {
     private fun createTimePickerFragment(): TimePickerFragment =
         TimePickerFragment().apply {
             arguments = Bundle().apply {
-                putSerializable(LOCAL_TIME, initialLocalDateTime)
-                putSerializable(MIN_TIME, minLocalDateTime)
-                putSerializable(MAX_TIME, maxLocalDateTime)
+                putSerializable(LOCAL_TIME, initialLocalDateTime.toLocalTime())
+                putSerializable(MIN_LOCAL_TIME, minLocalDateTime.toLocalTime())
+                putSerializable(MAX_LOCAL_TIME, maxLocalDateTime.toLocalTime())
+                putBoolean(WRAP_SELECTION_BOOLEAN, wrapSelectionWheel)
             }
         }
 
@@ -189,17 +190,17 @@ class ReelPicker : DialogFragment() {
         if (okClickCallback != null) {
             if (datePickerFragment == null) {
                 timePickerFragment?.timeStub?.requestFocus()
-                okClickCallback.onOkClick(timePickerFragment?.localDateTime)
+                okClickCallback.onOkClick(initialLocalDateTime)
                 return
             }
             if (timePickerFragment == null) {
                 datePickerFragment?.dateStub?.requestFocus()
-                okClickCallback.onOkClick(timePickerFragment?.localDateTime)
+                okClickCallback.onOkClick(initialLocalDateTime)
                 return
             }
             datePickerFragment?.dateStub?.requestFocus()
             timePickerFragment?.timeStub?.requestFocus()
-            okClickCallback.onOkClick(timePickerFragment?.localDateTime)
+            okClickCallback.onOkClick(initialLocalDateTime)
         }
     }
 
