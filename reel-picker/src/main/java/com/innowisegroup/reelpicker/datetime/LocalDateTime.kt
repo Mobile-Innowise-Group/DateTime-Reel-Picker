@@ -1,14 +1,9 @@
 package com.innowisegroup.reelpicker.datetime
 
-import com.innowisegroup.reelpicker.datetime.LocalDate.Companion.isDateWithinMinMaxValue
-import com.innowisegroup.reelpicker.datetime.LocalTime.Companion.MAX_HOUR
-import com.innowisegroup.reelpicker.datetime.LocalTime.Companion.MAX_MINUTE
-import com.innowisegroup.reelpicker.datetime.LocalTime.Companion.MIN_HOUR
-import com.innowisegroup.reelpicker.datetime.LocalTime.Companion.MIN_MINUTE
-import com.innowisegroup.reelpicker.datetime.LocalTime.Companion.isTimeWithinMinMaxValue
 import java.io.Serializable
 
-class LocalDateTime private constructor(private val date: LocalDate, private val time: LocalTime) : Serializable {
+class LocalDateTime private constructor(private val date: LocalDate, private val time: LocalTime) :
+    Serializable {
 
     fun toLocalDate(): LocalDate = date
 
@@ -35,38 +30,56 @@ class LocalDateTime private constructor(private val date: LocalDate, private val
         fun of(time: LocalTime): LocalDateTime = LocalDateTime(LocalDate.now(), time)
 
         internal fun validateInputDateTime(
-            initialLocalTime: LocalDateTime,
+            initialLocalDateTime: LocalDateTime,
             minLocalDateTime: LocalDateTime,
             maxLocalDateTime: LocalDateTime,
         ) {
-            if (!isDateWithinMinMaxValue(
-                    initialLocalTime.toLocalDate(),
-                    minLocalDateTime.toLocalDate(),
-                    maxLocalDateTime.toLocalDate()
-                )
-            ) throw IllegalArgumentException(
-                "Initial date value must be within max and min bounds"
+            checkValidDate(
+                initialLocalDateTime.toLocalDate(),
+                minLocalDateTime.toLocalDate(),
+                maxLocalDateTime.toLocalDate()
             )
-            if (initialLocalTime == minLocalDateTime) {
-                if (!isTimeWithinMinMaxValue(
-                        initialLocalTime.toLocalTime(),
-                        minLocalDateTime.toLocalTime(),
-                        LocalTime.of(MAX_HOUR, MAX_MINUTE)
-                    )
-                ) throw IllegalArgumentException(
-                    "Initial time value must be within max and min bounds"
-                )
-            }
-            if (initialLocalTime == maxLocalDateTime) {
-                if (!isTimeWithinMinMaxValue(
-                        initialLocalTime.toLocalTime(),
-                        LocalTime.of(MIN_HOUR, MIN_MINUTE),
-                        maxLocalDateTime.toLocalTime()
-                    )
-                ) throw IllegalArgumentException(
-                    "Initial time value must be within max and min bounds"
-                )
-            }
+            checkValidTime(
+                initialLocalDateTime.toLocalTime(),
+                minLocalDateTime.toLocalTime(),
+                maxLocalDateTime.toLocalTime()
+            )
+        }
+
+        private fun checkValidDate(
+            initialLocalDate: LocalDate,
+            minLocalDate: LocalDate,
+            maxLocalDate: LocalDate
+        ) {
+            require(initialLocalDate.year >= minLocalDate.year)
+            { "minLocalDate must not be more than initialLocalDate" }
+            require((initialLocalDate.month >= minLocalDate.month) || (initialLocalDate.year != minLocalDate.year))
+            { "minLocalDate must not be more than initialLocalDate" }
+            require((initialLocalDate.day >= minLocalDate.day) || (initialLocalDate.month != minLocalDate.month) || (initialLocalDate.year != minLocalDate.year))
+            { "minLocalDate must not be more than initialLocalDate" }
+
+            require(initialLocalDate.year <= maxLocalDate.year)
+            { "maxLocalDate must not be less than initialLocalDate" }
+            require((initialLocalDate.month <= maxLocalDate.month) || (initialLocalDate.year != maxLocalDate.year))
+            { "maxLocalDate must not be less than initialLocalDate" }
+            require(((initialLocalDate.day <= maxLocalDate.day) || (initialLocalDate.month != maxLocalDate.month) || (initialLocalDate.year != minLocalDate.year)))
+            { "maxLocalDate must not be less than initialLocalDate" }
+        }
+
+        private fun checkValidTime(
+            initialLocalTime: LocalTime,
+            minLocalTime: LocalTime,
+            maxLocalTime: LocalTime
+        ) {
+            require(initialLocalTime.hour >= minLocalTime.hour)
+            { "minLocalTime must not be more than initialLocalTime" }
+            require((initialLocalTime.minute >= minLocalTime.minute) || (initialLocalTime.hour != minLocalTime.hour))
+            { "minLocalTime must not be more than initialLocalTime" }
+
+            require((initialLocalTime.hour <= maxLocalTime.hour))
+            { "maxLocalTime must not be less than initialLocalTime" }
+            require((initialLocalTime.minute <= maxLocalTime.minute) || (initialLocalTime.hour != maxLocalTime.hour))
+            { "maxLocalTime must not be less than initialLocalTime" }
         }
     }
 }

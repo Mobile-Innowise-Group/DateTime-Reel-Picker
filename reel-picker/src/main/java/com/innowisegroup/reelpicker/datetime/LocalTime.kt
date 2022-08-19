@@ -1,6 +1,10 @@
 package com.innowisegroup.reelpicker.datetime
 
-import com.innowisegroup.reelpicker.extension.isWithinMinMaxRange
+import androidx.annotation.IntRange
+import com.innowisegroup.reelpicker.extension.MAX_HOUR
+import com.innowisegroup.reelpicker.extension.MAX_MINUTE
+import com.innowisegroup.reelpicker.extension.MIN_HOUR
+import com.innowisegroup.reelpicker.extension.MIN_MINUTE
 import java.io.Serializable
 import java.util.*
 
@@ -18,11 +22,6 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
         if (this.minute == minute) this else of(this.hour, minute)
 
     companion object {
-        internal const val MIN_HOUR = 0
-        internal const val MAX_HOUR = 23
-        internal const val MIN_MINUTE = 0
-        internal const val MAX_MINUTE = 59
-
         private val calendar: Calendar = Calendar.getInstance()
 
         fun now(): LocalTime {
@@ -31,21 +30,13 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
             return LocalTime(getHour, getMinute)
         }
 
-        fun of(hour: Int, minute: Int): LocalTime {
+        fun of(
+            @IntRange(from = MIN_HOUR.toLong(), to = MAX_HOUR.toLong()) hour: Int,
+            @IntRange(from = MIN_MINUTE.toLong(), to = MAX_MINUTE.toLong()) minute: Int
+        ): LocalTime {
             require(hour in MIN_HOUR..MAX_HOUR) { "Invalid hours value" }
             require(minute in MIN_MINUTE..MAX_MINUTE) { "Invalid minutes value" }
             return LocalTime(hour, minute)
-        }
-
-        internal fun isTimeWithinMinMaxValue(
-            time: LocalTime,
-            minTime: LocalTime,
-            maxTime: LocalTime
-        ): Boolean = if (time.hour == minTime.hour && time.hour == maxTime.hour) {
-            isWithinMinMaxRange(time.minute, minTime.minute, maxTime.minute)
-        } else {
-            isWithinMinMaxRange(time.hour, minTime.hour, maxTime.hour)
-                    && isWithinMinMaxRange(time.minute, minTime.minute, maxTime.minute)
         }
     }
 }

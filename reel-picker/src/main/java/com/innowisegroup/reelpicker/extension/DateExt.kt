@@ -16,5 +16,3 @@ internal fun LocalDate.formatDate(): String {
 }
 
 internal fun Int.formattedMonth(): Int = this + 1
-
-internal fun isWithinMinMaxRange(value: Int, min: Int, max: Int) = value in min..max

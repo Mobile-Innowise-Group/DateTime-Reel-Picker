@@ -19,13 +19,11 @@ import com.innowisegroup.reelpicker.datetime.LocalDate
 import com.innowisegroup.reelpicker.datetime.LocalDateTime
 import com.innowisegroup.reelpicker.datetime.LocalDateTime.Companion.validateInputDateTime
 import com.innowisegroup.reelpicker.datetime.LocalTime
-import com.innowisegroup.reelpicker.extension.formatDate
-import com.innowisegroup.reelpicker.extension.formatTime
+import com.innowisegroup.reelpicker.extension.*
 import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment
 import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.LOCAL_DATE
 import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.MAX_LOCAL_DATE
 import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.MIN_LOCAL_DATE
-import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.WRAP_SELECTION_BOOLEAN
 import com.innowisegroup.reelpicker.picker.ui.PagerAdapter
 import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment
 import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment.Companion.LOCAL_TIME
@@ -66,18 +64,17 @@ class ReelPicker : DialogFragment() {
         if (!isAdded) show(fragmentManager, DIALOG_TAG)
     }
 
-    private fun applyArguments() {
+    private fun applyArguments() =
         with(requireArguments()) {
             initialLocalDateTime =
-                getSerializable(INITIAL_LOCAL_DATE_TIME) as? LocalDateTime ?: LocalDateTime.now()
+                getSerializable(INITIAL_LOCAL_DATE_TIME) as LocalDateTime
             minLocalDateTime =
-                getSerializable(MIN_LOCAL_DATE_TIME) as? LocalDateTime ?: MIN_DEFAULT_DATE_TIME
+                getSerializable(MIN_LOCAL_DATE_TIME) as LocalDateTime
             maxLocalDateTime =
-                getSerializable(MAX_LOCAL_DATE_TIME) as? LocalDateTime ?: MAX_DEFAULT_DATE_TIME
+                getSerializable(MAX_LOCAL_DATE_TIME) as LocalDateTime
             wrapSelectionWheel = getBoolean(WRAP_SELECTION_WHEEL)
             pickerType = getSerializable(PICKER_TYPE) as PickerType
         }
-    }
 
     private fun applyAttributes() {
         isCancelable = false
@@ -96,7 +93,7 @@ class ReelPicker : DialogFragment() {
             viewLifecycleOwner
         ) { _, bundle ->
             val selectedTime =
-                bundle.getSerializable(UPDATE_TIME_TAB_TITLE_KEY) as? LocalTime ?: LocalTime.now()
+                bundle.getSerializable(UPDATE_TIME_TAB_TITLE_KEY) as LocalTime
             refresh(selectedTime.formatTime())
         }
 
@@ -105,7 +102,7 @@ class ReelPicker : DialogFragment() {
             viewLifecycleOwner
         ) { _, bundle ->
             val selectedDate =
-                bundle.getSerializable(UPDATE_DATE_TAB_TITLE_KEY) as? LocalDate ?: LocalDate.now()
+                bundle.getSerializable(UPDATE_DATE_TAB_TITLE_KEY) as LocalDate
             refresh(selectedDate.formatDate())
         }
     }
@@ -166,7 +163,6 @@ class ReelPicker : DialogFragment() {
                 putSerializable(LOCAL_TIME, initialLocalDateTime.toLocalTime())
                 putSerializable(MIN_LOCAL_TIME, minLocalDateTime.toLocalTime())
                 putSerializable(MAX_LOCAL_TIME, maxLocalDateTime.toLocalTime())
-                putBoolean(WRAP_SELECTION_BOOLEAN, wrapSelectionWheel)
             }
         }
 
@@ -176,7 +172,6 @@ class ReelPicker : DialogFragment() {
                 putSerializable(LOCAL_DATE, initialLocalDateTime.toLocalDate())
                 putSerializable(MIN_LOCAL_DATE, minLocalDateTime.toLocalDate())
                 putSerializable(MAX_LOCAL_DATE, maxLocalDateTime.toLocalDate())
-                putBoolean(WRAP_SELECTION_BOOLEAN, wrapSelectionWheel)
             }
         }
 
@@ -229,23 +224,24 @@ class ReelPicker : DialogFragment() {
         private const val INITIAL_LOCAL_DATE_TIME = "initialLocalDateTime"
         private const val MIN_LOCAL_DATE_TIME = "minLocalDateTime"
         private const val MAX_LOCAL_DATE_TIME = "maxLocalDateTime"
-        private const val WRAP_SELECTION_WHEEL = "wrapSelectionWheel"
         private const val PICKER_TYPE = "pickerType"
 
-        private val MIN_DEFAULT_TIME = LocalTime.of(0, 0)
-        private val MAX_DEFAULT_TIME = LocalTime.of(23, 59)
-        private val MIN_DEFAULT_DATE = LocalDate.of(1, 1, 1900)
-        private val MAX_DEFAULT_DATE = LocalDate.of(1, 1, 2100)
-        private val MIN_DEFAULT_DATE_TIME = LocalDateTime.of(MIN_DEFAULT_DATE, MIN_DEFAULT_TIME)
-        private val MAX_DEFAULT_DATE_TIME = LocalDateTime.of(MAX_DEFAULT_DATE, MAX_DEFAULT_TIME)
+        private val MIN_DEFAULT_LOCAL_TIME = LocalTime.of(MIN_HOUR, MIN_MINUTE)
+        private val MAX_DEFAULT_LOCAL_TIME = LocalTime.of(MAX_HOUR, MAX_MINUTE)
+        private val MIN_DEFAULT_LOCAL_DATE = LocalDate.of(MIN_DAY, MIN_MONTH, MIN_YEAR)
+        private val MAX_DEFAULT_LOCAL_DATE = LocalDate.of(MIN_DAY, MIN_MONTH, MAX_YEAR)
+        private val MIN_DEFAULT_DATE_TIME =
+            LocalDateTime.of(date = MIN_DEFAULT_LOCAL_DATE, time = MIN_DEFAULT_LOCAL_TIME)
+        private val MAX_DEFAULT_DATE_TIME =
+            LocalDateTime.of(date = MAX_DEFAULT_LOCAL_DATE, time = MAX_DEFAULT_LOCAL_TIME)
 
         //need to kotlin-java interop
         @JvmStatic
         @JvmOverloads
         fun createTimeDialog(
             initialLocalTime: LocalTime? = LocalTime.now(),
-            minLocalTime: LocalTime? = MIN_DEFAULT_TIME,
-            maxLocalTime: LocalTime? = MAX_DEFAULT_TIME,
+            minLocalTime: LocalTime? = MIN_DEFAULT_LOCAL_TIME,
+            maxLocalTime: LocalTime? = MAX_DEFAULT_LOCAL_TIME,
             wrapSelectionWheel: Boolean = false
         ): ReelPicker {
             requireNotNull(initialLocalTime) { "initialLocalTime must not be null" }
@@ -265,8 +261,8 @@ class ReelPicker : DialogFragment() {
         @JvmOverloads
         fun createDateDialog(
             initialLocalDate: LocalDate? = LocalDate.now(),
-            minLocalDate: LocalDate? = MIN_DEFAULT_DATE,
-            maxLocalDate: LocalDate? = MAX_DEFAULT_DATE,
+            minLocalDate: LocalDate? = MIN_DEFAULT_LOCAL_DATE,
+            maxLocalDate: LocalDate? = MAX_DEFAULT_LOCAL_DATE,
             wrapSelectionWheel: Boolean = false
         ): ReelPicker {
             requireNotNull(initialLocalDate) { "initialLocalDate must not be null" }

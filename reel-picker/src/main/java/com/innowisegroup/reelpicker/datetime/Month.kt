@@ -14,12 +14,14 @@ enum class Month {
     NOVEMBER,
     DECEMBER;
 
-    internal fun of(month: Int): Month =
-        if (month in 1..12) {
-            values()[month - 1]
-        } else {
-            throw Exception("Invalid value for Month Of Year: $month")
-        }
+    companion object {
+        internal fun Int.of(): Month =
+            if (this in 1..12) {
+                values()[this - 1]
+            } else {
+                throw Exception("Invalid value for Month Of Year: $this")
+            }
+    }
 
     internal fun of(): Int =
         if (this in values()) {
