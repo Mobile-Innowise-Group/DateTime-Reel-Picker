@@ -14,5 +14,3 @@ internal fun LocalDate.formatDate(): String {
     val correctMonth = if (month < 10) "0$month" else "$month"
     return "$correctDay.$correctMonth.$year"
 }
-
-internal fun Int.formattedMonth(): Int = this + 1

@@ -1,6 +1,7 @@
 package com.innowisegroup.reelpicker.extension
 
 internal const val MIN_DAY = 1
+internal const val MAX_DAY_DEFAULT = 31
 internal const val MIN_MONTH = 1
 internal const val MAX_MONTH = 12
 internal const val MIN_YEAR = 1900

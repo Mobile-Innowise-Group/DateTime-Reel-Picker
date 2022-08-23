@@ -19,7 +19,7 @@ enum class Month {
             if (this in 1..12) {
                 values()[this - 1]
             } else {
-                throw Exception("Invalid value for Month Of Year: $this")
+                throw IllegalArgumentException("Invalid value for Month Of Year: $this")
             }
     }
 
@@ -37,10 +37,10 @@ enum class Month {
                 SEPTEMBER -> 9
                 OCTOBER -> 10
                 NOVEMBER -> 11
-                else -> 12
+                DECEMBER -> 12
             }
         } else {
-            throw Exception("Invalid value for number of month: $this")
+            throw IllegalArgumentException("Invalid value for number of month: $this")
         }
 
     internal fun length(leapYear: Boolean): Int =

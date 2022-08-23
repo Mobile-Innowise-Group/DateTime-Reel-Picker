@@ -21,15 +21,19 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
     internal fun withMinute(minute: Int): LocalTime =
         if (this.minute == minute) this else of(this.hour, minute)
 
+    internal fun getSecondsOfTime(): Int = hour * 3600 + minute * 60
+
     companion object {
         private val calendar: Calendar = Calendar.getInstance()
 
+        @JvmStatic
         fun now(): LocalTime {
             val getHour = calendar.get(Calendar.HOUR_OF_DAY)
             val getMinute = calendar.get(Calendar.MINUTE)
             return LocalTime(getHour, getMinute)
         }
 
+        @JvmStatic
         fun of(
             @IntRange(from = MIN_HOUR.toLong(), to = MAX_HOUR.toLong()) hour: Int,
             @IntRange(from = MIN_MINUTE.toLong(), to = MAX_MINUTE.toLong()) minute: Int
