@@ -15,13 +15,35 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
 
     override fun hashCode(): Int = 31 * hour + minute
 
+    fun plusHours(hoursToAdd: Int): LocalTime =
+        if (hoursToAdd == 0) {
+            this
+        } else {
+            val newHour = hour + hoursToAdd
+            of(newHour, minute)
+        }
+
+    fun minusHours(hoursToSubtract: Int): LocalTime = plusHours(-hoursToSubtract)
+
+    fun plusMinutes(minutesToAdd: Int): LocalTime =
+        if (minutesToAdd == 0) {
+            this
+        } else {
+            val minutesAfterAdding = hour * MINUTES_PER_HOUR + minute + minutesToAdd
+            val newHour = minutesAfterAdding.floorDiv(MINUTES_PER_HOUR)
+            val newMinute = minutesAfterAdding.mod(MINUTES_PER_HOUR)
+            of(newHour, newMinute)
+        }
+
+    fun minusMinutes(minutesToSubtract: Int): LocalTime = plusMinutes(-minutesToSubtract)
+
     internal fun withHour(hour: Int): LocalTime =
         if (this.hour == hour) this else of(hour, this.minute)
 
     internal fun withMinute(minute: Int): LocalTime =
         if (this.minute == minute) this else of(this.hour, minute)
 
-    internal fun getSecondsOfTime(): Int = hour * 3600 + minute * 60
+    internal fun getSecondsOfTime(): Int = hour * 3600 + minute * MINUTES_PER_HOUR
 
     companion object {
         private val calendar: Calendar = Calendar.getInstance()
@@ -43,4 +65,6 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
             return LocalTime(hour, minute)
         }
     }
+
+    private val MINUTES_PER_HOUR = 60
 }

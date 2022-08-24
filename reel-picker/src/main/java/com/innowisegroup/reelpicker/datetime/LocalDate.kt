@@ -8,18 +8,104 @@ import java.util.*
 
 class LocalDate private constructor(val day: Int, val month: Int, val year: Int) : Serializable {
 
+    private val DAYS_PER_CYCLE = 146097
+
+    private val DAYS_0000_TO_1970 = DAYS_PER_CYCLE * 5 - (30 * 365 + 7)
+
     override fun equals(other: Any?): Boolean =
         this.year == (other as LocalDate).year && this.month == other.month && this.day == other.day
 
     override fun hashCode(): Int = 31 * day + month + year
 
-    internal fun plusYears(yearsToAdd: Int): LocalDate =
+    fun plusDays(daysToAdd: Int): LocalDate =
+        if (daysToAdd == 0) {
+            this
+        } else {
+            val mjDay = Math.addExact(toEpochDay(), daysToAdd)
+            ofEpochDay(mjDay)
+        }
+
+    private fun toEpochDay(): Int {
+        val y = year
+        val m = month
+        var total = 0
+        total += 365 * y
+        if (y >= 0) {
+            total += (y + 3) / 4 - (y + 99) / 100 + (y + 399) / 400
+        } else {
+            total -= y / -4 - y / -100 + y / -400
+        }
+        total += (367 * m - 362) / 12
+        total += (day - 1)
+        if (m > 2) {
+            total--
+            if (!isLeapYear(year.toLong())) {
+                total--
+            }
+        }
+        return total - DAYS_0000_TO_1970
+    }
+
+    private fun ofEpochDay(epochDay: Int): LocalDate {
+        var zeroDay = epochDay + DAYS_0000_TO_1970
+        zeroDay -= 60
+        var adjust = 0
+        if (zeroDay < 0) {
+            val adjustCycles = (zeroDay + 1) / DAYS_PER_CYCLE - 1
+            adjust = adjustCycles * 400
+            zeroDay += -adjustCycles * DAYS_PER_CYCLE
+        }
+        var yearEst = (400 * zeroDay + 591) / DAYS_PER_CYCLE
+        var doyEst = zeroDay - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400)
+        if (doyEst < 0) {
+            yearEst--
+            doyEst = zeroDay - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400)
+        }
+        yearEst += adjust
+        val marchDoy0 = doyEst
+
+        val marchMonth0 = (marchDoy0 * 5 + 2) / 153
+        val month = (marchMonth0 + 2) % 12 + 1
+        val dom = marchDoy0 - (marchMonth0 * 306 + 5) / 10 + 1
+        yearEst += (marchMonth0 / 10)
+
+        val year = yearEst
+        return of(dom, month, year)
+    }
+
+    fun minusDays(daysToMinus: Int): LocalDate =
+        if (daysToMinus == 0) {
+            this
+        } else {
+            val newDay = day - daysToMinus
+            resolvePreviousValid(newDay, month, year)
+        }
+
+    fun plusMonths(monthsToAdd: Int): LocalDate =
+        if (monthsToAdd == 0) {
+            this
+        } else {
+            val monthCount = year * 12L + (month - 1)
+            val calcMonths: Long = monthCount + monthsToAdd
+            val newYear = Math.floorDiv(calcMonths, 12).toInt()
+            val newMonth = Math.floorMod(calcMonths, 12) + 1
+            resolvePreviousValid(day, newMonth, newYear)
+        }
+
+    fun minusMonths(monthsToSubtract: Int): LocalDate =
+        if (monthsToSubtract.toLong() == Long.MIN_VALUE)
+            plusMonths(Long.MAX_VALUE.toInt()).plusMonths(1)
+        else plusMonths(-monthsToSubtract)
+
+    fun plusYears(yearsToAdd: Int): LocalDate =
         if (yearsToAdd == 0) {
             this
         } else {
             val newYear = year + yearsToAdd
             resolvePreviousValid(day, month, newYear)
         }
+
+    fun minusYears(yearsToMinus: Int): LocalDate = plusYears(-yearsToMinus)
 
     internal fun withDayOfMonth(day: Int): LocalDate =
         if (this.day == day) this else of(day, month, year)
@@ -39,7 +125,7 @@ class LocalDate private constructor(val day: Int, val month: Int, val year: Int)
         }
 
     internal fun getHoursOfDate(): Int =
-        (year * if (isLeapYear(year.toLong())) 8784 else 8760) + (month * 744) + day * 24
+        (year * if (isLeapYear(year.toLong())) 8784 else 8760) + (month * lengthOfMonth() * 24) + day * 24
 
     private fun resolvePreviousValid(day: Int, month: Int, year: Int): LocalDate {
         var day2 = day

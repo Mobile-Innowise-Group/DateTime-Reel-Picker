@@ -3,7 +3,7 @@ package com.innowisegroup.datetimepicker
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.innowisegroup.reelpicker.datetime.LocalDate
+import com.innowisegroup.reelpicker.datetime.LocalTime
 import com.innowisegroup.reelpicker.picker.ReelPicker
 
 class MainActivity : AppCompatActivity() {
@@ -12,10 +12,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val reelPicker = ReelPicker.createDateDialog(
-            initialLocalDate = LocalDate.of(28, 2,1900),
-            minLocalDate = LocalDate.of(27, 2,1900),
-            maxLocalDate = LocalDate.of(28, 2,1900)
+        val reelPicker = ReelPicker.createTimeDialog(
+            initialLocalTime = LocalTime.of(1, 3).minusMinutes(62),
+            minLocalTime = LocalTime.of(0, 0),
+            maxLocalTime = LocalTime.of(1, 1).plusMinutes(30)
         )
 
         val javaWrapper = JavaWrapper()
