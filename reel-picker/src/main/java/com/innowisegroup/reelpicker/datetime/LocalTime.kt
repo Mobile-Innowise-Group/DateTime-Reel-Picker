@@ -15,22 +15,53 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
 
     override fun hashCode(): Int = 31 * hour + minute
 
+    fun plusHours(hoursToAdd: Int): LocalTime =
+        if (hoursToAdd == 0) {
+            this
+        } else {
+            val newHour = ((hoursToAdd % HOURS_PER_DAY) + hour + HOURS_PER_DAY) % HOURS_PER_DAY
+            of(newHour, minute)
+        }
+
+    fun minusHours(hoursToSubtract: Int): LocalTime = plusHours(-hoursToSubtract)
+
+    fun plusMinutes(minutesToAdd: Int): LocalTime =
+        if (minutesToAdd == 0) {
+            this
+        } else {
+            val minutesOfDay = hour * MINUTES_PER_HOUR + minute
+            val newMinutesOfDay =
+                ((minutesToAdd % MINUTES_PER_DAY) + minutesOfDay + MINUTES_PER_DAY) % MINUTES_PER_DAY
+            if (minutesOfDay == newMinutesOfDay) {
+                this
+            } else {
+                val newHour = newMinutesOfDay / MINUTES_PER_HOUR
+                val newMinute = newMinutesOfDay % MINUTES_PER_HOUR
+                of(newHour, newMinute)
+            }
+        }
+
+    fun minusMinutes(minutesToSubtract: Int): LocalTime = plusMinutes(-minutesToSubtract)
+
     internal fun withHour(hour: Int): LocalTime =
         if (this.hour == hour) this else of(hour, this.minute)
 
     internal fun withMinute(minute: Int): LocalTime =
         if (this.minute == minute) this else of(this.hour, minute)
 
-    internal fun getSecondsOfTime(): Int = hour * 3600 + minute * 60
+    internal fun getSecondsOfTime(): Int = hour * 3600 + minute * MINUTES_PER_HOUR
 
     companion object {
         private val calendar: Calendar = Calendar.getInstance()
+        private const val MINUTES_PER_HOUR = 60
+        private const val MINUTES_PER_DAY = 1440
+        private const val HOURS_PER_DAY = 24
 
         @JvmStatic
         fun now(): LocalTime {
-            val getHour = calendar.get(Calendar.HOUR_OF_DAY)
-            val getMinute = calendar.get(Calendar.MINUTE)
-            return LocalTime(getHour, getMinute)
+            val hour = calendar.get(Calendar.HOUR_OF_DAY)
+            val minute = calendar.get(Calendar.MINUTE)
+            return LocalTime(hour, minute)
         }
 
         @JvmStatic
