@@ -8,10 +8,6 @@ import java.util.*
 
 class LocalDate private constructor(val day: Int, val month: Int, val year: Int) : Serializable {
 
-    private val DAYS_PER_CYCLE = 146097
-
-    private val DAYS_0000_TO_1970 = DAYS_PER_CYCLE * 5 - (30 * 365 + 7)
-
     override fun equals(other: Any?): Boolean =
         this.year == (other as LocalDate).year && this.month == other.month && this.day == other.day
 
@@ -73,13 +69,7 @@ class LocalDate private constructor(val day: Int, val month: Int, val year: Int)
         return of(dom, month, year)
     }
 
-    fun minusDays(daysToMinus: Int): LocalDate =
-        if (daysToMinus == 0) {
-            this
-        } else {
-            val newDay = day - daysToMinus
-            resolvePreviousValid(newDay, month, year)
-        }
+    fun minusDays(daysToMinus: Int): LocalDate = plusDays(-daysToMinus)
 
     fun plusMonths(monthsToAdd: Int): LocalDate =
         if (monthsToAdd == 0) {
@@ -124,8 +114,26 @@ class LocalDate private constructor(val day: Int, val month: Int, val year: Int)
             else -> 31
         }
 
-    internal fun getHoursOfDate(): Int =
-        (year * if (isLeapYear(year.toLong())) 8784 else 8760) + (month * lengthOfMonth() * 24) + day * 24
+    internal fun getDaysOfDate(): Int = ofYearDays() + ofYearDay()
+
+    internal fun ofYearDay(): Int {
+        var value = 0
+        for (i in 1 until month)
+            value += when (i) {
+                2 -> if (isLeapYear(year.toLong())) 29 else 28
+                3, 5, 7, 8, 10 -> 31
+                4, 6, 9, 11 -> 30
+                else -> 31
+            }
+        return value + day
+    }
+
+    private fun ofYearDays(): Int {
+        var value = 0
+        for (i in 1 until year)
+            value += (if (isLeapYear(i.toLong())) 366 else 365) * i
+        return value
+    }
 
     private fun resolvePreviousValid(day: Int, month: Int, year: Int): LocalDate {
         var day2 = day
@@ -140,6 +148,8 @@ class LocalDate private constructor(val day: Int, val month: Int, val year: Int)
 
     companion object {
         private val calendar: Calendar = Calendar.getInstance()
+        private const val DAYS_PER_CYCLE = 146097
+        private const val DAYS_0000_TO_1970 = DAYS_PER_CYCLE * 5 - (30 * 365 + 7)
 
         @JvmStatic
         fun now(): LocalDate {

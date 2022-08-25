@@ -19,7 +19,7 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
         if (hoursToAdd == 0) {
             this
         } else {
-            val newHour = hour + hoursToAdd
+            val newHour = ((hoursToAdd % HOURS_PER_DAY) + hour + HOURS_PER_DAY) % HOURS_PER_DAY
             of(newHour, minute)
         }
 
@@ -29,10 +29,16 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
         if (minutesToAdd == 0) {
             this
         } else {
-            val minutesAfterAdding = hour * MINUTES_PER_HOUR + minute + minutesToAdd
-            val newHour = minutesAfterAdding.floorDiv(MINUTES_PER_HOUR)
-            val newMinute = minutesAfterAdding.mod(MINUTES_PER_HOUR)
-            of(newHour, newMinute)
+            val minutesOfDay = hour * MINUTES_PER_HOUR + minute
+            val newMinutesOfDay =
+                ((minutesToAdd % MINUTES_PER_DAY) + minutesOfDay + MINUTES_PER_DAY) % MINUTES_PER_DAY
+            if (minutesOfDay == newMinutesOfDay) {
+                this
+            } else {
+                val newHour = newMinutesOfDay / MINUTES_PER_HOUR
+                val newMinute = newMinutesOfDay % MINUTES_PER_HOUR
+                of(newHour, newMinute)
+            }
         }
 
     fun minusMinutes(minutesToSubtract: Int): LocalTime = plusMinutes(-minutesToSubtract)
@@ -47,12 +53,15 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
 
     companion object {
         private val calendar: Calendar = Calendar.getInstance()
+        private const val MINUTES_PER_HOUR = 60
+        private const val MINUTES_PER_DAY = 1440
+        private const val HOURS_PER_DAY = 24
 
         @JvmStatic
         fun now(): LocalTime {
-            val getHour = calendar.get(Calendar.HOUR_OF_DAY)
-            val getMinute = calendar.get(Calendar.MINUTE)
-            return LocalTime(getHour, getMinute)
+            val hour = calendar.get(Calendar.HOUR_OF_DAY)
+            val minute = calendar.get(Calendar.MINUTE)
+            return LocalTime(hour, minute)
         }
 
         @JvmStatic
@@ -65,6 +74,4 @@ class LocalTime private constructor(val hour: Int, val minute: Int) : Serializab
             return LocalTime(hour, minute)
         }
     }
-
-    private val MINUTES_PER_HOUR = 60
 }
