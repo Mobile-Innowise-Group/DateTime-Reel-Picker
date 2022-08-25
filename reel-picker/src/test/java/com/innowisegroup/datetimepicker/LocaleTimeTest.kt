@@ -6,7 +6,6 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert
 import org.junit.Assert.assertThrows
 import org.junit.Test
-import java.util.*
 
 class LocaleTimeTest {
 
@@ -124,18 +123,6 @@ class LocaleTimeTest {
         val timeActual = LocalTime.of(14, 20).getSecondsOfTime()
 
         Assert.assertEquals(timeExpected, timeActual)
-    }
-
-    @Test
-    fun `test now()`() {
-        val calendar: Calendar = Calendar.getInstance()
-        val currentTimeExpected = LocalTime.of(
-            calendar.get(Calendar.HOUR_OF_DAY),
-            calendar.get(Calendar.MINUTE)
-        )
-        val timeActual = LocalTime.now()
-
-        Assert.assertEquals(currentTimeExpected, timeActual)
     }
 
     @Test

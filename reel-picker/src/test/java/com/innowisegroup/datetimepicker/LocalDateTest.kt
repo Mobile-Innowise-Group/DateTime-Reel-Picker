@@ -7,7 +7,6 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert
 import org.junit.Assert.assertThrows
 import org.junit.Test
-import java.util.*
 
 class LocalDateTest {
 
@@ -189,19 +188,6 @@ class LocalDateTest {
         Assert.assertEquals(dateExpected.day, dateActual.day)
         Assert.assertEquals(dateExpected.month, dateActual.month)
         Assert.assertEquals(dateExpected.year, dateActual.year)
-    }
-
-    @Test
-    fun `test now()`() {
-        val calendar: Calendar = Calendar.getInstance()
-        val hoursValueExpected = LocalDate.of(
-            calendar.get(Calendar.DAY_OF_MONTH),
-            calendar.get(Calendar.MONTH) + 1,
-            calendar.get(Calendar.YEAR)
-        )
-        val dateActual = LocalDate.now()
-
-        Assert.assertEquals(hoursValueExpected, dateActual)
     }
 
     @Test

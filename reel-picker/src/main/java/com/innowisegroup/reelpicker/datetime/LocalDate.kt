@@ -66,9 +66,7 @@ class LocalDate private constructor(val day: Int, val month: Int, val year: Int)
             else -> 31
         }
 
-    internal fun daysUntil(end: LocalDate): Int {
-        return end.toEpochDay() - toEpochDay()
-    }
+    internal fun daysUntil(end: LocalDate): Int = end.toEpochDay() - toEpochDay()
 
     private fun resolvePreviousValid(day: Int, month: Int, year: Int): LocalDate {
         var day2 = day

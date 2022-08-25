@@ -13,22 +13,6 @@ import java.util.*
 class LocalDateTimeTest {
 
     @Test
-    fun `test now() for time`() {
-        val timeExpected = LocalTime.now()
-        val timeActual = LocalDateTime.now().toLocalTime()
-
-        Assert.assertEquals(timeExpected, timeActual)
-    }
-
-    @Test
-    fun `test now() for date`() {
-        val dateExpected = LocalDate.now()
-        val dateActual = LocalDateTime.now().toLocalDate()
-
-        Assert.assertEquals(dateExpected, dateActual)
-    }
-
-    @Test
     fun `test of() for time`() {
         val calendar: Calendar = Calendar.getInstance()
         val currentTimeExpected = LocalTime.of(
@@ -79,9 +63,9 @@ class LocalDateTimeTest {
         val illegalArgumentException =
             Assert.assertThrows(IllegalArgumentException::class.java) {
                 LocalDateTime.validateInputDateTime(
-                    of(LocalDate.of(1,1,2001)),
-                    of(LocalDate.of(1,1,2001)),
-                    of(LocalDate.of(31,12,2000))
+                    of(LocalDate.of(1, 1, 2001)),
+                    of(LocalDate.of(1, 1, 2001)),
+                    of(LocalDate.of(31, 12, 2000))
                 )
             }
         MatcherAssert.assertThat(

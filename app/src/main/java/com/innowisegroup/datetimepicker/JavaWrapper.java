@@ -2,7 +2,6 @@ package com.innowisegroup.datetimepicker;
 
 import androidx.fragment.app.FragmentManager;
 
-import com.innowisegroup.reelpicker.datetime.LocalDate;
 import com.innowisegroup.reelpicker.datetime.LocalTime;
 import com.innowisegroup.reelpicker.picker.ReelPicker;
 
