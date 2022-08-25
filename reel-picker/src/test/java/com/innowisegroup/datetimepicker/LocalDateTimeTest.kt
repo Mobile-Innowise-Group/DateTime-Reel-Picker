@@ -75,34 +75,18 @@ class LocalDateTimeTest {
     }
 
     @Test
-    fun `test checkValidDate()`() {
+    fun `test validateInputDateTime()`() {
         val illegalArgumentException =
             Assert.assertThrows(IllegalArgumentException::class.java) {
-                LocalDateTime.checkValidDate(
-                    LocalDate.of(1, 1, 2001),
-                    LocalDate.of(1, 1, 2001),
-                    LocalDate.of(31, 12, 2000)
+                LocalDateTime.validateInputDateTime(
+                    of(LocalDate.of(1,1,2001)),
+                    of(LocalDate.of(1,1,2001)),
+                    of(LocalDate.of(31,12,2000))
                 )
             }
         MatcherAssert.assertThat(
             illegalArgumentException.message,
             CoreMatchers.containsString("initialLocalDate does not fit min..max range of minLocalDate and maxLocalDate")
-        )
-    }
-
-    @Test
-    fun `test checkValidTime()`() {
-        val illegalArgumentException =
-            Assert.assertThrows(IllegalArgumentException::class.java) {
-                LocalDateTime.checkValidTime(
-                    LocalTime.of(1,1),
-                    LocalTime.of(1, 1),
-                    LocalTime.of(1,0)
-                )
-            }
-        MatcherAssert.assertThat(
-            illegalArgumentException.message,
-            CoreMatchers.containsString("initialLocalTime does not fit min..max range of minLocalTime and maxLocalTime")
         )
     }
 }

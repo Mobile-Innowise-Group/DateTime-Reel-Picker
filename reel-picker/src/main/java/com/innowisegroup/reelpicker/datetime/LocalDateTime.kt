@@ -57,8 +57,8 @@ class LocalDateTime private constructor(private val date: LocalDate, private val
             minLocalDate: LocalDate,
             maxLocalDate: LocalDate
         ) = require(
-            initialLocalDate.getDaysOfDate() >= minLocalDate.getDaysOfDate() &&
-                    initialLocalDate.getDaysOfDate() <= maxLocalDate.getDaysOfDate()
+            initialLocalDate.daysUntil(minLocalDate) <= 0 &&
+                    initialLocalDate.daysUntil(maxLocalDate) >= 0
         ) { "initialLocalDate does not fit min..max range of minLocalDate and maxLocalDate" }
 
         private fun checkValidTime(

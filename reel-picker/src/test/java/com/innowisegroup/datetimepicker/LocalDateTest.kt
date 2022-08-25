@@ -259,12 +259,4 @@ class LocalDateTest {
             CoreMatchers.containsString("Invalid year value")
         )
     }
-
-    @Test
-    fun `test daysInYear`() {
-        val hoursValueExpected = 366
-        val dateActual = LocalDate.of(31,12,2000).ofYearDay()
-
-        Assert.assertEquals(hoursValueExpected, dateActual)
-    }
 }

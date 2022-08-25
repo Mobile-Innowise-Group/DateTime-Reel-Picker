@@ -21,6 +21,66 @@ class LocalDate private constructor(val day: Int, val month: Int, val year: Int)
             ofEpochDay(mjDay)
         }
 
+    fun minusDays(daysToMinus: Int): LocalDate = plusDays(-daysToMinus)
+
+    fun plusMonths(monthsToAdd: Int): LocalDate =
+        if (monthsToAdd == 0) {
+            this
+        } else {
+            val monthCount = year * 12L + (month - 1)
+            val calcMonths: Long = monthCount + monthsToAdd
+            val newYear = Math.floorDiv(calcMonths, 12).toInt()
+            val newMonth = Math.floorMod(calcMonths, 12) + 1
+            resolvePreviousValid(day, newMonth, newYear)
+        }
+
+    fun minusMonths(monthsToSubtract: Int): LocalDate =
+        if (monthsToSubtract.toLong() == Long.MIN_VALUE)
+            plusMonths(Long.MAX_VALUE.toInt()).plusMonths(1)
+        else plusMonths(-monthsToSubtract)
+
+    fun plusYears(yearsToAdd: Int): LocalDate =
+        if (yearsToAdd == 0) {
+            this
+        } else {
+            val newYear = year + yearsToAdd
+            resolvePreviousValid(day, month, newYear)
+        }
+
+    fun minusYears(yearsToMinus: Int): LocalDate = plusYears(-yearsToMinus)
+
+    internal fun withDayOfMonth(day: Int): LocalDate =
+        if (this.day == day) this else of(day, month, year)
+
+    internal fun withMonth(month: Int): LocalDate =
+        if (this.month == month) this else resolvePreviousValid(day, month, year)
+
+    internal fun withYear(year: Int): LocalDate =
+        if (this.year == year) this else resolvePreviousValid(day, month, year)
+
+    internal fun lengthOfMonth(): Int =
+        when (month) {
+            2 -> if (isLeapYear(year.toLong())) 29 else 28
+            3, 5, 7, 8, 10 -> 31
+            4, 6, 9, 11 -> 30
+            else -> 31
+        }
+
+    internal fun daysUntil(end: LocalDate): Int {
+        return end.toEpochDay() - toEpochDay()
+    }
+
+    private fun resolvePreviousValid(day: Int, month: Int, year: Int): LocalDate {
+        var day2 = day
+        when (month) {
+            2 -> day2 = day2.coerceAtMost(if (isLeapYear(year.toLong())) 29 else 28)
+            3, 5, 7, 8, 10 -> {}
+            4, 6, 9, 11 -> day2 = day2.coerceAtMost(30)
+            else -> {}
+        }
+        return of(day2, month, year)
+    }
+
     private fun toEpochDay(): Int {
         val y = year
         val m = month
@@ -67,83 +127,6 @@ class LocalDate private constructor(val day: Int, val month: Int, val year: Int)
 
         val year = yearEst
         return of(dom, month, year)
-    }
-
-    fun minusDays(daysToMinus: Int): LocalDate = plusDays(-daysToMinus)
-
-    fun plusMonths(monthsToAdd: Int): LocalDate =
-        if (monthsToAdd == 0) {
-            this
-        } else {
-            val monthCount = year * 12L + (month - 1)
-            val calcMonths: Long = monthCount + monthsToAdd
-            val newYear = Math.floorDiv(calcMonths, 12).toInt()
-            val newMonth = Math.floorMod(calcMonths, 12) + 1
-            resolvePreviousValid(day, newMonth, newYear)
-        }
-
-    fun minusMonths(monthsToSubtract: Int): LocalDate =
-        if (monthsToSubtract.toLong() == Long.MIN_VALUE)
-            plusMonths(Long.MAX_VALUE.toInt()).plusMonths(1)
-        else plusMonths(-monthsToSubtract)
-
-    fun plusYears(yearsToAdd: Int): LocalDate =
-        if (yearsToAdd == 0) {
-            this
-        } else {
-            val newYear = year + yearsToAdd
-            resolvePreviousValid(day, month, newYear)
-        }
-
-    fun minusYears(yearsToMinus: Int): LocalDate = plusYears(-yearsToMinus)
-
-    internal fun withDayOfMonth(day: Int): LocalDate =
-        if (this.day == day) this else of(day, month, year)
-
-    internal fun withMonth(month: Int): LocalDate =
-        if (this.month == month) this else resolvePreviousValid(day, month, year)
-
-    internal fun withYear(year: Int): LocalDate =
-        if (this.year == year) this else resolvePreviousValid(day, month, year)
-
-    internal fun lengthOfMonth(): Int =
-        when (month) {
-            2 -> if (isLeapYear(year.toLong())) 29 else 28
-            3, 5, 7, 8, 10 -> 31
-            4, 6, 9, 11 -> 30
-            else -> 31
-        }
-
-    internal fun getDaysOfDate(): Int = ofYearDays() + ofYearDay()
-
-    internal fun ofYearDay(): Int {
-        var value = 0
-        for (i in 1 until month)
-            value += when (i) {
-                2 -> if (isLeapYear(year.toLong())) 29 else 28
-                3, 5, 7, 8, 10 -> 31
-                4, 6, 9, 11 -> 30
-                else -> 31
-            }
-        return value + day
-    }
-
-    private fun ofYearDays(): Int {
-        var value = 0
-        for (i in 1 until year)
-            value += (if (isLeapYear(i.toLong())) 366 else 365) * i
-        return value
-    }
-
-    private fun resolvePreviousValid(day: Int, month: Int, year: Int): LocalDate {
-        var day2 = day
-        when (month) {
-            2 -> day2 = day2.coerceAtMost(if (isLeapYear(year.toLong())) 29 else 28)
-            3, 5, 7, 8, 10 -> {}
-            4, 6, 9, 11 -> day2 = day2.coerceAtMost(30)
-            else -> {}
-        }
-        return of(day2, month, year)
     }
 
     companion object {
