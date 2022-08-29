@@ -4,25 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.innowisegroup.reelpicker.R
 import com.innowisegroup.reelpicker.datetime.LocalTime
 import com.innowisegroup.reelpicker.extension.MAX_MINUTE
 import com.innowisegroup.reelpicker.extension.MIN_MINUTE
 import com.innowisegroup.reelpicker.extension.WRAP_SELECTION_WHEEL
-import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.UPDATE_TIME_TAB_TITLE_KEY
-import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.UPDATE_TIME_TAB_TITLE_REQUEST_KEY
-import java.util.*
+import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.TAB_TITLE_REQUEST_KEY
+import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.TAB_TYPE_KEY
+import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.TAB_VALUE_KEY
+import com.innowisegroup.reelpicker.picker.TabType
 
 internal class TimePickerFragment : Fragment() {
 
-    var timeStub: TextView? = null
-
     private lateinit var hours: CustomNumberPicker
     private lateinit var minutes: CustomNumberPicker
-
     private lateinit var localTime: LocalTime
     private lateinit var minLocalTime: LocalTime
     private lateinit var maxLocalTime: LocalTime
@@ -37,7 +33,6 @@ internal class TimePickerFragment : Fragment() {
         applyArguments()
         applySavedStateIfNeeded(savedInstanceState)
         initializeView(view)
-        refreshTimeValue(localTime)
         return view
     }
 
@@ -61,7 +56,6 @@ internal class TimePickerFragment : Fragment() {
     }
 
     private fun initializeView(view: View) {
-        timeStub = view.findViewById(R.id.time_stub)
         hours = view.findViewById(R.id.hours)
         minutes = view.findViewById(R.id.minutes)
 
@@ -69,19 +63,9 @@ internal class TimePickerFragment : Fragment() {
             minValue = minLocalTime.hour
             maxValue = maxLocalTime.hour
             value = localTime.hour
-
             wrapSelectorWheel = wrapSelectionWheel
-            setFormatter { i: Int ->
-                String.format(
-                    Locale.getDefault(),
-                    "%02d",
-                    i
-                )
-            }
-            setDividerColor(
-                hours,
-                ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
-            )
+            setDefaultFormatter()
+            setDividerColor(requireContext())
             setOnValueChangedListener { _, _, newVal: Int ->
                 refreshTimeValue(localTime.withHour(newVal))
                 setMinMaxMinutes()
@@ -92,18 +76,9 @@ internal class TimePickerFragment : Fragment() {
         minutes.run {
             setMinMaxMinutes()
             value = localTime.minute
-            setDividerColor(
-                minutes,
-                ResourcesCompat.getDrawable(resources, R.drawable.number_picker_divider_color, null)
-            )
-            wrapSelectorWheel = false
-            setFormatter { i: Int ->
-                String.format(
-                    Locale.getDefault(),
-                    "%02d",
-                    i
-                )
-            }
+            wrapSelectorWheel = wrapSelectionWheel
+            setDefaultFormatter()
+            setDividerColor(requireContext())
             setOnValueChangedListener { _, _, newVal: Int ->
                 refreshTimeValue(localTime.withMinute(newVal))
             }
@@ -112,28 +87,27 @@ internal class TimePickerFragment : Fragment() {
 
     private fun setMinMaxMinutes() =
         minutes.run {
-            minValue =
-                if (localTime.hour == minLocalTime.hour) minLocalTime.minute else MIN_MINUTE
-            maxValue =
-                if (localTime.hour == maxLocalTime.hour) maxLocalTime.minute else MAX_MINUTE
+            minValue = if (localTime.hour == minLocalTime.hour) minLocalTime.minute else MIN_MINUTE
+            maxValue = if (localTime.hour == maxLocalTime.hour) maxLocalTime.minute else MAX_MINUTE
         }
 
-    private fun refreshTimeValue(newValue: LocalTime) {
-        localTime = newValue
-
-        val bundle = Bundle()
-        bundle.putSerializable(UPDATE_TIME_TAB_TITLE_KEY, newValue)
-
-        requireActivity().supportFragmentManager.setFragmentResult(
-            UPDATE_TIME_TAB_TITLE_REQUEST_KEY,
-            bundle
-        )
-    }
+    private fun refreshTimeValue(newValue: LocalTime) =
+        Bundle()
+            .apply {
+                putSerializable(TAB_VALUE_KEY, newValue)
+                putSerializable(TAB_TYPE_KEY, TabType.TIME)
+            }.also {
+                localTime = newValue
+                requireActivity().supportFragmentManager.setFragmentResult(
+                    TAB_TITLE_REQUEST_KEY,
+                    it
+                )
+            }
 
     companion object {
-        internal const val LOCAL_TIME = "localTime"
-        internal const val MIN_LOCAL_TIME = "minLocalTime"
-        internal const val MAX_LOCAL_TIME = "maxLocalTime"
-        private const val SELECTED_TIME = "selectedTime"
+        internal const val LOCAL_TIME = "LOCAL_TIME"
+        internal const val MIN_LOCAL_TIME = "MIN_LOCAL_TIME"
+        internal const val MAX_LOCAL_TIME = "MAX_LOCAL_TIME"
+        private const val SELECTED_TIME = "SELECTED_TIME"
     }
 }
