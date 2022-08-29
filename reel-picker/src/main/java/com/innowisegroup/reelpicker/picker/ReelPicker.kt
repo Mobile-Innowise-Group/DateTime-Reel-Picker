@@ -30,7 +30,7 @@ import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment.Companion.LOCAL
 import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment.Companion.MAX_LOCAL_TIME
 import com.innowisegroup.reelpicker.picker.ui.TimePickerFragment.Companion.MIN_LOCAL_TIME
 
-class ReelPicker<T> : DialogFragment(), TabSelectedListener {
+class ReelPicker<T> : DialogFragment() {
 
     private var okClickCallback: OkClickCallback<T>? = null
     private var cancelClickCallback: CancelClickCallback? = null
