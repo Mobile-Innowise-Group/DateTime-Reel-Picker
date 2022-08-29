@@ -12,8 +12,8 @@ import com.innowisegroup.reelpicker.datetime.LocalTime
 import com.innowisegroup.reelpicker.extension.MAX_MINUTE
 import com.innowisegroup.reelpicker.extension.MIN_MINUTE
 import com.innowisegroup.reelpicker.extension.WRAP_SELECTION_WHEEL
-import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.UPDATE_TIME_TAB_TITLE_KEY
-import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.UPDATE_TIME_TAB_TITLE_REQUEST_KEY
+import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.UPDATE_VALUE_TAB_TITLE_KEY
+import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.UPDATE_VALUE_TAB_TITLE_REQUEST_KEY
 import java.util.*
 
 internal class TimePickerFragment : Fragment() {
@@ -122,10 +122,10 @@ internal class TimePickerFragment : Fragment() {
         localTime = newValue
 
         val bundle = Bundle()
-        bundle.putSerializable(UPDATE_TIME_TAB_TITLE_KEY, newValue)
+        bundle.putSerializable(UPDATE_VALUE_TAB_TITLE_KEY, newValue)
 
         requireActivity().supportFragmentManager.setFragmentResult(
-            UPDATE_TIME_TAB_TITLE_REQUEST_KEY,
+            UPDATE_VALUE_TAB_TITLE_REQUEST_KEY,
             bundle
         )
     }
