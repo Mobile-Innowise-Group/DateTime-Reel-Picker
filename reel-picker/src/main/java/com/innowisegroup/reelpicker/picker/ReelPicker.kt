@@ -92,13 +92,6 @@ class ReelPicker<T> : DialogFragment() {
 
     private fun applyAttributes() {
         isCancelable = false
-        dialog?.window?.setBackgroundDrawable(
-            ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.background_datetimepicker_dialog,
-                null
-            )
-        )
     }
 
     private fun setFragmentResultListeners() {

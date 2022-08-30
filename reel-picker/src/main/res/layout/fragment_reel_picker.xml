@@ -12,7 +12,7 @@
         android:layout_height="70dp"
         android:background="@null"
         app:tabGravity="fill"
-        app:tabMode="fixed"
+        app:tabMode="auto"
         app:tabTextAppearance="@style/CustomTabText" />
 
     <androidx.viewpager2.widget.ViewPager2
@@ -31,21 +31,21 @@
         <Button
             android:id="@+id/btn_cancel"
             style="@style/ButtonStyle"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/default_layout_height"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Отмена"
+            android:text="Cancel"
             android:textAllCaps="false" />
 
         <Button
             android:id="@+id/btn_ok"
             style="@style/ButtonStyle"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/default_layout_height"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="ОК"
+            android:text="Ok"
             android:textAllCaps="false" />
 
     </LinearLayout>
