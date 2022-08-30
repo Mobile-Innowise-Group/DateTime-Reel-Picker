@@ -11,10 +11,8 @@ import com.innowisegroup.reelpicker.extension.MAX_MONTH
 import com.innowisegroup.reelpicker.extension.MIN_DAY
 import com.innowisegroup.reelpicker.extension.MIN_MONTH
 import com.innowisegroup.reelpicker.extension.WRAP_SELECTION_WHEEL
-import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.TAB_TITLE_REQUEST_KEY
-import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.TAB_TYPE_KEY
+import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.DATE_TAB_TITLE_REQUEST_KEY
 import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.TAB_VALUE_KEY
-import com.innowisegroup.reelpicker.picker.TabType.DATE
 import java.util.*
 
 internal class DatePickerFragment : Fragment() {
@@ -126,14 +124,12 @@ internal class DatePickerFragment : Fragment() {
 
     private fun refreshDateValue(newValue: LocalDate) =
         Bundle()
-            .apply {
-                putSerializable(TAB_VALUE_KEY, newValue)
-                putSerializable(TAB_TYPE_KEY, DATE)
-            }.also {
+            .apply { putSerializable(TAB_VALUE_KEY, newValue) }
+            .also {
                 localDate = newValue
                 requireActivity()
                     .supportFragmentManager
-                    .setFragmentResult(TAB_TITLE_REQUEST_KEY, it)
+                    .setFragmentResult(DATE_TAB_TITLE_REQUEST_KEY, it)
             }
 
     companion object {

@@ -19,10 +19,20 @@ import com.innowisegroup.reelpicker.datetime.LocalDate
 import com.innowisegroup.reelpicker.datetime.LocalDateTime
 import com.innowisegroup.reelpicker.datetime.LocalDateTime.Companion.validateInputDateTime
 import com.innowisegroup.reelpicker.datetime.LocalTime
-import com.innowisegroup.reelpicker.extension.*
-import com.innowisegroup.reelpicker.picker.PickerType.*
-import com.innowisegroup.reelpicker.picker.TabType.DATE
-import com.innowisegroup.reelpicker.picker.TabType.TIME
+import com.innowisegroup.reelpicker.extension.MAX_HOUR
+import com.innowisegroup.reelpicker.extension.MAX_MINUTE
+import com.innowisegroup.reelpicker.extension.MAX_YEAR
+import com.innowisegroup.reelpicker.extension.MIN_DAY
+import com.innowisegroup.reelpicker.extension.MIN_HOUR
+import com.innowisegroup.reelpicker.extension.MIN_MINUTE
+import com.innowisegroup.reelpicker.extension.MIN_MONTH
+import com.innowisegroup.reelpicker.extension.MIN_YEAR
+import com.innowisegroup.reelpicker.extension.WRAP_SELECTION_WHEEL
+import com.innowisegroup.reelpicker.extension.formatDate
+import com.innowisegroup.reelpicker.extension.formatTime
+import com.innowisegroup.reelpicker.picker.PickerType.DATE_ONLY
+import com.innowisegroup.reelpicker.picker.PickerType.DATE_TIME
+import com.innowisegroup.reelpicker.picker.PickerType.TIME_ONLY
 import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment
 import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.LOCAL_DATE
 import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.MAX_LOCAL_DATE
@@ -66,8 +76,13 @@ class ReelPicker<T> : DialogFragment() {
         if (!isAdded) show(fragmentManager, DIALOG_TAG)
     }
 
-    fun setOnClickCallback(okClickCallback: OkClickCallback<T>): ReelPicker<T> {
+    fun setOkClickCallback(okClickCallback: OkClickCallback<T>): ReelPicker<T> {
         this.okClickCallback = okClickCallback
+        return this
+    }
+
+    fun setCancelClickCallback(cancelClickCallback: CancelClickCallback): ReelPicker<T> {
+        this.cancelClickCallback = cancelClickCallback
         return this
     }
 
@@ -91,20 +106,37 @@ class ReelPicker<T> : DialogFragment() {
         )
     }
 
-    private fun setFragmentResultListeners() =
+    private fun setFragmentResultListeners() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
-            TAB_TITLE_REQUEST_KEY,
+            TIME_TAB_TITLE_REQUEST_KEY,
             viewLifecycleOwner
         ) { _, bundle ->
             bundle.getSerializable(TAB_VALUE_KEY)?.let { newValue ->
-                when (bundle.getSerializable(TAB_TYPE_KEY) as TabType) {
-                    TIME -> (newValue as LocalTime).also { selectedTime = it }.formatTime()
-                    DATE -> (newValue as LocalDate).also { selectedDate = it }.formatDate()
-                }.also {
-                    tabLayout.getTabAt(viewPager.currentItem)?.text = it
-                }
+                (newValue as LocalTime)
+                    .also { selectedTime = it }
+                    .formatTime()
+                    .also { tabLayout.getTabAt(0)?.text = it }
             }
         }
+
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            DATE_TAB_TITLE_REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            bundle.getSerializable(TAB_VALUE_KEY)?.let { newValue ->
+                (newValue as LocalDate)
+                    .also { selectedDate = it }
+                    .formatDate()
+                    .also {
+                        val tabPosition = when (pickerType) {
+                            DATE_ONLY -> 0
+                            else -> 1
+                        }
+                        tabLayout.getTabAt(tabPosition)?.text = it
+                    }
+            }
+        }
+    }
 
     private fun initializeView(view: View) {
         viewPager = view.findViewById(R.id.viewPager)
@@ -202,10 +234,10 @@ class ReelPicker<T> : DialogFragment() {
     companion object {
         private const val DIALOG_TAG = "DIALOG_TAG"
 
-        internal const val TAB_TITLE_REQUEST_KEY = "TAB_TITLE_REQUEST_KEY"
+        internal const val TIME_TAB_TITLE_REQUEST_KEY = "TIME_TAB_TITLE_REQUEST_KEY"
+        internal const val DATE_TAB_TITLE_REQUEST_KEY = "DATE_TAB_TITLE_REQUEST_KEY"
 
         internal const val TAB_VALUE_KEY = "TAB_TITLE_KEY"
-        internal const val TAB_TYPE_KEY = "TAB_TYPE_KEY"
 
         private const val INITIAL_LOCAL_DATE_TIME = "INITIAL_LOCAL_DATE_TIME"
         private const val MIN_LOCAL_DATE_TIME = "MIN_LOCAL_DATE_TIME"

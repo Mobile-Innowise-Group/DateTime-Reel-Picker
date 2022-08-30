@@ -10,10 +10,8 @@ import com.innowisegroup.reelpicker.datetime.LocalTime
 import com.innowisegroup.reelpicker.extension.MAX_MINUTE
 import com.innowisegroup.reelpicker.extension.MIN_MINUTE
 import com.innowisegroup.reelpicker.extension.WRAP_SELECTION_WHEEL
-import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.TAB_TITLE_REQUEST_KEY
-import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.TAB_TYPE_KEY
 import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.TAB_VALUE_KEY
-import com.innowisegroup.reelpicker.picker.TabType
+import com.innowisegroup.reelpicker.picker.ReelPicker.Companion.TIME_TAB_TITLE_REQUEST_KEY
 
 internal class TimePickerFragment : Fragment() {
 
@@ -27,7 +25,7 @@ internal class TimePickerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         val view = inflater.inflate(R.layout.item_time_picker, container, false)
         applyArguments()
@@ -93,15 +91,12 @@ internal class TimePickerFragment : Fragment() {
 
     private fun refreshTimeValue(newValue: LocalTime) =
         Bundle()
-            .apply {
-                putSerializable(TAB_VALUE_KEY, newValue)
-                putSerializable(TAB_TYPE_KEY, TabType.TIME)
-            }.also {
+            .apply { putSerializable(TAB_VALUE_KEY, newValue) }
+            .also {
                 localTime = newValue
-                requireActivity().supportFragmentManager.setFragmentResult(
-                    TAB_TITLE_REQUEST_KEY,
-                    it
-                )
+                requireActivity()
+                    .supportFragmentManager
+                    .setFragmentResult(TIME_TAB_TITLE_REQUEST_KEY, it)
             }
 
     companion object {
