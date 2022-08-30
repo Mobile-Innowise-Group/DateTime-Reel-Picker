@@ -19,20 +19,8 @@ import com.innowisegroup.reelpicker.datetime.LocalDate
 import com.innowisegroup.reelpicker.datetime.LocalDateTime
 import com.innowisegroup.reelpicker.datetime.LocalDateTime.Companion.validateInputDateTime
 import com.innowisegroup.reelpicker.datetime.LocalTime
-import com.innowisegroup.reelpicker.extension.MAX_HOUR
-import com.innowisegroup.reelpicker.extension.MAX_MINUTE
-import com.innowisegroup.reelpicker.extension.MAX_YEAR
-import com.innowisegroup.reelpicker.extension.MIN_DAY
-import com.innowisegroup.reelpicker.extension.MIN_HOUR
-import com.innowisegroup.reelpicker.extension.MIN_MINUTE
-import com.innowisegroup.reelpicker.extension.MIN_MONTH
-import com.innowisegroup.reelpicker.extension.MIN_YEAR
-import com.innowisegroup.reelpicker.extension.WRAP_SELECTION_WHEEL
-import com.innowisegroup.reelpicker.extension.formatDate
-import com.innowisegroup.reelpicker.extension.formatTime
-import com.innowisegroup.reelpicker.picker.PickerType.DATE_ONLY
-import com.innowisegroup.reelpicker.picker.PickerType.DATE_TIME
-import com.innowisegroup.reelpicker.picker.PickerType.TIME_ONLY
+import com.innowisegroup.reelpicker.extension.*
+import com.innowisegroup.reelpicker.picker.PickerType.*
 import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment
 import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.LOCAL_DATE
 import com.innowisegroup.reelpicker.picker.ui.DatePickerFragment.Companion.MAX_LOCAL_DATE
@@ -68,8 +56,14 @@ class ReelPicker<T> : DialogFragment() {
         applyArguments()
         applyAttributes()
         setFragmentResultListeners()
-        initializeView(view)
+        initializeView(view, savedInstanceState)
         return view
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(TIME_FOR_TAB, selectedTime)
+        outState.putSerializable(DATE_FOR_TAB, selectedDate)
     }
 
     fun showDialog(fragmentManager: FragmentManager) {
@@ -138,7 +132,7 @@ class ReelPicker<T> : DialogFragment() {
         }
     }
 
-    private fun initializeView(view: View) {
+    private fun initializeView(view: View, savedInstanceState: Bundle?) {
         viewPager = view.findViewById(R.id.viewPager)
         tabLayout = view.findViewById(R.id.tabLayout)
         val buttonOk = view.findViewById<Button>(R.id.btn_ok)
@@ -155,6 +149,10 @@ class ReelPicker<T> : DialogFragment() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             selectedTime = initialLocalDateTime.toLocalTime()
             selectedDate = initialLocalDateTime.toLocalDate()
+            if (savedInstanceState != null) {
+                selectedTime = savedInstanceState.getSerializable(TIME_FOR_TAB) as LocalTime
+                selectedDate = savedInstanceState.getSerializable(DATE_FOR_TAB) as LocalDate
+            }
             (selectedTime.formatTime() to selectedDate.formatDate())
                 .let { (formattedTime, formattedDate) ->
                     when (pickerType) {
@@ -232,6 +230,9 @@ class ReelPicker<T> : DialogFragment() {
     }
 
     companion object {
+        private const val DATE_FOR_TAB = "DATE_FOR_TAB"
+        private const val TIME_FOR_TAB = "TIME_FOR_TAB"
+
         private const val DIALOG_TAG = "DIALOG_TAG"
 
         internal const val TIME_TAB_TITLE_REQUEST_KEY = "TIME_TAB_TITLE_REQUEST_KEY"
