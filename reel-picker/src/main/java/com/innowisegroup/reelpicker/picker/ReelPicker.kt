@@ -63,8 +63,8 @@ class ReelPicker<T> : DialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putSerializable(TIME_FOR_TAB, selectedTime)
-        outState.putSerializable(DATE_FOR_TAB, selectedDate)
+        outState.putSerializable(TIME, selectedTime)
+        outState.putSerializable(DATE, selectedDate)
     }
 
     fun showDialog(fragmentManager: FragmentManager) {
@@ -135,8 +135,8 @@ class ReelPicker<T> : DialogFragment() {
 
     private fun setInitialValues(savedInstanceState: Bundle?) =
         if (savedInstanceState != null) {
-            selectedTime = savedInstanceState.getSerializable(TIME_FOR_TAB) as LocalTime
-            selectedDate = savedInstanceState.getSerializable(DATE_FOR_TAB) as LocalDate
+            selectedTime = savedInstanceState.getSerializable(TIME) as LocalTime
+            selectedDate = savedInstanceState.getSerializable(DATE) as LocalDate
         } else {
             selectedTime = initialLocalDateTime.toLocalTime()
             selectedDate = initialLocalDateTime.toLocalDate()
@@ -234,8 +234,8 @@ class ReelPicker<T> : DialogFragment() {
     }
 
     companion object {
-        private const val DATE_FOR_TAB = "DATE_FOR_TAB"
-        private const val TIME_FOR_TAB = "TIME_FOR_TAB"
+        private const val DATE = "DATE"
+        private const val TIME = "TIME"
 
         private const val DIALOG_TAG = "DIALOG_TAG"
 
