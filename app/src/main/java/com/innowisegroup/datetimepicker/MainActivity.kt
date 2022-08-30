@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.innowisegroup.reelpicker.datetime.LocalDate
 import com.innowisegroup.reelpicker.datetime.LocalDateTime
 import com.innowisegroup.reelpicker.picker.ReelPicker
 
@@ -17,10 +18,11 @@ class MainActivity : AppCompatActivity() {
 
         val javaWrapper = JavaWrapper()
 
-        val kotlinButton = findViewById<Button>(R.id.kotlinButton)
-        val javaButton = findViewById<Button>(R.id.javaButton)
+        val dateTime = findViewById<Button>(R.id.dateTime)
+        val onlyTime = findViewById<Button>(R.id.onlyTime)
+        val onlyDate = findViewById<Button>(R.id.onlyDate)
 
-        kotlinButton.setOnClickListener {
+        dateTime.setOnClickListener {
             ReelPicker
                 .createDateTimeDialog()
                 .setOkClickCallback(object : ReelPicker.OkClickCallback<LocalDateTime> {
@@ -30,7 +32,17 @@ class MainActivity : AppCompatActivity() {
                 })
                 .showDialog(supportFragmentManager)
         }
-        javaButton.setOnClickListener {
+        onlyDate.setOnClickListener {
+            ReelPicker
+                .createDateDialog()
+                .setOkClickCallback(object : ReelPicker.OkClickCallback<LocalDate> {
+                    override fun onOkClick(value: LocalDate) {
+                        tvResult.text = "${value.year}/${value.month}/${value.day}"
+                    }
+                })
+                .showDialog(supportFragmentManager)
+        }
+        onlyTime.setOnClickListener {
             javaWrapper.showDialog(supportFragmentManager)
         }
     }

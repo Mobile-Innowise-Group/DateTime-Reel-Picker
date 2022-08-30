@@ -54,7 +54,6 @@ class ReelPicker<T> : DialogFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_reel_picker, container, false)
         applyArguments()
-        applyAttributes()
         setFragmentResultListeners()
         setInitialValues(savedInstanceState)
         initializeView(view)
@@ -89,17 +88,6 @@ class ReelPicker<T> : DialogFragment() {
             wrapSelectionWheel = getBoolean(WRAP_SELECTION_WHEEL)
             pickerType = getSerializable(PICKER_TYPE) as PickerType
         }
-
-    private fun applyAttributes() {
-        isCancelable = false
-        dialog?.window?.setBackgroundDrawable(
-            ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.background_datetimepicker_dialog,
-                null
-            )
-        )
-    }
 
     private fun setFragmentResultListeners() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
@@ -179,6 +167,8 @@ class ReelPicker<T> : DialogFragment() {
             root.dividerPadding = 10
             root.dividerDrawable = drawable
         }
+
+        isCancelable = false
     }
 
     private fun createFragments(): List<Fragment> =

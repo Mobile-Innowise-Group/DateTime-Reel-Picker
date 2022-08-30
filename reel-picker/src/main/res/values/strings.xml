@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">reel-picker</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
 </resources>
