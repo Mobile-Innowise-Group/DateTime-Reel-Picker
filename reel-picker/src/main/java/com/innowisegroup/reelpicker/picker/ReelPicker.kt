@@ -56,7 +56,8 @@ class ReelPicker<T> : DialogFragment() {
         applyArguments()
         applyAttributes()
         setFragmentResultListeners()
-        initializeView(view, savedInstanceState)
+        setInitialValues(savedInstanceState)
+        initializeView(view)
         return view
     }
 
@@ -132,7 +133,16 @@ class ReelPicker<T> : DialogFragment() {
         }
     }
 
-    private fun initializeView(view: View, savedInstanceState: Bundle?) {
+    private fun setInitialValues(savedInstanceState: Bundle?) =
+        if (savedInstanceState != null) {
+            selectedTime = savedInstanceState.getSerializable(TIME_FOR_TAB) as LocalTime
+            selectedDate = savedInstanceState.getSerializable(DATE_FOR_TAB) as LocalDate
+        } else {
+            selectedTime = initialLocalDateTime.toLocalTime()
+            selectedDate = initialLocalDateTime.toLocalDate()
+        }
+
+    private fun initializeView(view: View) {
         viewPager = view.findViewById(R.id.viewPager)
         tabLayout = view.findViewById(R.id.tabLayout)
         val buttonOk = view.findViewById<Button>(R.id.btn_ok)
@@ -147,12 +157,6 @@ class ReelPicker<T> : DialogFragment() {
         viewPager.isUserInputEnabled = false
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            selectedTime = initialLocalDateTime.toLocalTime()
-            selectedDate = initialLocalDateTime.toLocalDate()
-            if (savedInstanceState != null) {
-                selectedTime = savedInstanceState.getSerializable(TIME_FOR_TAB) as LocalTime
-                selectedDate = savedInstanceState.getSerializable(DATE_FOR_TAB) as LocalDate
-            }
             (selectedTime.formatTime() to selectedDate.formatDate())
                 .let { (formattedTime, formattedDate) ->
                     when (pickerType) {
