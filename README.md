@@ -64,8 +64,10 @@ implementation 'com.github.Mobile-Innowise-Group:DateTime-Reel-Picker:{latest ve
 ## Date and Time internal entities
 
 <br/>
-LocalTime:
 
+**LocalTime:**
+
+<br/>
 
 | Method | What it does |
 |-------------|-------------|
@@ -80,8 +82,9 @@ LocalTime:
 
 <br/>
 
-LocalDate:
+**LocalDate:**
 
+<br/>
 
 | Method | What it does |
 |------------|--------------|
@@ -98,8 +101,10 @@ LocalDate:
 | year | gets selected year |
 
 <br/>
-LocalDateTime:
 
+**LocalDateTime:**
+
+<br/>
 
 | Method | What it does |
 |-------------|-----------------------|
@@ -196,6 +201,9 @@ ReelPicker
 <br/>
 
 
+---
+
+
 ### __Time dialog example:__
 
 
@@ -280,6 +288,10 @@ ReelPicker
 ```
 
 <br/>
+
+
+---
+
 
 ### __Date and time dialog example:__
 
