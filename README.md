@@ -19,7 +19,9 @@ Also supports input from keyboard, checks and validations for date and time.
 
 
 <p align="center">
-    <img width="33%" src="./super-sample.mp4"> 
+    <video>
+        <source src="./super-sample.mp4" type="video/mp4">
+    </video>
 </p>
 
 
