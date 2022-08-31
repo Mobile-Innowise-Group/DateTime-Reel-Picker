@@ -18,7 +18,9 @@ Also supports input from keyboard, checks and validations for date and time.
 <br/>
 
 
-![](./sample.gif)
+<p align="center">
+  <img src="./sample.gif" />
+</p>
 
 
 <br/>
@@ -65,7 +67,6 @@ implementation 'com.github.Mobile-Innowise-Group:DateTime-Reel-Picker:{latest ve
 
 **LocalTime:**
 
-<br/>
 
 | Method | What it does |
 |-------------|-------------|
@@ -82,7 +83,6 @@ implementation 'com.github.Mobile-Innowise-Group:DateTime-Reel-Picker:{latest ve
 
 **LocalDate:**
 
-<br/>
 
 | Method | What it does |
 |------------|--------------|
@@ -102,7 +102,6 @@ implementation 'com.github.Mobile-Innowise-Group:DateTime-Reel-Picker:{latest ve
 
 **LocalDateTime:**
 
-<br/>
 
 | Method | What it does |
 |-------------|-----------------------|
@@ -121,36 +120,16 @@ implementation 'com.github.Mobile-Innowise-Group:DateTime-Reel-Picker:{latest ve
 ### __Date dialog example:__
 
 
-#### ***Basic implementation***
+#### ***Basic (default) implementation***
 
 #### Kotlin
 ``` kotlin
-ReelPicker
-    .createDateDialog()
-    .setOkClickCallback(object : ReelPicker.OkClickCallback<LocalDate> {
-        override fun onOkClick(value: LocalDate) {
-            //do whatever you want with callback value
-        }
-    })
-    .setCancelClickCallback(object : ReelPicker.CancelClickCallback{
-        override fun onCancelClick() {
-            //do whatever you want
-        }
-    })
-    .showDialog(supportFragmentManager)
+ReelPicker.createDateDialog().showDialog(supportFragmentManager)
 ```
 
 #### Java
 ``` java
-ReelPicker
-    .createDateDialog()
-    .setOkClickCallback(value -> {
-        //do whatever you want with callback value
-    })
-    .setCancelClickCallback(() -> {
-        //do whatever you want
-    })
-    .showDialog(fragmentManager)
+ReelPicker.createDateDialog().showDialog(getSupportFragmentManager());
 ```
 <br/>
 
@@ -193,7 +172,7 @@ ReelPicker
     .setCancelClickCallback(() -> {
         //do whatever you want
     })
-    .showDialog(fragmentManager)
+    .showDialog(getSupportFragmentManager());
 ```
 
 <br/>
@@ -205,39 +184,19 @@ ReelPicker
 ### __Time dialog example:__
 
 
-#### ***Default implementation***
+#### ***Basic (default) implementation***
 
 #### Kotlin
 
 ``` kotlin
-ReelPicker
-    .createTimeDialog()
-    .setOkClickCallback(object : ReelPicker.OkClickCallback<LocalTime> {
-        override fun onOkClick(value: LocalTime) {
-            //do whatever you want with callback value
-        }
-    })
-    .setCancelClickCallback(object : ReelPicker.CancelClickCallback{
-        override fun onCancelClick() {
-            //do whatever you want
-        }
-    })
-    .showDialog(supportFragmentManager)
+ReelPicker.createTimeDialog().showDialog(supportFragmentManager)
 ```
 
 <br/>
 
 #### Java
 ``` java
-ReelPicker
-    .createTimeDialog()
-    .setOkClickCallback(value -> {
-        //do whatever you want with callback value
-    })
-    .setCancelClickCallback(() -> {
-        //do whatever you want
-    })
-    .showDialog(fragmentManager)
+ReelPicker.createTimeDialog().showDialog(getSupportFragmentManager());
 ```
 
 
@@ -282,7 +241,7 @@ ReelPicker
     .setCancelClickCallback(() -> {
         //do whatever you want
     })
-    .showDialog(fragmentManager)
+    .showDialog(getSupportFragmentManager());
 ```
 
 <br/>
@@ -294,39 +253,19 @@ ReelPicker
 ### __Date and time dialog example:__
 
 
-#### ***Default implementation***
+#### ***Basic (default) implementation***
 
 #### Kotlin
 
 ``` kotlin
-ReelPicker
-    .createDateTimeDialog()
-    .setOkClickCallback(object : ReelPicker.OkClickCallback<LocalDateTime> {
-        override fun onOkClick(value: LocalDateTime) {
-            //do whatever you want with callback value
-        }
-    })
-    .setCancelClickCallback(object : ReelPicker.CancelClickCallback{
-        override fun onCancelClick() {
-            //do whatever you want
-        }
-    })
-    .showDialog(supportFragmentManager)
+ReelPicker.createDateTimeDialog().showDialog(supportFragmentManager)
 ```
 
 <br/>
 
 #### Java
 ``` java
-ReelPicker
-    .createDateTimeDialog()
-    .setOkClickCallback(value -> {
-        //do whatever you want with callback value
-    })
-    .setCancelClickCallback(() -> {
-        //do whatever you want
-    })
-    .showDialog(fragmentManager);
+ReelPicker.createDateTimeDialog().showDialog(getSupportFragmentManager());
 ```
 
 <br/>
@@ -383,7 +322,7 @@ ReelPicker
     .setCancelClickCallback(() -> {
         //do whatever you want
     })
-    .showDialog(fragmentManager);
+    .showDialog(getSupportFragmentManager());
 ```
 
 
