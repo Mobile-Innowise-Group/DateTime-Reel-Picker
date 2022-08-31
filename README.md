@@ -18,7 +18,7 @@ Also supports input from keyboard, checks and validations for date and time.
 <br/>
 
 
-![](./super-sample.mp4)
+./super-sample.mp4
 
 
 <br/>
