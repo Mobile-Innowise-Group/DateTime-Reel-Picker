@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.innowisegroup.reelpicker.datetime.LocalDate
 import com.innowisegroup.reelpicker.datetime.LocalDateTime
+import com.innowisegroup.reelpicker.datetime.LocalTime
 import com.innowisegroup.reelpicker.picker.ReelPicker
 
 class MainActivity : AppCompatActivity() {
@@ -14,20 +15,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val tvResult = findViewById<TextView>(R.id.result)
-
-        val javaWrapper = JavaWrapper()
-
         val dateTime = findViewById<Button>(R.id.dateTime)
-        val onlyTime = findViewById<Button>(R.id.onlyTime)
-        val onlyDate = findViewById<Button>(R.id.onlyDate)
+        val onlyTime = findViewById<Button>(R.id.timeOnly)
+        val onlyDate = findViewById<Button>(R.id.dateOnly)
+
+        val tvDateTime = findViewById<TextView>(R.id.tvDateTime)
+        val tvDateOnly = findViewById<TextView>(R.id.tvDateOnly)
+        val tvTimeOnly = findViewById<TextView>(R.id.tvTimeOnly)
 
         dateTime.setOnClickListener {
             ReelPicker
                 .createDateTimeDialog()
                 .setOkClickCallback(object : ReelPicker.OkClickCallback<LocalDateTime> {
                     override fun onOkClick(value: LocalDateTime) {
-                        tvResult.text = "${value.toLocalDate().year}"
+                        tvDateTime.text =
+                            "${value.toLocalDate().year}/${value.toLocalDate().month}/${value.toLocalDate().day} | " +
+                                    "${value.toLocalTime().hour}:${value.toLocalTime().minute}"
                     }
                 })
                 .showDialog(supportFragmentManager)
@@ -37,13 +40,26 @@ class MainActivity : AppCompatActivity() {
                 .createDateDialog()
                 .setOkClickCallback(object : ReelPicker.OkClickCallback<LocalDate> {
                     override fun onOkClick(value: LocalDate) {
-                        tvResult.text = "${value.year}/${value.month}/${value.day}"
+                        tvDateOnly.text = "${value.year}/${value.month}/${value.day}"
                     }
+                })
+                .setCancelClickCallback(object : ReelPicker.CancelClickCallback {
+                    override fun onCancelClick() {}
                 })
                 .showDialog(supportFragmentManager)
         }
         onlyTime.setOnClickListener {
-            javaWrapper.showDialog(supportFragmentManager)
+            ReelPicker
+                .createTimeDialog()
+                .setOkClickCallback(object : ReelPicker.OkClickCallback<LocalTime> {
+                    override fun onOkClick(value: LocalTime) {
+                        tvTimeOnly.text = "${value.hour}:${value.minute}"
+                    }
+                })
+                .setCancelClickCallback(object : ReelPicker.CancelClickCallback {
+                    override fun onCancelClick() {}
+                })
+                .showDialog(supportFragmentManager)
         }
     }
 }
