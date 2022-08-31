@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.innowisegroup.reelpicker.datetime.LocalDate
 import com.innowisegroup.reelpicker.datetime.LocalDateTime
+import com.innowisegroup.reelpicker.datetime.LocalTime
 import com.innowisegroup.reelpicker.picker.ReelPicker
 
 class MainActivity : AppCompatActivity() {
@@ -27,7 +28,8 @@ class MainActivity : AppCompatActivity() {
                 .createDateTimeDialog()
                 .setOkClickCallback(object : ReelPicker.OkClickCallback<LocalDateTime> {
                     override fun onOkClick(value: LocalDateTime) {
-                        tvResult.text = "${value.toLocalDate().year}"
+                        tvResult.text = "${value.toLocalDate().year}/${value.toLocalDate().month}/${value.toLocalDate().day} | "+
+                                "${value.toLocalTime().hour}:${value.toLocalTime().minute}"
                     }
                 })
                 .showDialog(supportFragmentManager)
@@ -43,7 +45,14 @@ class MainActivity : AppCompatActivity() {
                 .showDialog(supportFragmentManager)
         }
         onlyTime.setOnClickListener {
-            javaWrapper.showDialog(supportFragmentManager)
+            ReelPicker
+                .createTimeDialog()
+                .setOkClickCallback(object : ReelPicker.OkClickCallback<LocalTime> {
+                    override fun onOkClick(value: LocalTime) {
+                        tvResult.text = "${value.hour}:${value.minute}"
+                    }
+                })
+                .showDialog(supportFragmentManager)
         }
     }
 }

@@ -6,10 +6,11 @@ Can be used in 3 different ways: date picker, time picker, date and time picker.
 Contains properties for setting the minimum and maximum values.
 Supports keyboard input.
 Calculates and validates date and time values
+
+
 ![](./sample.gif)
 
 
-sample.gif
 <br/>
 <br/>
 <br/>
@@ -134,7 +135,10 @@ ReelPicker.createTimeDialog().showDialog(supportFragmentManager)
 ReelPicker.createDateTimeDialog().showDialog(supportFragmentManager)
 ```
 
-![DateTimeDialog](./createDateTimeDialog.jpg)
+![DateTimeDialog](./createDateTimeDialog-Time.jpg)
+
+
+![DateTimeDialog](./createDateTimeDialog-Date.jpg)
 
 <br/>
 <br/>

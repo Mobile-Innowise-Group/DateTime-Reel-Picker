@@ -8,9 +8,9 @@ import com.innowisegroup.reelpicker.picker.ReelPicker;
 class JavaWrapper {
 
     ReelPicker reelPicker = ReelPicker.createTimeDialog(
-            LocalTime.of(1, 3).minusMinutes(62),
-            LocalTime.of(0, 0),
-            LocalTime.of(1, 1).plusMinutes(30)
+            LocalTime.of(15, 20).minusMinutes(62),
+            LocalTime.of(3, 18),
+            LocalTime.of(22, 52).plusMinutes(30)
     );
 
     void showDialog(FragmentManager fragmentManager) {
