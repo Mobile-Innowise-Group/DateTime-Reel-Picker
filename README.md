@@ -18,11 +18,7 @@ Also supports input from keyboard, checks and validations for date and time.
 <br/>
 
 
-<p align="center">
-    <video>
-        <source src="./super-sample.mp4" type="video/mp4">
-    </video>
-</p>
+![](./super-sample.mp4)
 
 
 <br/>
