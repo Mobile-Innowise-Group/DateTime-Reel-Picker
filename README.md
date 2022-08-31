@@ -3,12 +3,14 @@
 
 A library that provides a reel picker for date and time.
 Can be used in 3 ways: 
-- date picker only,
-- time picker, 
+- date picker only
+- time picker only
 - date and time picker.
-Contains properties for setting date and time min and max ranges.
-Also supports input from keyboard, date and time checks and validations
 
+Contains properties for setting date and time min and max ranges.
+Also supports input from keyboard, checks and validations for date and time.
+
+<br/>
 
 ![collage](./collage.jpg)
 
@@ -16,7 +18,9 @@ Also supports input from keyboard, date and time checks and validations
 <br/>
 
 
-![](./sample.gif)
+<p align="center">
+    <img width="33%" src="./sample.gif"> 
+</p>
 
 
 <br/>
@@ -48,60 +52,61 @@ implementation 'com.github.Mobile-Innowise-Group:DateTime-Reel-Picker:{latest ve
 
 | Method | What it does |
 |----------------|---------|
-| createTimeDialog | create a dialog where you can select only time |
-| createDateDialog | create a dialog where you can select only date |
-| createDateTimeDialog | create a dialog where you can select both date and time |
+| createTimeDialog | creates a dialog where you can select only time |
+| createDateDialog | creates a dialog where you can select only date |
+| createDateTimeDialog | creates a dialog where you can select both date and time |
 | setOkClickCallback | ok button click callback |
 | setCancelClickCallback | cancel button click callback |
-| showDialog | show picker dialog with a chosen type |
+| showDialog | shows picker dialog with a chosen type |
 
 <br/>
 
-## Time and Date internal entities
+## Date and Time internal entities
 
 <br/>
-LocalTime methods:
+LocalTime:
 
 
 | Method | What it does |
 |-------------|-------------|
-| now | set the current time |
-| of | set a specific time |
-| plusMinutes | add minutes to the selected time |
-| minusMinutes | subtract minutes from the selected time |
-| plusHours | add hours to the selected time |
-| minusHours | subtract hours from the selected time |
-| hour | get selected hour |
-| minute | get selected minute |
+| now | sets the current time |
+| of | sets the specific time |
+| plusMinutes | adds minutes to the selected time |
+| minusMinutes | subtracts minutes from the selected time |
+| plusHours | adds hours to the selected time |
+| minusHours | subtracts hours from the selected time |
+| hour | gets selected hour |
+| minute | gets selected minute |
 
 <br/>
-LocalDate methods:
+
+LocalDate:
 
 
 | Method | What it does |
 |------------|--------------|
-| now | set the current date |
-| of | set a specific date |
-| plusDays | add days to the selected date |
+| now | sets the current date |
+| of | sets the specific date |
+| plusDays | adds days to the selected date |
 | minusDays | subtract days from the selected date |
-| plusMonths | add months to the selected date |
-| minusMonths | subtract months from the selected date |
-| plusYears | add years to the selected date |
-| minusYears | subtract years from the selected date |
-| day | get selected day |
-| month | get selected month |
-| year | get selected year |
+| plusMonths | adds months to the selected date |
+| minusMonths | subtracts months from the selected date |
+| plusYears | adds years to the selected date |
+| minusYears | subtracts years from the selected date |
+| day | gets selected day |
+| month | gets selected month |
+| year | gets selected year |
 
 <br/>
-LocalDateTime methods:
+LocalDateTime:
 
 
 | Method | What it does |
 |-------------|-----------------------|
-| now | set the current date and time |
-| of | set a specific date and time |
-| toLocalDate | get only the date from LocalDateTime value |
-| toLocalTime | get only the time from LocalDateTime value |
+| now | sets the current date and time |
+| of | sets the specific date and time |
+| toLocalDate | gets only the date from LocalDateTime value |
+| toLocalTime | gets only the time from LocalDateTime value |
 
 
 <br/>
@@ -110,13 +115,13 @@ LocalDateTime methods:
 ## Usage
 
 
-### __DateDialog Example:__
+### __Date dialog example:__
 
 
-#### Default implementation
+#### ***Basic implementation***
 
-#### **MainActivity.kt**
-```kotlin
+#### Kotlin
+``` kotlin
 ReelPicker
     .createDateDialog()
     .setOkClickCallback(object : ReelPicker.OkClickCallback<LocalDate> {
@@ -132,21 +137,25 @@ ReelPicker
     .showDialog(supportFragmentManager)
 ```
 
-#### **MainActivity.java**
-```java
+#### Java
+``` java
 ReelPicker
-        .createDateDialog()
-        .setOkClickCallback(value -> {
-            //do whatever you want with callback value
-        }).setCancelClickCallback(() -> {
-            //do whatever you want
-        }).showDialog(fragmentManager)
+    .createDateDialog()
+    .setOkClickCallback(value -> {
+        //do whatever you want with callback value
+    })
+    .setCancelClickCallback(() -> {
+        //do whatever you want
+    })
+    .showDialog(fragmentManager)
 ```
 <br/>
 
-#### Custom implementation
+#### ***Custom implementation***
 
-```kotlin
+#### Kotlin
+
+``` kotlin
 ReelPicker
     .createDateDialog(
         initialLocalDate = LocalDate.now().plusMonths(11).minusYears(1),
@@ -166,34 +175,35 @@ ReelPicker
     .showDialog(supportFragmentManager)
 ```
 
-#### **MainActivity.java**
+#### Java
 
-```java
+``` java
 ReelPicker
-        .createDateDialog(
-            LocalDate.now().plusMonths(11).minusYears(1),
-            LocalDate.of(13,1,2055).minusDays(5).plusMonths(3),
-            LocalDate.now().minusMonths(19)
-        )
-        .setOkClickCallback(value -> {
-            //do whatever you want with callback value
-        })
-        .setCancelClickCallback(() -> {
-            //do whatever you want
-        })
-        .showDialog(fragmentManager)
+    .createDateDialog(
+        LocalDate.now().plusMonths(11).minusYears(1),
+        LocalDate.of(13,1,2055).minusDays(5).plusMonths(3),
+        LocalDate.now().minusMonths(19)
+    )
+    .setOkClickCallback(value -> {
+        //do whatever you want with callback value
+    })
+    .setCancelClickCallback(() -> {
+        //do whatever you want
+    })
+    .showDialog(fragmentManager)
 ```
 
 <br/>
 
 
-### __TimeDialog Example:__
+### __Time dialog example:__
 
 
-#### Default implementation
+#### ***Default implementation***
 
-#### **MainActivity.kt**
-```kotlin
+#### Kotlin
+
+``` kotlin
 ReelPicker
     .createTimeDialog()
     .setOkClickCallback(object : ReelPicker.OkClickCallback<LocalTime> {
@@ -211,21 +221,25 @@ ReelPicker
 
 <br/>
 
-#### **MainActivity.java**
+#### Java
 ``` java
 ReelPicker
-        .createTimeDialog()
-        .setOkClickCallback(value -> {
-            //do whatever you want with callback value
-        }).setCancelClickCallback(() -> {
-            //do whatever you want
-        }).showDialog(fragmentManager)
+    .createTimeDialog()
+    .setOkClickCallback(value -> {
+        //do whatever you want with callback value
+    })
+    .setCancelClickCallback(() -> {
+        //do whatever you want
+    })
+    .showDialog(fragmentManager)
 ```
 
 
 <br/>
 
-#### Custom implementation
+#### ***Custom implementation***
+
+#### Kotlin
 
 ``` kotlin
 ReelPicker
@@ -247,32 +261,33 @@ ReelPicker
     .showDialog(supportFragmentManager)
 ```
 
-#### **MainActivity.java**
+#### Java
 
 ``` java
 ReelPicker
-        .createTimeDialog(
-            LocalTime.of(15, 20).minusMinutes(62),
-            LocalTime.of(3, 18).plusHours(2),
-            LocalTime.of(22, 52).plusMinutes(30)
-        )
-        .setOkClickCallback(value -> {
-            //do whatever you want with callback value
-        })
-        .setCancelClickCallback(() -> {
-            //do whatever you want
-        })
-        .showDialog(fragmentManager)
+    .createTimeDialog(
+        LocalTime.of(15, 20).minusMinutes(62),
+        LocalTime.of(3, 18).plusHours(2),
+        LocalTime.of(22, 52).plusMinutes(30)
+    )
+    .setOkClickCallback(value -> {
+        //do whatever you want with callback value
+    })
+    .setCancelClickCallback(() -> {
+        //do whatever you want
+    })
+    .showDialog(fragmentManager)
 ```
 
 <br/>
 
-### __DateTimeDialog Example:__
+### __Date and time dialog example:__
 
 
-#### Default implementation
+#### ***Default implementation***
 
-#### **MainActivity.kt**
+#### Kotlin
+
 ``` kotlin
 ReelPicker
     .createDateTimeDialog()
@@ -291,72 +306,74 @@ ReelPicker
 
 <br/>
 
-#### **MainActivity.java**
+#### Java
 ``` java
-    ReelPicker
-        .createDateTimeDialog()
-        .setOkClickCallback(value -> {
-            //do whatever you want with callback value
-        })
-        .setCancelClickCallback(() -> {
-            //do whatever you want
-        })
-        .showDialog(fragmentManager);
+ReelPicker
+    .createDateTimeDialog()
+    .setOkClickCallback(value -> {
+        //do whatever you want with callback value
+    })
+    .setCancelClickCallback(() -> {
+        //do whatever you want
+    })
+    .showDialog(fragmentManager);
 ```
 
 <br/>
 
 
-#### Custom implementation
+#### ***Custom implementation***
+
+#### Kotlin
 
 ``` kotlin
-    ReelPicker
-        .createDateTimeDialog(
-            initialLocalDateTime = LocalDateTime.now(),
-            minLocalDateTime = LocalDateTime.of(
-                LocalDate.of(1, Month.MAY, 1950),
-                LocalTime.now().minusHours(40)
-            ),
-            maxLocalDateTime = LocalDateTime.of(
-                LocalDate.now().plusYears(15),
-                LocalTime.of(23, 33)
-            )
+ReelPicker
+    .createDateTimeDialog(
+        initialLocalDateTime = LocalDateTime.now(),
+        minLocalDateTime = LocalDateTime.of(
+            LocalDate.of(1, Month.MAY, 1950),
+            LocalTime.now().minusHours(40)
+        ),
+        maxLocalDateTime = LocalDateTime.of(
+            LocalDate.now().plusYears(15),
+            LocalTime.of(23, 33)
         )
-        .setOkClickCallback(object : ReelPicker.OkClickCallback<LocalDateTime> {
-            override fun onOkClick(value: LocalDateTime) {
-                //do whatever you want with callback value
-            }
-        })
-        .setCancelClickCallback(object : ReelPicker.CancelClickCallback{
-            override fun onCancelClick() {
-                //do whatever you want
-            }
-        })
-        .showDialog(supportFragmentManager)
+    )
+    .setOkClickCallback(object : ReelPicker.OkClickCallback<LocalDateTime> {
+        override fun onOkClick(value: LocalDateTime) {
+            //do whatever you want with callback value
+        }
+    })
+    .setCancelClickCallback(object : ReelPicker.CancelClickCallback{
+        override fun onCancelClick() {
+            //do whatever you want
+        }
+    })
+    .showDialog(supportFragmentManager)
 ```
 
-#### **MainActivity.java**
+#### Java
 
 ``` java
-    ReelPicker
-        .createDateTimeDialog(
-            LocalDateTime.now(),
-            LocalDateTime.of(
-                LocalDate.of(1, Month.MAY, 1950),
-                LocalTime.now().minusHours(40)
+ReelPicker
+    .createDateTimeDialog(
+        LocalDateTime.now(),
+        LocalDateTime.of(
+            LocalDate.of(1, Month.MAY, 1950),
+            LocalTime.now().minusHours(40)
             ),
-            LocalDateTime.of(
-                LocalDate.now().plusYears(15),
-                LocalTime.of(23, 33)
+        LocalDateTime.of(
+            LocalDate.now().plusYears(15),
+            LocalTime.of(23, 33)
             )
-        )
-        .setOkClickCallback(value -> {
-            //do whatever you want with callback value
-         })
-        .setCancelClickCallback(() -> {
-            //do whatever you want
-         })
-        .showDialog(fragmentManager);
+    )
+    .setOkClickCallback(value -> {
+        //do whatever you want with callback value
+    })
+    .setCancelClickCallback(() -> {
+        //do whatever you want
+    })
+    .showDialog(fragmentManager);
 ```
 
 
