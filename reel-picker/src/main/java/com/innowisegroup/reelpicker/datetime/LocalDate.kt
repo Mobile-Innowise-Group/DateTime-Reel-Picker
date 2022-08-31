@@ -17,8 +17,8 @@ class LocalDate private constructor(val day: Int, val month: Int, val year: Int)
         if (daysToAdd == 0) {
             this
         } else {
-            val mjDay = Math.addExact(toEpochDay(), daysToAdd)
-            ofEpochDay(mjDay)
+            val mjDay = addExact(toEpochDay().toLong(), daysToAdd.toLong())
+            ofEpochDay(mjDay.toInt())
         }
 
     fun minusDays(daysToMinus: Int): LocalDate = plusDays(-daysToMinus)
@@ -29,8 +29,8 @@ class LocalDate private constructor(val day: Int, val month: Int, val year: Int)
         } else {
             val monthCount = year * 12L + (month - 1)
             val calcMonths: Long = monthCount + monthsToAdd
-            val newYear = Math.floorDiv(calcMonths, 12).toInt()
-            val newMonth = Math.floorMod(calcMonths, 12) + 1
+            val newYear = floorDiv(calcMonths, 12).toInt()
+            val newMonth = (floorMod(calcMonths, 12) + 1).toInt()
             resolvePreviousValid(day, newMonth, newYear)
         }
 
@@ -67,6 +67,19 @@ class LocalDate private constructor(val day: Int, val month: Int, val year: Int)
         }
 
     internal fun daysUntil(end: LocalDate): Int = end.toEpochDay() - toEpochDay()
+
+    private fun addExact(a: Long, b: Long): Long {
+        val sum = a + b
+        return if (a xor sum < 0L && a xor b >= 0L) {
+            throw ArithmeticException("Addition overflows a long: $a + $b")
+        } else {
+            sum
+        }
+    }
+
+    private fun floorDiv(a: Long, b: Long): Long = if (a >= 0L) a / b else (a + 1L) / b - 1L
+
+    private fun floorMod(a: Long, b: Long): Long = (a % b + b) % b
 
     private fun resolvePreviousValid(day: Int, month: Int, year: Int): LocalDate {
         var day2 = day
