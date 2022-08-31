@@ -19,7 +19,7 @@ Also supports input from keyboard, checks and validations for date and time.
 
 
 <p align="center">
-    <img width="33%" src="./sample.gif"> 
+    <img width="33%" src="./super-sample.gif"> 
 </p>
 
 
